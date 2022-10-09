@@ -1,0 +1,37 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "name": "adorafrika",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "Pixel 4",
+            "request": "launch",
+            "type": "dart",
+           // "flutterMode": "profile",
+            "deviceId": "emulator-5554"
+        },
+        {
+            "name": "iPhone 14",
+            "request": "launch",
+            "type": "dart",
+           // "flutterMode": "release",
+            "deviceId": "FB5826D6-6025-4A75-83BE-66725203B2B2"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "All Devices",
+            "configurations": [
+                "Pixel 4",
+                "iPhone 14",
+            ],
+        }
+    ]
+}
