@@ -86,20 +86,21 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                   'Concert géant d\'Angélique KIDJO',
                                   style: GoogleFonts.poppins(
                                     fontSize: 22,
+                                    color: Colors.black,
                                     fontWeight: FontWeight.w600,
                                   ),
                                   maxLines: 2,
                                 ),
-                                Text(
-                                  '12.500.000 F CFA',
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w600,
-                                      color: SizeConfig.secondaryColor),
-                                ),
                               ],
                             ),
                             const SizedBox(height: 15),
+                            Text(
+                              'Budget: 12.500.000 F CFA',
+                              style: GoogleFonts.poppins(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                  color: SizeConfig.secondaryColor),
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -108,8 +109,9 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       CircleAvatar(
-                                          child: Image.network(
-                                              "https://images.pexels.com/photos/697509/pexels-photo-697509.jpeg?auto=compress&cs=tinysrgb&w=1200")),
+                                        radius: 30,
+                                          child: CachedNetworkImage(imageUrl:
+                                              "https://images.pexels.com/photos/697509/pexels-photo-697509.jpeg?auto=compress&cs=tinysrgb&w=1200", fit: BoxFit.cover, height: 60, width: 60,)),
                                       SizedBox(
                                         width: SizeConfig.screenWidth * .02,
                                       ),
@@ -117,7 +119,9 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          Text("COSSI Paul"),
+                                          Text("COSSI Paul",
+                                              style: TextStyle(
+                                                  color: Colors.black)),
                                         ],
                                       )
                                     ],
@@ -131,7 +135,17 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                   onPressed: () {
                                     //  Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatScreen(/* chatParams: ChatParams(userUid, peer), */)));
                                   },
-                                  text: "Contacter",
+                                  text: "Télécharger",
+                                  icon: Icon(FontAwesomeIcons.fileArrowDown,
+                                      color: Colors.white),
+                                  shape: GFButtonShape.pills,
+                                ),
+                                GFButton(
+                                  elevation: 10,
+                                  onPressed: () {
+                                    //  Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatScreen(/* chatParams: ChatParams(userUid, peer), */)));
+                                  },
+                                  text: "Soutenir",
                                   icon: Icon(FontAwesomeIcons.phone,
                                       color: Colors.white),
                                   shape: GFButtonShape.pills,
@@ -141,12 +155,15 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                             const SizedBox(height: 15),
                           ]),
                     ),
-                    
-                    Text(
-                      '',
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        '${lorem(paragraphs: 1, words: 50)}',
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          
+                          color: Colors.grey.shade500
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10)
@@ -208,7 +225,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
               width: SizeConfig.screenWidth,
               fit: BoxFit.cover,
               imageUrl:
-                  "https://images.pexels.com/photos/8488024/pexels-photo-8488024.jpeg?auto=compress&cs=tinysrgb&w=1600",
+                  "https://www.un.org/africarenewal/sites/www.un.org.africarenewal/files/kejo.jpg",
               progressIndicatorBuilder: (context, url, downloadProgress) =>
                   Center(
                       child: CircularProgressIndicator(

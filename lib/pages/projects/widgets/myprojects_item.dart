@@ -29,6 +29,7 @@ Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
               Text(project.title,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(fontSize: 18, color:Colors.black)),
               SizedBox(height: 5.0),
               Row(

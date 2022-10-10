@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -22,28 +22,28 @@ class SizeConfig {
     orientation = _mediaQueryData.orientation;
   }
 
-  static String getDurationFromTimestamp(var timestamp) {
-    var now = DateTime.now();
-    var date = timestamp.toDate();
-    var diff = now.difference(date);
-    DateFormat formatter = DateFormat('H:m');
-    DateFormat formatterd = DateFormat('MM/dd/yyyy');
-    DateTime dt = (timestamp as Timestamp).toDate();
-    String time = '';
+//   static String getDurationFromTimestamp(var timestamp) {
+//     var now = DateTime.now();
+//     var date = timestamp.toDate();
+//     var diff = now.difference(date);
+//     DateFormat formatter = DateFormat('H:m');
+//     DateFormat formatterd = DateFormat('MM/dd/yyyy');
+//     DateTime dt = (timestamp as Timestamp).toDate();
+//     String time = '';
 
-    if (diff.inMinutes < 60) {
-      return time = 'Vu il y a ${diff.inMinutes} min';
-    } else if (diff.inHours <= 24 && now.day == date.day) {
-      return time = 'Vu aujourd\'hui à ${formatter.format(dt)}';
-    } else if (diff.inHours <= 24 && diff.inDays < 2 && now.day > date.day) {
-      return time = 'Vu hier à ${formatter.format(date)}';
-    } else if (diff.inDays < 2 && now.day > date.day) {
-      return time = 'Vu hier à ${formatter.format(date)}';
-    } else if (diff.inDays > 0 && diff.inDays >= 1) {
-      return time = 'Vu le ${formatterd.format(dt)}';
-    }
-    return time;
-  }
+//     if (diff.inMinutes < 60) {
+//       return time = 'Vu il y a ${diff.inMinutes} min';
+//     } else if (diff.inHours <= 24 && now.day == date.day) {
+//       return time = 'Vu aujourd\'hui à ${formatter.format(dt)}';
+//     } else if (diff.inHours <= 24 && diff.inDays < 2 && now.day > date.day) {
+//       return time = 'Vu hier à ${formatter.format(date)}';
+//     } else if (diff.inDays < 2 && now.day > date.day) {
+//       return time = 'Vu hier à ${formatter.format(date)}';
+//     } else if (diff.inDays > 0 && diff.inDays >= 1) {
+//       return time = 'Vu le ${formatterd.format(dt)}';
+//     }
+//     return time;
+//   }
 }
 
 // Get the proportionate height as per screen size

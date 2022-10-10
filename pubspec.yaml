@@ -60,10 +60,11 @@ dependencies:
   audioplayers: ^1.1.1
   sliding_up_panel: ^2.0.0+1 
   intl: ^0.17.0
-  cloud_firestore: ^3.5.1
+  #cloud_firestore: ^3.5.1
   google_fonts: ^3.0.1
   flutter_lorem: ^2.0.0
   sliding_up_panel2: ^3.2.2
+  encrypt: ^5.0.1
 
 
 
