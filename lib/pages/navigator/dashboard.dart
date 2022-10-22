@@ -1,4 +1,5 @@
 import 'package:adorafrika/models/song.dart';
+import 'package:adorafrika/pages/auth/login.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -322,14 +323,20 @@ class _CustomAppBar extends StatelessWidget with PreferredSizeWidget {
       leading: const Icon(Icons.grid_view_rounded),
       backgroundColor: Colors.transparent,
       actions: [
-        Container(
-            margin: EdgeInsets.only(right: 20),
-            child: CircleAvatar(
-                child: CachedNetworkImage(
-              imageUrl:
-                  "https://www.betterteam.com/images/musician-job-description-6000x4000-20201118.jpeg?crop=1:1,smart&width=1200&dpr=2",
-              width: 30,
-            )))
+        GestureDetector(
+          child: Container(
+              margin: EdgeInsets.only(right: 20),
+              child: CircleAvatar(
+                  child: CachedNetworkImage(
+                imageUrl:
+                    "https://www.betterteam.com/images/musician-job-description-6000x4000-20201118.jpeg?crop=1:1,smart&width=1200&dpr=2",
+                width: 30,
+              ))),
+              onTap: (() {
+                 Navigator.push(context,
+              MaterialPageRoute(builder: (context) => Login()));
+              }),
+        )
       ],
     );
   }
