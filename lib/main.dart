@@ -1,13 +1,40 @@
+import 'package:adorafrika/pages/account/abonnement.dart';
+import 'package:adorafrika/pages/auth/create-new-account.dart';
+import 'package:adorafrika/pages/auth/forgot-password.dart';
+import 'package:adorafrika/pages/auth/login-screen.dart';
 import 'package:adorafrika/pages/navigator/dashboard.dart';
 import 'package:adorafrika/pages/navigator/navigation.dart';
+import 'package:adorafrika/pages/panegyriques/create_panegyrique.dart';
 import 'package:adorafrika/pages/player.dart';
 import 'package:adorafrika/pages/projects/projectdetails.dart';
 import 'package:adorafrika/pages/navigator/projects.dart';
+import 'package:adorafrika/providers/play_audio_provider.dart';
+import 'package:adorafrika/providers/record_audio_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
+  configLoading();
+}
+
+void configLoading() {
+  EasyLoading.instance
+    ..displayDuration = const Duration(milliseconds: 2000)
+    ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+    ..loadingStyle = EasyLoadingStyle.dark
+    ..indicatorSize = 45.0
+    ..radius = 10.0
+    ..progressColor = Colors.yellow
+    ..backgroundColor = Colors.green
+    ..indicatorColor = Colors.yellow
+    ..textColor = Colors.yellow
+    ..maskColor = Colors.blue.withOpacity(0.5)
+    ..userInteractions = true
+    ..dismissOnTap = false;
+  // ..customAnimation = CustomAnimation();
 }
 
 class MyApp extends StatelessWidget {
@@ -16,31 +43,39 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
+    return  MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => RecordAudioProvider()),
+        ChangeNotifierProvider(create: (_) => PlayAudioProvider()),
+      ],
+//GetMaterialApp(
+  child: MaterialApp(
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
             textTheme: Theme.of(context).textTheme.apply(
-              bodyColor: Colors.white,
-              displayColor: Colors.white,
-              
-            ),
-iconTheme: const IconThemeData(size: 22.0, color: Colors.black87),
+                  bodyColor: Colors.white,
+                  displayColor: Colors.white,
+                ),
+            iconTheme: const IconThemeData(size: 22.0, color: Colors.black87),
+            primaryColor: Colors.deepPurple.shade200),
+        home: const Navigation(),
+        builder: EasyLoading.init(),
+       /*  getPages: [
+          GetPage(name: '/', page: () => const Navigation()),
+          GetPage(name: '/player', page: () => const Player()),
+          GetPage(name: '/playlist', page: () => const Navigation()),
+          GetPage(name: '/createProject', page: () => const Navigation()),
+          GetPage(name: '/projectsList', page: () => const Projects()),
+          GetPage(name: '/projectsDetails', page: () => const ProjectDetails()),
+          GetPage(name: '/CreateNewAccount', page: () => CreateNewAccount()),
+          GetPage(name: '/login', page: () => LoginScreen()),
+          GetPage(name: '/ForgotPassword', page: () => ForgotPassword()),
+          GetPage(name: '/abonnement', page: () => Abonnement()),
+          GetPage(name: '/createPanegyrique', page: () => CreatePanegyrique()),   
 
-            primaryColor: Colors.deepPurple.shade200
-             ),
-      home: const Navigation(),
-      getPages: [
-        GetPage(name: '/', page:()=>  const Navigation()),
-        GetPage(name: '/player', page:()=>  const Player()),
-        GetPage(name: '/playlist', page:()=>  const Navigation()),
-        GetPage(name: '/createProject', page:()=>  const Navigation()),
-        GetPage(name: '/projectsList', page:()=>  const Projects()),
-        GetPage(name: '/projectsDetails', page:()=>  const ProjectDetails()),
-
-
-      ]
-    );
+        ] */
+        ));
   }
 }
 

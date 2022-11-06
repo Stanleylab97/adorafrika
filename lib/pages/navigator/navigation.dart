@@ -1,6 +1,9 @@
 import 'dart:ffi';
 
+import 'package:adorafrika/pages/navigator/account.dart';
 import 'package:adorafrika/pages/navigator/dashboard.dart';
+import 'package:adorafrika/pages/navigator/panegyriques.dart';
+import 'package:adorafrika/pages/navigator/playlist.dart';
 import 'package:adorafrika/pages/player.dart';
 import 'package:adorafrika/pages/navigator/projects.dart';
 import 'package:adorafrika/utils/config.dart';
@@ -25,6 +28,9 @@ class _NavigationState extends State<Navigation> {
 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
+
+       static const TextStyle optionStyles =
+      TextStyle(fontSize: 14);
   static const List<Widget> _widgetOptions = <Widget>[];
 
   @override
@@ -39,12 +45,12 @@ class _NavigationState extends State<Navigation> {
             hideNavigation: hideNav,
             showNavigation: showNav,
           ),
-          Player(),
-          Projects(),
-          Text(
-            'Profil',
-            style: optionStyle,
-          ),
+          Playlist(hideNavigation: hideNav,
+          showNavigation: showNav),
+          Panegyriques(hideNavigation: hideNav,
+            showNavigation: showNav,),
+         // Projects(),
+          Account()
         ],
       ),
       bottomNavigationBar: AnimatedContainer(
@@ -53,7 +59,7 @@ class _NavigationState extends State<Navigation> {
         height: visible ? kBottomNavigationBarHeight + 40 : 0,
         curve: Curves.fastLinearToSlowEaseIn,
         decoration: BoxDecoration(
-          color: Colors.deepPurple.shade800.withOpacity(0.6),
+          color: Colors.green.shade800,
           boxShadow: [
             BoxShadow(
               blurRadius: 20,
@@ -70,6 +76,7 @@ class _NavigationState extends State<Navigation> {
               gap: 8,
               activeColor: Colors.black,
               iconSize: 24,
+              //style: optionStyles,
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               duration: Duration(milliseconds: 300),
               tabBackgroundColor: Colors.grey[100]!,
@@ -81,12 +88,16 @@ class _NavigationState extends State<Navigation> {
                 ),
                 GButton(
                   icon: LineIcons.music,
-                  text: 'Playlist',
+                  text: 'Musique',
                 ),
                 GButton(
+                  icon: LineIcons.microphone,
+                  text: 'Panégyriques',
+                ),
+                /* GButton(
                   icon: LineIcons.lightbulbAlt,
                   text: 'Projets',
-                ),
+                ), */
                 GButton(
                   icon: LineIcons.user,
                   text: 'Compte',

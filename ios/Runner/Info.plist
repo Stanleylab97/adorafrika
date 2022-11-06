@@ -28,6 +28,10 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+     <string>We need to request your permission to read your photos to load them into the app.</string>
+	  <key>NSMicrophoneUsageDescription</key>
+  <string>(Enter your rationale about using user's microphone here)</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

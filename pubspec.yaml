@@ -65,7 +65,15 @@ dependencies:
   flutter_lorem: ^2.0.0
   sliding_up_panel2: ^3.2.2
   encrypt: ^5.0.1
-
+  flutter_easyloading: ^3.0.5
+  dio: ^4.0.6
+  permission_handler: any
+  record: ^3.0.3
+  simple_ripple_animation: ^0.0.3
+  provider: ^6.0.3
+  path_provider: any
+  percent_indicator: ^4.2.2
+  fluttertoast: ^8.0.9
 
 
 
@@ -97,6 +105,8 @@ flutter:
     - assets/images/
     - assets/music/
     - assets/images/auth/
+    - assets/images/playlist/
+    - assets/images/panigeriques/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
