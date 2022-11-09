@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:adorafrika/models/panegyrique.dart';
 import 'package:adorafrika/pages/panegyriques/create_panegyrique.dart';
+import 'package:adorafrika/pages/services/networkHandler.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -18,6 +22,24 @@ class Panegyriques extends StatefulWidget {
 class _PanegyriquesState extends State<Panegyriques> {
   ScrollController scrollController = ScrollController();
   late SingleValueDropDownController _cnt;
+
+  
+  Future<List<Panegyrique>> getPanegyriquesList() async{
+    try {
+       var response= await http.get(Uri.parse(NetworkHandler.baseurl+"/panegyrique"));
+ var jsonData= json.decode(response.body);
+ var jsonArray= jsonData['panegyriques'];
+ return jsonArray.map<Panegyrique>(Panegyrique.fromJson).toList();
+    } catch (e) {
+      return List.empty();
+    }
+   
+   
+   
+   
+  }
+
+
  
   @override
   void initState() {
@@ -124,8 +146,30 @@ class _PanegyriquesState extends State<Panegyriques> {
                           height: size.height * 0.6,
                           child: TabBarView(
                             children: <Widget>[
-                              ListView()
-                             
+FutureBuilder<List<Panegyrique>> (
+  future: getPanegyriquesList(),
+  builder:  (context, snapshot) {
+    
+    if(snapshot.hasData){
+       var  panegeriques=snapshot.data!;
+       return ListView.builder(itemCount: panegeriques.length,itemBuilder:(context, index) {
+       //  return Text("Toto", style: TextStyle(color:Colors.black),);
+       final pane=panegeriques[index];
+           return ListTile(title: Text("Famille "+pane.name, style: TextStyle(color: Colors.black, fontSize: 20),), 
+           subtitle:  Row(
+             children: [
+              Icon(Icons.map, color: Colors.red,),
+              SizedBox(width: 5,),
+               Text(pane.region,style: TextStyle(color: Colors.black)),
+             ],
+           ));
+       },);
+    }else{
+     return Center(child: CircularProgressIndicator(color: Colors.red));
+    }
+
+  }),
+                    
                             ],
                           ),
                         ) 

@@ -37,7 +37,7 @@ class _DashboardState extends State<Dashboard> {
                 Padding(
                   padding: EdgeInsets.only(left: 20),
                   child: Text(
-                    "Explorez la couture sous",
+                    "Promouvoir la beauté de",
                     style: TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
@@ -47,7 +47,7 @@ class _DashboardState extends State<Dashboard> {
                 Padding(
                   padding: EdgeInsets.only(left: 20),
                   child: Text(
-                    "toutes ses formes",
+                    "la culture Africaine",
                     style: TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,

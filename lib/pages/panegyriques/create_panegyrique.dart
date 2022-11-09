@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:adorafrika/pages/navigator/navigation.dart';
 import 'package:adorafrika/pages/services/networkHandler.dart';
 import 'package:adorafrika/providers/play_audio_provider.dart';
 import 'package:adorafrika/providers/record_audio_provider.dart';
@@ -211,11 +212,11 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
               Map<String, dynamic> output = json.decode(response.body);
               EasyLoading.showSuccess('Panégyrique enregistré!');
               print("Upload done");
-              
+               EasyLoading.dismiss();
               setState(() {
                 isloading = false;
               });
-              EasyLoading.dismiss();
+             
               Navigator.pop(context);
             } else {
               EasyLoading.dismiss();
@@ -294,9 +295,18 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
-          leading: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.push(
+    context,
+    MaterialPageRoute(
+        builder: (context) => Navigation()));
+              //Navigator.pop(context);
+            },
+            child: const Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+            ),
           ),
           backgroundColor: Colors.transparent,
           title: Text(
@@ -338,6 +348,7 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
 
                                   return null;
                                 },
+                                style: TextStyle(color: Colors.black),
                                 decoration: InputDecoration(
                                   errorText: validate ? null : errorText,
                                   labelText: 'Nom de famille',
@@ -359,8 +370,9 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
                                     return 'Indiquez la région';
                                   return null;
                                 },
-
+style: TextStyle(color: Colors.black),
                                 decoration: InputDecoration(
+                                   errorText: validate ? null : errorText,
                                   labelText: 'Région',
                                   prefixIcon: Icon(Icons.map_outlined),
                                   focusedBorder: UnderlineInputBorder(

@@ -11,7 +11,7 @@ class SizeConfig {
 
  static  Color  secondaryColor= Color.fromRGBO(242,142,19,1);
  static Color bgColor = Color(0xFFFBFBFD);
- static Color primaryColor = Color.fromRGBO(105,108,255,1);
+ static Color primaryColor = Colors.green.shade600;
  static Color greenColor = Color.fromRGBO(142, 191, 69,1);
 
 

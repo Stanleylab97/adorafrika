@@ -7,7 +7,7 @@ import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NetworkHandler {
- static String baseurl = "http://192.168.2.102:8000/api";
+ static String baseurl = "http://10.0.2.2:8000/api";
   var log = Logger();
   Dio dio = Dio();
 
@@ -41,7 +41,7 @@ class NetworkHandler {
   }
 
   Future<Response> unsecurepost(String url, Map<String, dynamic> body) async {
-    url = formater(url);
+   // url = formater(url);
 
     return dio.post(url,
         data: jsonEncode(body),
@@ -66,13 +66,13 @@ class NetworkHandler {
 
   Future<http.Response> authenticateUser(
       String url, Map<String, String> body) async {
-    url = formater(url);
+    //url = formater(url);
     var response = await http.post(
       Uri.parse(url),
       body: json.encode(body),
       headers: {
         "Content-type": "application/json",
-        HttpHeaders.contentTypeHeader: "application/json",
+      //  HttpHeaders.contentTypeHeader: "application/json",
       },
     );
     return response;

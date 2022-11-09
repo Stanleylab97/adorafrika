@@ -2,13 +2,15 @@ import 'package:adorafrika/pages/auth/widgets/pallete.dart';
 import 'package:flutter/material.dart';
 
 class TextInputField extends StatelessWidget {
-  const TextInputField({
+  TextEditingController controller;
+   TextInputField({
     Key? key,
     required this.icon,
     required this.hint,
     this.inputType,
     this.inputAction,
-  }) : super(key: key);
+    required this.controller
+  }) ;
 
   final IconData icon;
   final String hint;
@@ -29,6 +31,7 @@ class TextInputField extends StatelessWidget {
         ),
         child: Center(
           child: TextField(
+            controller: controller,
             decoration: InputDecoration(
               border: InputBorder.none,
               prefixIcon: Padding(

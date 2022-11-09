@@ -2,9 +2,10 @@ import 'package:adorafrika/pages/auth/widgets/pallete.dart';
 import 'package:flutter/material.dart';
 
 class RoundedButton extends StatelessWidget {
+ // VoidCallback login;
   const RoundedButton({
     Key? key,
-    required this.buttonName,
+    required this.buttonName
   }) : super(key: key);
 
   final String buttonName;

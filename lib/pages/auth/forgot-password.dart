@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 
 class ForgotPassword extends StatelessWidget {
+  late TextEditingController email;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -53,6 +54,7 @@ class ForgotPassword extends StatelessWidget {
                       height: 20,
                     ),
                     TextInputField(
+                      controller: email,
                       icon: FontAwesomeIcons.envelope,
                       hint: 'E-mail',
                       inputType: TextInputType.emailAddress,

@@ -4,6 +4,13 @@ import 'package:adorafrika/pages/playlist/panigericList.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+
+
+import '../../models/panegyrique.dart';
+import '../services/networkHandler.dart';
 
 class Playlist extends StatefulWidget {
    final VoidCallback showNavigation;
@@ -20,6 +27,10 @@ class _PlaylistState extends State<Playlist> {
 
   ScrollController scrollController = ScrollController();
   late SingleValueDropDownController _cnt;
+
+
+
+
 
 
   @override
@@ -113,7 +124,7 @@ class _PlaylistState extends State<Playlist> {
                         topLeft: Radius.circular(30),
                         topRight: Radius.circular(30))),
                 child: DefaultTabController(
-                    length: 3,
+                    length: 2,
                     child: Column(
                       children: <Widget>[
                         TabBar(
@@ -129,9 +140,9 @@ class _PlaylistState extends State<Playlist> {
                             Tab(
                               child: Text("Rythmes traditionnels",style:TextStyle(fontSize:15)),
                             ),
-                            Tab(
-                              child: Text("Panigériques",style:TextStyle(fontSize:14)),
-                            ),
+                         
+                         
+                         
                             Tab(
                               child: Text("Louanges"),
                             ),
@@ -167,7 +178,7 @@ class _PlaylistState extends State<Playlist> {
                           child: TabBarView(
                             children: <Widget>[
                               MusicList(),
-                              Panigeriques(),
+                             
                               Placeholder(),
                             ],
                           ),
