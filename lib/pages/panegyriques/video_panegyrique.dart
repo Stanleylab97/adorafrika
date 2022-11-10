@@ -20,7 +20,7 @@ class _PicknUploadPaneegyriqueState extends State<PicknUploadPaneegyrique> {
   final ImagePicker _imagePicker = ImagePicker();
 
   Future<void> _getVideo() async {
-    XFile? video = await _imagePicker.pickVideo(source: ImageSource.gallery);
+    XFile? video = await _imagePicker.pickVideo(source: ImageSource.camera);
     _video = File(video!.path);
     videoPlayerController = VideoPlayerController.file(_video!)
       ..initialize().then((_) {

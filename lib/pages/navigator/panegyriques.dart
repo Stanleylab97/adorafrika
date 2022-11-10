@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:adorafrika/pages/panegyriques/video_panegyrique.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:adorafrika/models/panegyrique.dart';
@@ -220,14 +221,18 @@ class _PanegyriquesState extends State<Panegyriques> {
                     label: "Enregister",
                     labelBackgroundColor: Colors.black,
                     onTap: () {
-                      MaterialPageRoute(
-                          builder: (context) => CreatePanegyrique());
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => CreatePanegyrique()));
                     }),
                 SpeedDialChild(
                     child: Icon(FontAwesomeIcons.video),
                     label: "Sélectionner une vidéo",
                     labelBackgroundColor: Colors.black,
-                    onTap: () {}),
+                    onTap: () {
+                     Navigator.push(context,  MaterialPageRoute(
+                          builder: (context) => PicknUploadPaneegyrique()));
+                   
+                    }),
                 SpeedDialChild(
                     child: Icon(FontAwesomeIcons.fileAudio),
                     label: "Sélectionner un audio",
