@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:adorafrika/models/panegyrique.dart';
 import 'package:adorafrika/pages/panegyriques/create_panegyrique.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class Panegyriques extends StatefulWidget {
   final VoidCallback showNavigation;
@@ -23,24 +25,18 @@ class _PanegyriquesState extends State<Panegyriques> {
   ScrollController scrollController = ScrollController();
   late SingleValueDropDownController _cnt;
 
-  
-  Future<List<Panegyrique>> getPanegyriquesList() async{
+  Future<List<Panegyrique>> getPanegyriquesList() async {
     try {
-       var response= await http.get(Uri.parse(NetworkHandler.baseurl+"/panegyrique"));
- var jsonData= json.decode(response.body);
- var jsonArray= jsonData['panegyriques'];
- return jsonArray.map<Panegyrique>(Panegyrique.fromJson).toList();
+      var response =
+          await http.get(Uri.parse(NetworkHandler.baseurl + "/panegyrique"));
+      var jsonData = json.decode(response.body);
+      var jsonArray = jsonData['panegyriques'];
+      return jsonArray.map<Panegyrique>(Panegyrique.fromJson).toList();
     } catch (e) {
       return List.empty();
     }
-   
-   
-   
-   
   }
 
-
- 
   @override
   void initState() {
     _cnt = SingleValueDropDownController();
@@ -70,123 +66,182 @@ class _PanegyriquesState extends State<Panegyriques> {
 
   @override
   Widget build(BuildContext context) {
-     Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery.of(context).size;
+    final isDialOpen=ValueNotifier(false);
 
-    return Scaffold(
-      body: SingleChildScrollView(
-        controller: scrollController,
-        child:  Container(
-        child: Column(
-          children: <Widget>[
-            Stack(
-              children: <Widget>[
-                Container(
-                  height:size.height * 0.3,
-                  width: size.width,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage("assets/images/panigeriques/images.jpeg"),
-                          fit: BoxFit.cover)),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [
-                      Colors.black.withOpacity(0.0),
-                      Colors.black.withOpacity(0.0),
-                      Colors.black.withOpacity(0.1),
-                      Colors.black.withOpacity(0.5),
-                      Colors.black.withOpacity(1.0),
-                    ], begin: Alignment.topRight, end: Alignment.bottomLeft)),
-                  ),
-                ),
-                
-              ],
-            ),
-            Transform.translate(
-              offset: Offset(0.0, -(size.height * 0.3 - size.height * 0.26)),
+    return WillPopScope(
+      onWillPop: () async {
+        if (isDialOpen.value) {
+          isDialOpen.value = false;
+          return false; 
+        }else
+          return true;
+      },
+      child: Scaffold(
+          body: SingleChildScrollView(
+              controller: scrollController,
               child: Container(
-                width: size.width,
-                padding: EdgeInsets.only(top: 10),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30))),
-                child: DefaultTabController(
-                    length: 1,
-                    child: Column(
-                      children: <Widget>[
-                        
-                        SizedBox(
-                          height: 5,
+                child: Column(children: <Widget>[
+                  Stack(
+                    children: <Widget>[
+                      Container(
+                        height: size.height * 0.3,
+                        width: size.width,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage(
+                                    "assets/images/panigeriques/images.jpeg"),
+                                fit: BoxFit.cover)),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                  colors: [
+                                Colors.black.withOpacity(0.0),
+                                Colors.black.withOpacity(0.0),
+                                Colors.black.withOpacity(0.1),
+                                Colors.black.withOpacity(0.5),
+                                Colors.black.withOpacity(1.0),
+                              ],
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomLeft)),
                         ),
-                         Padding(
-                          padding: const EdgeInsets.only(
-                              left: 20, right: 20, bottom: 10),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              labelStyle: TextStyle(color: Colors.black),
-                                contentPadding:
-                                    EdgeInsets.symmetric(vertical: 3),
-                                prefixIcon: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 15, right: 15),
-                                  child: Icon(
-                                    Icons.search,
-                                    size: 30,
-                                  ),
-                                ),
-                                hintText: "Nom de famille ou région",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                    borderSide: BorderSide(
-                                        width: 1.0, color: Colors.grey.shade400))),
-                          ),
-                        ),
-                        Container(
-                          height: size.height * 0.6,
-                          child: TabBarView(
+                      ),
+                    ],
+                  ),
+                  Transform.translate(
+                    offset:
+                        Offset(0.0, -(size.height * 0.3 - size.height * 0.26)),
+                    child: Container(
+                      width: size.width,
+                      padding: EdgeInsets.only(top: 10),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              topRight: Radius.circular(30))),
+                      child: DefaultTabController(
+                          length: 1,
+                          child: Column(
                             children: <Widget>[
-FutureBuilder<List<Panegyrique>> (
-  future: getPanegyriquesList(),
-  builder:  (context, snapshot) {
-    
-    if(snapshot.hasData){
-       var  panegeriques=snapshot.data!;
-       return ListView.builder(itemCount: panegeriques.length,itemBuilder:(context, index) {
-       //  return Text("Toto", style: TextStyle(color:Colors.black),);
-       final pane=panegeriques[index];
-           return ListTile(title: Text("Famille "+pane.name, style: TextStyle(color: Colors.black, fontSize: 20),), 
-           subtitle:  Row(
-             children: [
-              Icon(Icons.map, color: Colors.red,),
-              SizedBox(width: 5,),
-               Text(pane.region,style: TextStyle(color: Colors.black)),
-             ],
-           ));
-       },);
-    }else{
-     return Center(child: CircularProgressIndicator(color: Colors.red));
-    }
-
-  }),
-                    
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, bottom: 10),
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                      labelStyle:
+                                          TextStyle(color: Colors.black),
+                                      contentPadding:
+                                          EdgeInsets.symmetric(vertical: 3),
+                                      prefixIcon: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 15, right: 15),
+                                        child: Icon(
+                                          Icons.search,
+                                          size: 30,
+                                        ),
+                                      ),
+                                      hintText: "Nom de famille ou région",
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          borderSide: BorderSide(
+                                              width: 1.0,
+                                              color: Colors.grey.shade400))),
+                                ),
+                              ),
+                              Container(
+                                height: size.height * 0.6,
+                                child: TabBarView(
+                                  children: <Widget>[
+                                    FutureBuilder<List<Panegyrique>>(
+                                        future: getPanegyriquesList(),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            var panegeriques = snapshot.data!;
+                                            return ListView.builder(
+                                              itemCount: panegeriques.length,
+                                              itemBuilder: (context, index) {
+                                                //  return Text("Toto", style: TextStyle(color:Colors.black),);
+                                                final pane =
+                                                    panegeriques[index];
+                                                return ListTile(
+                                                    title: Text(
+                                                      "Famille " + pane.name,
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 20),
+                                                    ),
+                                                    subtitle: Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons.map,
+                                                          color: Colors.red,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 5,
+                                                        ),
+                                                        Text(pane.region,
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black)),
+                                                      ],
+                                                    ));
+                                              },
+                                            );
+                                          } else {
+                                            return Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                        color: Colors.red));
+                                          }
+                                        }),
+                                  ],
+                                ),
+                              )
                             ],
-                          ),
-                        ) 
-                      ],
-                    )),
-              ),
-            )
-          ]
-      ),
-    )), 
-    floatingActionButton: FloatingActionButton(
+                          )),
+                    ),
+                  )
+                ]),
+              )),
+          floatingActionButton: SpeedDial(
+              //animatedIcon: AnimatedIcons.menu_close,
+              backgroundColor: Colors.yellow.shade600,
+              overlayOpacity: 0.4,
+              overlayColor: Colors.black,
+              icon: Icons.add,
+              activeIcon: Icons.close,
+              children: [
+                SpeedDialChild(
+                    child: Icon(FontAwesomeIcons.microphone),
+                    label: "Enregister",
+                    labelBackgroundColor: Colors.black,
+                    onTap: () {
+                      MaterialPageRoute(
+                          builder: (context) => CreatePanegyrique());
+                    }),
+                SpeedDialChild(
+                    child: Icon(FontAwesomeIcons.video),
+                    label: "Sélectionner une vidéo",
+                    labelBackgroundColor: Colors.black,
+                    onTap: () {}),
+                SpeedDialChild(
+                    child: Icon(FontAwesomeIcons.fileAudio),
+                    label: "Sélectionner un audio",
+                    labelBackgroundColor: Colors.black,
+                    onTap: () {}),
+              ])),
+    );
+    /* FloatingActionButton(
         onPressed: () {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => CreatePanegyrique()));
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.yellow.shade600,
-      ),);
+      ),); */
   }
 }
