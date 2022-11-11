@@ -8,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/instance_manager.dart';
 import 'package:http/http.dart' as http;
@@ -34,6 +35,7 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
   NetworkHandler networkHandler = NetworkHandler();
   final TextEditingController _famille = TextEditingController();
   final TextEditingController _region = TextEditingController();
+   TextEditingController country=TextEditingController();
   bool validate = false;
   Logger log = Logger();
   late String errorText = "";
@@ -197,6 +199,8 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
           request.files.add(await http.MultipartFile.fromPath(
               "fichier_audio", panegyrique_path));
           request.fields['nom_famille'] = _famille.text.trim();
+           request.fields['type_fichier'] = "AUDIO";
+           request.fields['pays'] = country.text.trim();
           request.fields['region'] = _region.text.trim();
           request.fields['statut'] = "NOUVEAU";
           request.headers.addAll({
@@ -293,6 +297,8 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
     final _recordProvider = Provider.of<RecordAudioProvider>(context);
     final _playProvider = Provider.of<PlayAudioProvider>(context);
     return Scaffold(
+      //resizeToAvoidBottomInset : false,
+      
         appBar: AppBar(
           elevation: 0,
           leading: GestureDetector(
@@ -316,6 +322,7 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
           centerTitle: true,
         ),
         body: SingleChildScrollView(
+              physics: ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
           padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 20),
           child: Center(
             child: Container(
@@ -362,6 +369,30 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
                                 //onSaved: (input) => _email = input
                               ),
                             ),
+                                                 Container(
+  child: TextFormField(
+    controller: country,
+    validator: (input) {
+      if (input!.isEmpty)
+        return 'Indiquez le pays';
+      return null;
+    },
+  style:TextStyle(color: Colors.black),
+    decoration: InputDecoration(
+       errorText: validate ? null : errorText,
+      labelText: 'Pays',
+      prefixIcon: Icon(FontAwesomeIcons.mapLocation),
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.black,
+          width: 2,
+        ),
+      ),
+    ),
+    //onSaved: (input) => _password = input
+  ),
+),
+
                             Container(
                               child: TextFormField(
                                 controller: _region,

@@ -77,8 +77,9 @@ dependencies:
   flutter_speed_dial: ^6.2.0
   video_player: ^2.4.7
   image_picker: ^0.8.6
-  flutter_speed_dial: ^6.2.0
 
+  
+  
 
 
 dev_dependencies:

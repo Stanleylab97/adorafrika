@@ -68,14 +68,14 @@ class _PanegyriquesState extends State<Panegyriques> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    final isDialOpen=ValueNotifier(false);
+    final isDialOpen = ValueNotifier(false);
 
     return WillPopScope(
       onWillPop: () async {
         if (isDialOpen.value) {
           isDialOpen.value = false;
-          return false; 
-        }else
+          return false;
+        } else
           return true;
       },
       child: Scaffold(
@@ -153,53 +153,147 @@ class _PanegyriquesState extends State<Panegyriques> {
                                               color: Colors.grey.shade400))),
                                 ),
                               ),
-                              Container(
-                                height: size.height * 0.6,
-                                child: TabBarView(
-                                  children: <Widget>[
-                                    FutureBuilder<List<Panegyrique>>(
-                                        future: getPanegyriquesList(),
-                                        builder: (context, snapshot) {
-                                          if (snapshot.hasData) {
-                                            var panegeriques = snapshot.data!;
-                                            return ListView.builder(
-                                              itemCount: panegeriques.length,
-                                              itemBuilder: (context, index) {
-                                                //  return Text("Toto", style: TextStyle(color:Colors.black),);
-                                                final pane =
-                                                    panegeriques[index];
-                                                return ListTile(
-                                                    title: Text(
-                                                      "Famille " + pane.name,
-                                                      style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 20),
-                                                    ),
-                                                    subtitle: Row(
-                                                      children: [
-                                                        Icon(
-                                                          Icons.map,
-                                                          color: Colors.red,
+                              Padding(
+                                padding: const EdgeInsets.only(top:20.0),
+                                child: Container(
+                                  height: size.height * 0.6,
+                                  child: TabBarView(
+                                    children: <Widget>[
+                                      FutureBuilder<List<Panegyrique>>(
+                                          future: getPanegyriquesList(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.hasData) {
+                                              var panegeriques = snapshot.data!;
+                                              return ListView.builder(
+                                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                                itemCount: panegeriques.length,
+                                                itemBuilder: (context, index) {
+                                                  //  return Text("Toto", style: TextStyle(color:Colors.black),);
+                                                  final pane =
+                                                      panegeriques[index];
+                                                  if (pane.type == "AUDIO")
+                                                    return ListTile(
+                                                      leading: FaIcon(FontAwesomeIcons.music, size: 35, color: Colors.orange,),
+                                                        title: Text(
+                                                          "Famille " + pane.name,
+                                                          style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontSize: 20),
                                                         ),
-                                                        SizedBox(
-                                                          width: 5,
+                                                        subtitle: Row(
+                                                          children: [
+                                                            Icon(
+                                                              Icons.map,
+                                                              color: Colors.red,
+                                                            ),
+                                                            SizedBox(
+                                                              width: 5,
+                                                            ),
+                                                            Text(pane.region,
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .black)),
+                                                          ],
+                                                        ));
+                                                  else
+                                                    return GestureDetector(
+                                                      child: Container(
+                                                     
+                                                        height:
+                                                            MediaQuery.of(context)
+                                                                    .size
+                                                                    .height *
+                                                                .09,
+                                                        child: Column(
+                                                          children: [
+                                                            Row(
+                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                              children: [
+                                                                Container(
+                                                                  width: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width *
+                                                                      .2,
+                                                                  height: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .height *
+                                                                      .07,
+                                                                  decoration: BoxDecoration(
+                                                                    
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              18),
+                                                                      image: DecorationImage(
+                                                                        fit: BoxFit.cover,
+                                                                          image: AssetImage(
+                                                                              "assets/images/panigeriques/play.jpg"))),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width *
+                                                                      .01,
+                                                                ),
+                                                                Column(
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Text(
+                                                                      "Famille " +
+                                                                          pane.name,
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              18,
+                                                                          color: Colors
+                                                                              .black),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height: MediaQuery.of(context)
+                                                                              .size
+                                                                              .width *
+                                                                          .02,
+                                                                    ),
+                                                                    Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                                      children: [
+                                                                        Icon(
+                                                                          Icons
+                                                                              .map,
+                                                                          color: Colors
+                                                                              .red,
+                                                                        ),
+                                                                        SizedBox(
+                                                                          width:
+                                                                              5,
+                                                                        ),
+                                                                        Text(
+                                                                            pane
+                                                                                .region,
+                                                                            style:
+                                                                                TextStyle(color: Colors.black)),
+                                                                      ],
+                                                                    )
+                                                                  ],
+                                                                )
+                                                              ],
+                                                            )
+                                                          ],
                                                         ),
-                                                        Text(pane.region,
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .black)),
-                                                      ],
-                                                    ));
-                                              },
-                                            );
-                                          } else {
-                                            return Center(
-                                                child:
-                                                    CircularProgressIndicator(
-                                                        color: Colors.red));
-                                          }
-                                        }),
-                                  ],
+                                                      ),
+                                                    );
+                                                },
+                                              );
+                                            } else {
+                                              return Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                          color: Colors.red));
+                                            }
+                                          }),
+                                    ],
+                                  ),
                                 ),
                               )
                             ],
@@ -221,17 +315,20 @@ class _PanegyriquesState extends State<Panegyriques> {
                     label: "Enregister",
                     labelBackgroundColor: Colors.black,
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => CreatePanegyrique()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CreatePanegyrique()));
                     }),
                 SpeedDialChild(
                     child: Icon(FontAwesomeIcons.video),
                     label: "Sélectionner une vidéo",
                     labelBackgroundColor: Colors.black,
                     onTap: () {
-                     Navigator.push(context,  MaterialPageRoute(
-                          builder: (context) => PicknUploadPaneegyrique()));
-                   
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PicknUploadPaneegyrique()));
                     }),
                 SpeedDialChild(
                     child: Icon(FontAwesomeIcons.fileAudio),
