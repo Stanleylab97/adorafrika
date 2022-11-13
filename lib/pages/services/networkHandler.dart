@@ -7,7 +7,7 @@ import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NetworkHandler {
- static String baseurl = "http://10.0.2.2:8000/api";
+ static String baseurl = "https://backend.adorafrika.com/api";
   var log = Logger();
   Dio dio = Dio();
 
