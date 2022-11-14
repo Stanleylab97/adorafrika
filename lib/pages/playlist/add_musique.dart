@@ -155,39 +155,41 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
     // actively listen for status update
   }
 
-  savePanegyrique() async {
+  saveMusic() async {
     final prefs = await SharedPreferences.getInstance();
-    String panegyrique_path = "";
     // int? userId=prefs.getString("userId");
     String userId = "1";
 
-    if (isNotNull(_videoselected.path) &&
+    setState(() {
+      isloading = true;
+    });
+
+    if (isfilechoosen &&
         idCategory != 0 &&
         titleCtrl.text.length >= 3) {
-      setState(() {
-        isloading = true;
-      });
-
       if (_videoselected.path.isNotEmpty || _audioselected.path.isNotEmpty) {
         DataConnectionStatus status = await isConnected();
 
         if (status == DataConnectionStatus.connected) {
+          var data = {
+      "typefile": plan == 0 ? "AUDIO" : "VIDEO",
+      "statut":"NOUVEAU",
+      "country": pays.text.trim(),
+      "titre": titleCtrl.text.trim(),
+      "blazartiste": blazArtistCtrl.text.trim(),
+      "compte_clients_id": userId,
+      "categories_id": idCategory,
+      "yearofproduction": yearproduction.text.trim(),
+      "validationstate": false
+};
+Map<String, String> obj = {"musicData": json.encode(data).toString()};
           var request = http.MultipartRequest(
-              'POST', Uri.parse(NetworkHandler.baseurl + "/create/musique"));
-          request.files.add(await http.MultipartFile.fromPath(
-              "fichier_audio", panegyrique_path));
-          request.fields['typefile'] = plan == 0 ? "AUDIO" : "VIDEO";
-          request.fields['statut'] = "NOUVEAU";
-          request.fields['country'] = pays.text.trim();
-          request.fields['titre'] = titleCtrl.text.trim();
-          request.fields['blazartiste'] = blazArtistCtrl.text.trim();
-          request.fields['compte_clients_id'] = userId;
-          request.fields['categories_id'] = idCategory.toString();
-          request.fields['yearofproduction'] = yearproduction.text.trim();
-          request.fields['validationstate'] = "NEW";
-          request.fields['fichier_audio'] =
-              plan == 0 ? "" : _videoselected.path;
-
+              'POST', Uri.parse(NetworkHandler.baseurl + "musique/creation"));
+          request.files.add(await http.MultipartFile.fromPath("fichier_audio",
+              plan == 0 ? _audioselected.path : _videoselected.path));
+             request.files.add(await http.MultipartFile.fromPath("thumbnail",
+     plan == 0 ? _audioselected.path : coverImage.path));
+     request.fields.addAll(obj);
           request.headers.addAll({
             "Content-type": "multipart/form-data",
             //"Authorization": "Bearer $token"
@@ -199,7 +201,7 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
             final response = await http.Response.fromStream(streamedResponse);
             if (response.statusCode == 200 || response.statusCode == 201) {
               Map<String, dynamic> output = json.decode(response.body);
-              EasyLoading.showSuccess('Panégyrique enregistré!');
+              EasyLoading.showSuccess('Musique enregistré!');
               print("Upload done");
               EasyLoading.dismiss();
               setState(() {
@@ -255,6 +257,19 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
         // print("Il manque au moins un fichier à charger");
 
       }
+    } else {
+      setState(() {
+        isloading = false;
+      });
+      CherryToast.error(
+              title: Text("Erreur"),
+              displayTitle: false,
+              description: Text("Il manque des données importantes",
+                  style: TextStyle(color: Colors.black)),
+              animationType: AnimationType.fromRight,
+              animationDuration: Duration(milliseconds: 2000),
+              autoDismiss: true)
+          .show(context);
     }
   }
 
@@ -315,6 +330,7 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
       await playerController.preparePlayer(file.path);
       setState(() {
         isfilechoosen = true;
+        _audioselected=file;
       });
       _playOrPausePlayer(playerController);
     } else {
@@ -624,10 +640,11 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    super.dispose();
+   
     playerController.stopAllPlayers();
 
     playerController.dispose();
+     super.dispose();
   }
 
   @override
@@ -688,17 +705,7 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
                   setState(() {
                     isCompleted = true;
                   });
-                  print("plan:$plan");
-                  CherryToast.success(
-                          title: Text("Succès"),
-                          displayTitle: false,
-                          description: Text(
-                              "Votre musique vient de se charger avec succès!"),
-                          animationType: AnimationType.fromRight,
-                          animationDuration: Duration(milliseconds: 800),
-                          autoDismiss: true)
-                      .show(context);
-                  //Navigator.pop(context);
+                  saveMusic();
                 } else {
                   setState(() {
                     currentStep += 1;
@@ -731,9 +738,14 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
                         width: 12,
                       ),
                       Expanded(
-                          child: ElevatedButton(
-                              child: Text(isLastStep ? "Envoyer" : "Suivant"),
-                              onPressed: controls.onStepContinue)),
+                          child: isloading
+                              ? Center(
+                                  child: CircularProgressIndicator(
+                                      color: Colors.red))
+                              : ElevatedButton(
+                                  child:
+                                      Text(isLastStep ? "Envoyer" : "Suivant"),
+                                  onPressed: controls.onStepContinue)),
                     ]));
               },
             ),
