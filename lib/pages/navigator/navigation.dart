@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:adorafrika/pages/account/profile.dart';
 import 'package:adorafrika/pages/navigator/account.dart';
 import 'package:adorafrika/pages/navigator/dashboard.dart';
 import 'package:adorafrika/pages/navigator/panegyriques.dart';
@@ -50,7 +51,7 @@ class _NavigationState extends State<Navigation> {
           Panegyriques(hideNavigation: hideNav,
             showNavigation: showNav,),
          // Projects(),
-          Account()
+          Profil()
         ],
       ),
       bottomNavigationBar: AnimatedContainer(

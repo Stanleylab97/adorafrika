@@ -313,7 +313,6 @@ class _PanegyriquesState extends State<Panegyriques> {
                 SpeedDialChild(
                     child: Icon(FontAwesomeIcons.microphone),
                     label: "Enregister",
-                    labelBackgroundColor: Colors.black,
                     onTap: () {
                       Navigator.push(
                           context,
@@ -323,18 +322,13 @@ class _PanegyriquesState extends State<Panegyriques> {
                 SpeedDialChild(
                     child: Icon(FontAwesomeIcons.video),
                     label: "Sélectionner une vidéo",
-                    labelBackgroundColor: Colors.black,
                     onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => PicknUploadPaneegyrique()));
                     }),
-                SpeedDialChild(
-                    child: Icon(FontAwesomeIcons.fileAudio),
-                    label: "Sélectionner un audio",
-                    labelBackgroundColor: Colors.black,
-                    onTap: () {}),
+              
               ])),
     );
     /* FloatingActionButton(

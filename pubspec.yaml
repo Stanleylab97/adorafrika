@@ -77,8 +77,11 @@ dependencies:
   flutter_speed_dial: ^6.2.0
   video_player: ^2.4.7
   image_picker: ^0.8.6
-
-  
+  dropdown_search: ^5.0.3
+  fl_country_code_picker: ^0.0.4
+  profile: ^0.0.1
+  file_picker: ^5.2.2
+  audio_waveforms: ^0.1.5+1
   
 
 

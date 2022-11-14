@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
             textTheme: Theme.of(context).textTheme.apply(
-                  bodyColor: Colors.white,
+                  bodyColor: Colors.black,
                   displayColor: Colors.white,
                 ),
             iconTheme: const IconThemeData(size: 22.0, color: Colors.black87),

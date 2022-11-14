@@ -1,4 +1,5 @@
 
+import 'package:adorafrika/pages/playlist/add_musique.dart';
 import 'package:adorafrika/pages/playlist/music.dart';
 import 'package:adorafrika/pages/playlist/panigericList.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
@@ -190,6 +191,15 @@ class _PlaylistState extends State<Playlist> {
           ],
         ),
       ),
-    ));
+    ), 
+    floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => AddMusic()));
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Colors.yellow.shade600,
+      )
+    );
   }
 }
