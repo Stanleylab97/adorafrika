@@ -193,6 +193,7 @@ class _PlaylistState extends State<Playlist> {
       ),
     ), 
     floatingActionButton: FloatingActionButton(
+       heroTag: "ubico",
         onPressed: () {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => AddMusic()));

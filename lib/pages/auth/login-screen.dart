@@ -152,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Flexible(
                 child: Center(
                   child: Text(
-                    'AdorAfrica',
+                    'AdorAfriKa',
                     style: GoogleFonts.fuzzyBubbles(
                         textStyle: TextStyle(
                             color: SizeConfig.primaryColor,

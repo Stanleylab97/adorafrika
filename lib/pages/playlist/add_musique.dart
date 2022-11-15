@@ -164,32 +164,45 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
       isloading = true;
     });
 
-    if (isfilechoosen &&
+    if ((isfilechoosen || iscovered) &&
         idCategory != 0 &&
         titleCtrl.text.length >= 3) {
       if (_videoselected.path.isNotEmpty || _audioselected.path.isNotEmpty) {
         DataConnectionStatus status = await isConnected();
 
         if (status == DataConnectionStatus.connected) {
-          var data = {
-      "typefile": plan == 0 ? "AUDIO" : "VIDEO",
-      "statut":"NOUVEAU",
-      "country": pays.text.trim(),
-      "titre": titleCtrl.text.trim(),
-      "blazartiste": blazArtistCtrl.text.trim(),
-      "compte_clients_id": userId,
-      "categories_id": idCategory,
-      "yearofproduction": yearproduction.text.trim(),
-      "validationstate": false
-};
-Map<String, String> obj = {"musicData": json.encode(data).toString()};
+       /*    var data = {
+            "typefile": plan == 0 ? "AUDIO" : "VIDEO",
+            "statut": "NOUVEAU",
+            "country": pays.text.trim(),
+            "titre": titleCtrl.text.trim(),
+            "blazartiste": blazArtistCtrl.text.trim(),
+            "compte_clients_id": int.parse(userId),
+            "categories_id": idCategory,
+            "yearofproduction": yearproduction.text.length == 4
+                ? int.parse(yearproduction.text.trim())
+                : 1974,
+          };
+          print(data); */
+         // Map<String, String> obj = {"musicData": json.encode(data).toString()};
           var request = http.MultipartRequest(
-              'POST', Uri.parse(NetworkHandler.baseurl + "musique/creation"));
+              'POST', Uri.parse(NetworkHandler.baseurl + "/musique/creation"));
           request.files.add(await http.MultipartFile.fromPath("fichier_audio",
               plan == 0 ? _audioselected.path : _videoselected.path));
-             request.files.add(await http.MultipartFile.fromPath("thumbnail",
-     plan == 0 ? _audioselected.path : coverImage.path));
-     request.fields.addAll(obj);
+          request.fields['typefile'] = plan == 0 ? "AUDIO" : "VIDEO";
+          request.fields['statut'] = "NOUVEAU";
+          request.fields['country'] = pays.text.trim();
+          request.fields['titre'] = titleCtrl.text.trim();
+          request.fields['blazartiste'] = blazArtistCtrl.text.trim();
+          request.fields['compte_clients_id'] =  userId;
+          request.fields['categories_id'] = idCategory.toString();
+          request.fields['yearofproduction'] = yearproduction.text.length == 4
+                ? yearproduction.text.trim().toString():"1974";
+
+          if (iscovered) {
+            request.files.add(await http.MultipartFile.fromPath(
+                "thumbnail", coverImage.path));
+          }
           request.headers.addAll({
             "Content-type": "multipart/form-data",
             //"Authorization": "Bearer $token"
@@ -198,10 +211,11 @@ Map<String, String> obj = {"musicData": json.encode(data).toString()};
 
           try {
             final streamedResponse = await request.send();
+
             final response = await http.Response.fromStream(streamedResponse);
             if (response.statusCode == 200 || response.statusCode == 201) {
               Map<String, dynamic> output = json.decode(response.body);
-              EasyLoading.showSuccess('Musique enregistré!');
+              EasyLoading.showSuccess('Musique enregistrée!');
               print("Upload done");
               EasyLoading.dismiss();
               setState(() {
@@ -330,7 +344,7 @@ Map<String, String> obj = {"musicData": json.encode(data).toString()};
       await playerController.preparePlayer(file.path);
       setState(() {
         isfilechoosen = true;
-        _audioselected=file;
+        _audioselected = file;
       });
       _playOrPausePlayer(playerController);
     } else {
@@ -457,24 +471,30 @@ Map<String, String> obj = {"musicData": json.encode(data).toString()};
             content: Column(children: [
               Center(
                   child: iscovered
-                      ? GestureDetector(
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * .6,
-                            height: MediaQuery.of(context).size.height * .3,
-                            child: Image.file(coverImage),
-                          ),
-                          onTap: () {},
-                        )
-                      : GestureDetector(
-                          child: Container(
+                      ? Card(
+                          elevation: 10,
+                          child: GestureDetector(
+                            child: Container(
                               width: MediaQuery.of(context).size.width * .6,
                               height: MediaQuery.of(context).size.height * .3,
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: AssetImage(
-                                        "assets/images/playlist/cover.jpeg",
-                                      )))),
+                              child: Image.file(coverImage),
+                            ),
+                            onTap: () {},
+                          ),
+                        )
+                      : GestureDetector(
+                          child: Card(
+                            elevation: 10,
+                            child: Container(
+                                width: MediaQuery.of(context).size.width * .6,
+                                height: MediaQuery.of(context).size.height * .3,
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: AssetImage(
+                                          "assets/images/playlist/cover.jpeg",
+                                        )))),
+                          ),
                           onTap: () {
                             _getFromGallery();
                           },
@@ -640,11 +660,10 @@ Map<String, String> obj = {"musicData": json.encode(data).toString()};
 
   @override
   void dispose() {
-   
     playerController.stopAllPlayers();
 
     playerController.dispose();
-     super.dispose();
+    super.dispose();
   }
 
   @override
