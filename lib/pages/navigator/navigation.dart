@@ -7,6 +7,7 @@ import 'package:adorafrika/pages/navigator/panegyriques.dart';
 import 'package:adorafrika/pages/navigator/playlist.dart';
 import 'package:adorafrika/pages/player.dart';
 import 'package:adorafrika/pages/navigator/projects.dart';
+import 'package:adorafrika/pages/playlist/add_musique.dart';
 import 'package:adorafrika/utils/config.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -46,8 +47,9 @@ class _NavigationState extends State<Navigation> {
             hideNavigation: hideNav,
             showNavigation: showNav,
           ),
-          Playlist(hideNavigation: hideNav,
-          showNavigation: showNav),
+          AddMusic( hideNavigation: hideNav,
+            showNavigation: showNav,),
+          //Playlist(hideNavigation: hideNav,showNavigation: showNav),
           Panegyriques(hideNavigation: hideNav,
             showNavigation: showNav,),
          // Projects(),

@@ -32,6 +32,7 @@ class _PanegyriquesState extends State<Panegyriques> {
           await http.get(Uri.parse(NetworkHandler.baseurl + "/panegyrique"));
       var jsonData = json.decode(response.body);
       var jsonArray = jsonData['panegyriques'];
+      print(jsonArray);
       return jsonArray.map<Panegyrique>(Panegyrique.fromJson).toList();
     } catch (e) {
       return List.empty();
@@ -154,7 +155,7 @@ class _PanegyriquesState extends State<Panegyriques> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(top:20.0),
+                                padding: const EdgeInsets.only(top: 20.0),
                                 child: Container(
                                   height: size.height * 0.6,
                                   child: TabBarView(
@@ -165,7 +166,9 @@ class _PanegyriquesState extends State<Panegyriques> {
                                             if (snapshot.hasData) {
                                               var panegeriques = snapshot.data!;
                                               return ListView.builder(
-                                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 10,
+                                                    vertical: 5),
                                                 itemCount: panegeriques.length,
                                                 itemBuilder: (context, index) {
                                                   //  return Text("Toto", style: TextStyle(color:Colors.black),);
@@ -173,11 +176,18 @@ class _PanegyriquesState extends State<Panegyriques> {
                                                       panegeriques[index];
                                                   if (pane.type == "AUDIO")
                                                     return ListTile(
-                                                      leading: FaIcon(FontAwesomeIcons.music, size: 35, color: Colors.orange,),
+                                                        leading: FaIcon(
+                                                          FontAwesomeIcons
+                                                              .music,
+                                                          size: 35,
+                                                          color: Colors.orange,
+                                                        ),
                                                         title: Text(
-                                                          "Famille " + pane.name,
+                                                          "Famille " +
+                                                              pane.name,
                                                           style: TextStyle(
-                                                              color: Colors.black,
+                                                              color:
+                                                                  Colors.black,
                                                               fontSize: 20),
                                                         ),
                                                         subtitle: Row(
@@ -198,16 +208,17 @@ class _PanegyriquesState extends State<Panegyriques> {
                                                   else
                                                     return GestureDetector(
                                                       child: Container(
-                                                     
-                                                        height:
-                                                            MediaQuery.of(context)
-                                                                    .size
-                                                                    .height *
-                                                                .09,
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height *
+                                                            .09,
                                                         child: Column(
                                                           children: [
                                                             Row(
-                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .start,
                                                               children: [
                                                                 Container(
                                                                   width: MediaQuery.of(
@@ -221,14 +232,14 @@ class _PanegyriquesState extends State<Panegyriques> {
                                                                           .height *
                                                                       .07,
                                                                   decoration: BoxDecoration(
-                                                                    
                                                                       borderRadius:
                                                                           BorderRadius.circular(
                                                                               18),
                                                                       image: DecorationImage(
-                                                                        fit: BoxFit.cover,
-                                                                          image: AssetImage(
-                                                                              "assets/images/panigeriques/play.jpg"))),
+                                                                          fit: BoxFit
+                                                                              .cover,
+                                                                          image:
+                                                                              AssetImage("assets/images/panigeriques/play.jpg"))),
                                                                 ),
                                                                 SizedBox(
                                                                   width: MediaQuery.of(
@@ -238,7 +249,9 @@ class _PanegyriquesState extends State<Panegyriques> {
                                                                       .01,
                                                                 ),
                                                                 Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
                                                                   children: [
                                                                     Text(
                                                                       "Famille " +
@@ -246,8 +259,8 @@ class _PanegyriquesState extends State<Panegyriques> {
                                                                       style: TextStyle(
                                                                           fontSize:
                                                                               18,
-                                                                          color: Colors
-                                                                              .black),
+                                                                          color:
+                                                                              Colors.black),
                                                                     ),
                                                                     SizedBox(
                                                                       height: MediaQuery.of(context)
@@ -256,13 +269,15 @@ class _PanegyriquesState extends State<Panegyriques> {
                                                                           .02,
                                                                     ),
                                                                     Row(
-                                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .start,
                                                                       children: [
                                                                         Icon(
                                                                           Icons
                                                                               .map,
-                                                                          color: Colors
-                                                                              .red,
+                                                                          color:
+                                                                              Colors.red,
                                                                         ),
                                                                         SizedBox(
                                                                           width:
@@ -328,7 +343,6 @@ class _PanegyriquesState extends State<Panegyriques> {
                           MaterialPageRoute(
                               builder: (context) => PicknUploadPaneegyrique()));
                     }),
-              
               ])),
     );
     /* FloatingActionButton(

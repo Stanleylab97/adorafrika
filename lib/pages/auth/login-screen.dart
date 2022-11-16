@@ -156,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: GoogleFonts.fuzzyBubbles(
                         textStyle: TextStyle(
                             color: SizeConfig.primaryColor,
-                            fontSize: 60,
+                            fontSize: 50,
                             fontWeight: FontWeight.bold)),
                   ),
                 ),
@@ -196,6 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: kBlue,
                     ),
                     child: TextButton(
+                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(SizeConfig.primaryColor)),
                       onPressed: () {
                         login();
                       },

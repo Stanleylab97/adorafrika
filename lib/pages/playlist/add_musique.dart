@@ -31,7 +31,9 @@ import 'package:http/http.dart' as http;
 import 'package:audio_waveforms/audio_waveforms.dart';
 
 class AddMusic extends StatefulWidget {
-  const AddMusic({Key? key}) : super(key: key);
+   final VoidCallback showNavigation;
+  final VoidCallback hideNavigation;
+  const AddMusic({Key? key, required this.showNavigation, required this.hideNavigation}) : super(key: key);
 
   @override
   State<AddMusic> createState() => _AddMusicState();
@@ -171,7 +173,7 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
         DataConnectionStatus status = await isConnected();
 
         if (status == DataConnectionStatus.connected) {
-       /*    var data = {
+          /*    var data = {
             "typefile": plan == 0 ? "AUDIO" : "VIDEO",
             "statut": "NOUVEAU",
             "country": pays.text.trim(),
@@ -184,25 +186,28 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
                 : 1974,
           };
           print(data); */
-         // Map<String, String> obj = {"musicData": json.encode(data).toString()};
+          // Map<String, String> obj = {"musicData": json.encode(data).toString()};
           var request = http.MultipartRequest(
               'POST', Uri.parse(NetworkHandler.baseurl + "/musique/creation"));
-          request.files.add(await http.MultipartFile.fromPath("fichier_audio",
+          request.files.add(await http.MultipartFile.fromPath("fichier",
               plan == 0 ? _audioselected.path : _videoselected.path));
+          if (iscovered) {
+            request.files.add(await http.MultipartFile.fromPath(
+                "thumbnail", coverImage.path));
+           }
           request.fields['typefile'] = plan == 0 ? "AUDIO" : "VIDEO";
           request.fields['statut'] = "NOUVEAU";
           request.fields['country'] = pays.text.trim();
           request.fields['titre'] = titleCtrl.text.trim();
           request.fields['blazartiste'] = blazArtistCtrl.text.trim();
-          request.fields['compte_clients_id'] =  userId;
+          request.fields['compte_clients_id'] = userId;
           request.fields['categories_id'] = idCategory.toString();
           request.fields['yearofproduction'] = yearproduction.text.length == 4
-                ? yearproduction.text.trim().toString():"1974";
+              ? yearproduction.text.trim().toString()
+              : "1974";
 
-          if (iscovered) {
-            request.files.add(await http.MultipartFile.fromPath(
-                "thumbnail", coverImage.path));
-          }
+          
+        
           request.headers.addAll({
             "Content-type": "multipart/form-data",
             //"Authorization": "Bearer $token"
@@ -636,12 +641,21 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
   bool isCompleted = false;
   int plan = 0;
   ScrollController scrollController = ScrollController();
+  //late SingleValueDropDownController _cnt;
   late PermissionStatus _permissionStatus;
 
   @override
   void initState() {
     _cnt = SingleValueDropDownController();
     super.initState();
+     scrollController.addListener(() {
+      if (scrollController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        widget.showNavigation();
+      } else {
+        widget.hideNavigation();
+      }
+    });
     () async {
       _permissionStatus = await Permission.storage.status;
 
@@ -663,6 +677,14 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
     playerController.stopAllPlayers();
 
     playerController.dispose();
+     scrollController.removeListener(() {
+      if (scrollController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        widget.showNavigation();
+      } else {
+        widget.hideNavigation();
+      }
+    });
     super.dispose();
   }
 
@@ -677,6 +699,7 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      controller: scrollController,
         child: Material(
       child: Theme(
         data: Theme.of(context)

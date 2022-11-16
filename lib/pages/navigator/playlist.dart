@@ -192,15 +192,7 @@ class _PlaylistState extends State<Playlist> {
         ),
       ),
     ), 
-    floatingActionButton: FloatingActionButton(
-       heroTag: "ubico",
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddMusic()));
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.yellow.shade600,
-      )
+
     );
   }
 }

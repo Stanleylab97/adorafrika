@@ -8,7 +8,7 @@ class Panegyrique{
     name: json['nom_famille'],
      region: json['region'], 
      statut: json['statut'], 
-     fichier_audio: json['fichier_audio'],
+     fichier_audio: json['fichier'],
      type: json['type_fichier'],
      url: "");
 }

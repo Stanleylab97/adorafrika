@@ -5,6 +5,7 @@ import 'package:adorafrika/pages/auth/widgets/background-image.dart';
 import 'package:adorafrika/pages/auth/widgets/pallete.dart';
 import 'package:adorafrika/pages/auth/widgets/widgets.dart';
 import 'package:adorafrika/pages/services/networkHandler.dart';
+import 'package:adorafrika/utils/config.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cherry_toast/resources/arrays.dart';
@@ -186,7 +187,7 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
                         height: size.width * 0.1,
                         width: size.width * 0.1,
                         decoration: BoxDecoration(
-                          color: kBlue,
+                          color: SizeConfig.primaryColor,
                           shape: BoxShape.circle,
                           border: Border.all(color: kWhite, width: 2),
                         ),
@@ -240,6 +241,7 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
                         color: kBlue,
                       ),
                       child: TextButton(
+                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(SizeConfig.primaryColor)),
                         onPressed: () {
                           saveClient();
                         },
@@ -270,7 +272,7 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
                           child: Text(
                             'Se connecter',
                             style: kBodyText.copyWith(
-                                color: kBlue, fontWeight: FontWeight.bold),
+                                color: SizeConfig.primaryColor, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ],

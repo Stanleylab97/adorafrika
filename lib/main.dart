@@ -10,6 +10,7 @@ import 'package:adorafrika/pages/projects/projectdetails.dart';
 import 'package:adorafrika/pages/navigator/projects.dart';
 import 'package:adorafrika/providers/play_audio_provider.dart';
 import 'package:adorafrika/providers/record_audio_provider.dart';
+import 'package:adorafrika/utils/config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -58,7 +59,7 @@ class MyApp extends StatelessWidget {
                   displayColor: Colors.white,
                 ),
             iconTheme: const IconThemeData(size: 22.0, color: Colors.black87),
-            primaryColor: Colors.deepPurple.shade200),
+            primaryColor: SizeConfig.primaryColor),
         home: const Navigation(),
         builder: EasyLoading.init(),
        /*  getPages: [

@@ -8,6 +8,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Dashboard extends StatefulWidget {
   final VoidCallback showNavigation;
@@ -38,20 +39,18 @@ class _DashboardState extends State<Dashboard> {
                   padding: EdgeInsets.only(left: 20),
                   child: Text(
                     "Promouvoir la beauté de",
-                    style: TextStyle(
+                    style: GoogleFonts.cabin(fontSize: 25, fontWeight:FontWeight.bold, color: Colors.white) /* TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white),
+                        color: Colors.white), */
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 20),
                   child: Text(
                     "la culture Africaine",
-                    style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
+                    style: GoogleFonts.cabin(fontSize: 25, fontWeight:FontWeight.bold, color: Colors.white) 
+
                   ),
                 ),
                 Padding(
@@ -84,10 +83,10 @@ class _DashboardState extends State<Dashboard> {
               ],
             ),
           ),
-          Align(
+         /*  Align(
             alignment: Alignment.bottomCenter,
             child: PlayerHome(currentSong),
-          )
+          ) */
         ],
       ),
     );
@@ -313,10 +312,7 @@ class CircleTrackWidget extends StatelessWidget {
             padding: EdgeInsets.only(left: 20, top: 10),
             child: Text(
               title,
-              style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
+              style:                      GoogleFonts.cabin(fontSize: 25, fontWeight:FontWeight.bold, color: Colors.white) 
             ),
           ),
           Padding(

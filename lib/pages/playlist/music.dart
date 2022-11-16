@@ -1,3 +1,4 @@
+import 'package:adorafrika/pages/playlist/add_musique.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
@@ -167,9 +168,15 @@ class _MusicListState extends State<MusicList> {
                         fontSize: 22.0,
                       ),
                     ),
-                    CircleAvatar(
-                      backgroundImage: AssetImage("assets/images/logo.jpeg"),
-                    ),
+                    FloatingActionButton(
+       
+        onPressed: () {
+          /* Navigator.push(context,
+              MaterialPageRoute(builder: (context) => AddMusic(hideNavigation:  },))); */
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Colors.yellow.shade600,
+      )
                   ],
                 ),
               ),
