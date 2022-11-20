@@ -1,18 +1,24 @@
 import 'package:adorafrika/pages/playlist/add_musique.dart';
-import 'package:adorafrika/pages/playlist/music.dart';
 import 'package:adorafrika/pages/playlist/newMusics.dart';
 import 'package:adorafrika/pages/playlist/panigericList.dart';
+import 'package:adorafrika/pages/playlist/search_music.dart';
 import 'package:adorafrika/utils/config.dart';
+import 'package:cherry_toast/cherry_toast.dart';
+import 'package:cherry_toast/resources/arrays.dart';
+import 'package:data_connection_checker_tv/data_connection_checker.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 import 'dart:convert';
 
 import '../../models/panegyrique.dart';
+import '../../models/song.dart';
 import '../services/networkHandler.dart';
 
 class Playlist extends StatefulWidget {
@@ -37,6 +43,11 @@ class _PlaylistState extends State<Playlist> {
   final countryPicker = const FlCountryCodePicker();
   TextEditingController anneeprod = TextEditingController();
   TextEditingController blazArtist = TextEditingController();
+  Logger log = Logger();
+  NetworkHandler networkHandler = NetworkHandler();
+
+  bool isloading = false;
+  late String search_key;
 
   @override
   void initState() {
@@ -63,6 +74,91 @@ class _PlaylistState extends State<Playlist> {
         widget.hideNavigation();
       }
     });
+  }
+
+  isConnected() async {
+    return await DataConnectionChecker().connectionStatus;
+    // actively listen for status update
+  }
+
+  search() async {
+    setState(() {
+      isloading = true;
+    });
+
+    if (searchByblazartiste! || searchBycountry! || searchByyearofproduction!) {
+      if (!search_key.isEmpty) {
+        DataConnectionStatus status = await isConnected();
+
+        if (status == DataConnectionStatus.connected) {
+          print("La clé $search_key");
+          Map<String, dynamic> data = {
+            "key_search": search_key,
+          };
+          var response = await networkHandler.unsecurepost(
+              NetworkHandler.baseurl + "/musique/recherche", data);
+          log.v(response.data['musiques']);
+          if (response.statusCode == 200 || response.statusCode == 201) {
+            setState(() {
+              isloading = false;
+            });
+            searchByblazartiste =
+                searchBycountry = searchByyearofproduction = false;
+            anneeprod.clear();
+            blazArtist.clear();
+            codepays = "";
+            var jsonArray = response.data['message']==""?response.data['musiques'] :[];
+           Navigator.pop(context);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Search(
+                          songs:
+                              jsonArray.map<Song>(Song.fromJson).toList(),
+                        )));
+
+            // 
+          } else {
+            //Map<String, dynamic> output = json.decode(response.data);
+            setState(() {
+              /*   errorText = output['status'];
+                log.e(errorText); */
+              isloading = false;
+            });
+          }
+        } else {
+          setState(() {
+            isloading = false;
+          });
+          CherryToast.error(
+                  title: Text("Erreur"),
+                  displayTitle: false,
+                  description: Text(
+                      "Il semble que votre connexion soit instable",
+                      style: TextStyle(color: Colors.black)),
+                  animationType: AnimationType.fromRight,
+                  animationDuration: Duration(milliseconds: 1000),
+                  autoDismiss: true)
+              .show(context);
+        }
+      } else {
+        // print("Il manque au moins un fichier à charger");
+
+      }
+    } else {
+      setState(() {
+        isloading = false;
+      });
+      CherryToast.error(
+              title: Text("Erreur"),
+              displayTitle: false,
+              description: Text("Définissez la clé de recherche",
+                  style: TextStyle(color: Colors.black)),
+              animationType: AnimationType.fromRight,
+              animationDuration: Duration(milliseconds: 2000),
+              autoDismiss: true)
+          .show(context);
+    }
   }
 
   showFilterModal() {
@@ -92,11 +188,11 @@ class _PlaylistState extends State<Playlist> {
                     ),
                     MaterialButton(
                       onPressed: () {
-                         searchByblazartiste =
-                      searchBycountry = searchByyearofproduction = false;
-                  anneeprod.clear();
-                  blazArtist.clear();
-                  codepays = "";
+                        searchByblazartiste =
+                            searchBycountry = searchByyearofproduction = false;
+                        anneeprod.clear();
+                        blazArtist.clear();
+                        codepays = "";
                         Navigator.pop(context);
                       },
                       minWidth: 40,
@@ -127,53 +223,62 @@ class _PlaylistState extends State<Playlist> {
                               this.searchBycountry = val!;
                             }),
                           ),
-                          title: Center(
-                            child: codepays.isEmpty
-                                ? FloatingActionButton.extended(
-                                    heroTag: "country",
-                                    elevation: 8,
-                                    label: Center(
-                                        child: Text(
-                                      'Choisissez le pays',
-                                      style: TextStyle(color: Colors.black),
-                                    )),
-                                    backgroundColor: Colors.white,
-                                    icon: Icon(
-                                      FontAwesomeIcons.flag,
-                                      size: 24.0,
-                                    ),
-                                    onPressed: () async {
-                                      final code = await countryPicker
-                                          .showPicker(context: context);
-                                      if (code != null) {
-                                        setState(() {
-                                          pays.text = code.name;
-                                          codepays = code.code;
-                                        });
-                                      }
-                                    },
-                                  )
-                                : InkWell(
-                                    onTap: () async {
-                                      final code = await countryPicker
-                                          .showPicker(context: context);
-                                      if (code != null) {
-                                        setState(() {
-                                          pays.text = code.name;
-                                          codepays = code.code;
-                                        });
-                                      }
-                                    },
-                                    child: TextFormField(
-                                      controller: pays,
-                                      enabled: false,
-                                      style: TextStyle(color: Colors.black),
-                                      keyboardType: TextInputType.text,
-                                      decoration: InputDecoration(
-                                          labelText: "Pays sélectionné"),
-                                    ),
-                                  ),
-                          ),
+                          title: !searchBycountry!
+                              ? Text(
+                                  "Rechercher par pays",
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.black45),
+                                )
+                              : Center(
+                                  child: codepays.isEmpty
+                                      ? FloatingActionButton.extended(
+                                          heroTag: "country",
+                                          elevation: 8,
+                                          label: Center(
+                                              child: Text(
+                                            'Choisissez le pays',
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          )),
+                                          backgroundColor: Colors.white,
+                                          icon: Icon(
+                                            FontAwesomeIcons.flag,
+                                            size: 24.0,
+                                          ),
+                                          onPressed: () async {
+                                            final code = await countryPicker
+                                                .showPicker(context: context);
+                                            if (code != null) {
+                                              setState(() {
+                                                pays.text = code.name;
+                                                codepays = code.code;
+                                                search_key = pays.text;
+                                              });
+                                            }
+                                          },
+                                        )
+                                      : InkWell(
+                                          onTap: () async {
+                                            final code = await countryPicker
+                                                .showPicker(context: context);
+                                            if (code != null) {
+                                              setState(() {
+                                                pays.text = code.name;
+                                                codepays = code.code;
+                                              });
+                                            }
+                                          },
+                                          child: TextFormField(
+                                            controller: pays,
+                                            enabled: false,
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                            keyboardType: TextInputType.text,
+                                            decoration: InputDecoration(
+                                                labelText: "Pays sélectionné"),
+                                          ),
+                                        ),
+                                ),
                         ),
                       ),
                     )
@@ -199,6 +304,9 @@ class _PlaylistState extends State<Playlist> {
                           title: Center(
                             child: TextFormField(
                               controller: anneeprod,
+                              onChanged: (value) {
+                                search_key = value;
+                              },
                               enabled:
                                   this.searchByyearofproduction! ? true : false,
                               style: TextStyle(color: Colors.black),
@@ -231,6 +339,9 @@ class _PlaylistState extends State<Playlist> {
                           ),
                           title: Center(
                             child: TextFormField(
+                              onChanged: (value) {
+                                search_key = value;
+                              },
                               controller: blazArtist,
                               enabled: searchByblazartiste! ? true : false,
                               style: TextStyle(color: Colors.black),
@@ -253,13 +364,12 @@ class _PlaylistState extends State<Playlist> {
                 SizedBox(
                   height: 20,
                 ),
-                button('Rechercher', () {
-                  searchByblazartiste =
-                      searchBycountry = searchByyearofproduction = false;
-                  anneeprod.clear();
-                  blazArtist.clear();
-                  codepays = "";
-                })
+                isloading
+                    ? Center(
+                        child: CircularProgressIndicator(color: Colors.red))
+                    : button('Rechercher', () {
+                        search();
+                      })
               ],
             ),
           );

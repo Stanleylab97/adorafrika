@@ -38,7 +38,7 @@ class _PanegyriquesState extends State<Panegyriques> {
           await http.get(Uri.parse(NetworkHandler.baseurl + "/panegyrique"));
       var jsonData = json.decode(response.body);
       var jsonArray = jsonData['panegyriques'];
-      print(jsonArray);
+     
       return jsonArray.map<Panegyrique>(Panegyrique.fromJson).toList();
 
       /*    var req = new http.Request(
@@ -197,7 +197,6 @@ class _PanegyriquesState extends State<Panegyriques> {
                                                     vertical: 5),
                                                 itemCount: panegeriques.length,
                                                 itemBuilder: (context, index) {
-                                                  //  return Text("Toto", style: TextStyle(color:Colors.black),);
                                                   final pane =
                                                       panegeriques[index];
                                                   if (pane.type == "AUDIO")
@@ -372,13 +371,6 @@ class _PanegyriquesState extends State<Panegyriques> {
                     }),
               ])),
     );
-    /* FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => CreatePanegyrique()));
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.yellow.shade600,
-      ),); */
+
   }
 }

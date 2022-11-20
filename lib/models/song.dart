@@ -21,7 +21,7 @@ class Song {
         thumnail: isNotNull(json['thumbnail']) ?  json['thumbnail']: "",
         file: json['fichier'],
         country: isNotNull(json['country'])? json['country'] : "",
-        rythme: json['categorie']['libelle'],
+        rythme:  json['categories_id'].toString(),
         author:  isNotNull(json['blazartiste']) ? json['blazartiste'] : "",
         yearofproduction: isNotNull(json['yearofproduction']) ? json['yearofproduction'] : ""
       );

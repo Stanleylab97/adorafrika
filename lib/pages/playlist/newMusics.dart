@@ -33,7 +33,7 @@ class _NewMusicsState extends State<NewMusics> {
             await http.get(Uri.parse(NetworkHandler.baseurl + "/musique"));
         var jsonData = json.decode(response.body);
         var jsonArray = jsonData['musiques'];
-        print(jsonArray);
+        //print(jsonArray);
         return jsonArray.map<Song>(Song.fromJson).toList();
       } catch (ex) {
         return List.empty();

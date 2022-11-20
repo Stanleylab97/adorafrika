@@ -54,7 +54,7 @@ class _FashionDashboardState extends State<FashionDashboard> {
   List<String> images = [
     "assets/images/fashion/fash1.jpeg",
     "assets/images/fashion/hear.jpeg",
-    "assets/images/fashion/fash2.jp g",
+    "assets/images/fashion/fash2.jpg",
     "assets/images/fashion/hear.jpeg",
   ];
 
@@ -81,7 +81,7 @@ class _FashionDashboardState extends State<FashionDashboard> {
                 ),
                 child: Icon(
                   Icons.shopping_bag_rounded,
-                  color: Color(0xff8275b3),
+                  color: Colors.red,
                 ),
               ),
             ),
@@ -113,7 +113,7 @@ class _FashionDashboardState extends State<FashionDashboard> {
                     Text(
                       "Filtre",
                       style: TextStyle(
-                        color: Color(0xff8275b3),
+                        color: Colors.red,
                       ),
                     ),
                     Icon(
@@ -178,7 +178,7 @@ class _FashionDashboardState extends State<FashionDashboard> {
                 suffixIcon: Container(
                   padding: EdgeInsets.all(7.0),
                   child: PhysicalShape(
-                    color: Color(0xff8477bb),
+                    color: Colors.red,
                     shadowColor: Colors.black,
                     elevation: 3,
                     clipper: ShapeBorderClipper(
