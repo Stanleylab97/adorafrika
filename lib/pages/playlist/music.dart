@@ -10,6 +10,19 @@ class MusicList extends StatefulWidget {
 }
 
 class _MusicListState extends State<MusicList> {
+  bool visible = true;
+
+   void hideNav() {
+    setState(() {
+      visible = false;
+    });
+  }
+
+  void showNav() {
+    setState(() {
+      visible = true;
+    });
+  }
   List musicList = [
     {
       "title": "Life is a Dream",
@@ -169,10 +182,10 @@ class _MusicListState extends State<MusicList> {
                       ),
                     ),
                     FloatingActionButton(
-       
+       heroTag: "music",
         onPressed: () {
-          /* Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddMusic(hideNavigation:  },))); */
+           Navigator.push(context,
+              MaterialPageRoute(builder: (context) => AddMusic())); 
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.yellow.shade600,

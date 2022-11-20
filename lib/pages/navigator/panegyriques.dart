@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:adorafrika/pages/panegyriques/video_panegyrique.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -23,18 +24,36 @@ class Panegyriques extends StatefulWidget {
 }
 
 class _PanegyriquesState extends State<Panegyriques> {
+  StreamController<Panegyrique>? streamController;
+
   ScrollController scrollController = ScrollController();
   late SingleValueDropDownController _cnt;
+  List<Panegyrique> list = [];
 
   Future<List<Panegyrique>> getPanegyriquesList() async {
     try {
+      // var client = new http.Client();
+
       var response =
           await http.get(Uri.parse(NetworkHandler.baseurl + "/panegyrique"));
       var jsonData = json.decode(response.body);
       var jsonArray = jsonData['panegyriques'];
       print(jsonArray);
       return jsonArray.map<Panegyrique>(Panegyrique.fromJson).toList();
-    } catch (e) {
+
+      /*    var req = new http.Request(
+          'get', Uri.parse(NetworkHandler.baseurl + "/panegyrique"));
+
+      var streamedRes = await client.send(req);
+      print(streamedRes);
+
+      streamedRes.stream
+          .transform(utf8.decoder)
+          .transform(json.decoder)
+          .expand((e) => e)
+          .map((map) => Panegyrique.fromJson(map))
+          .pipe(sc); */
+    } catch (ex) {
       return List.empty();
     }
   }
@@ -51,10 +70,17 @@ class _PanegyriquesState extends State<Panegyriques> {
         widget.hideNavigation();
       }
     });
+    streamController = StreamController.broadcast();
+
+    streamController!.stream.listen((p) => setState(() => list.add(p)));
+
+    getPanegyriquesList();
   }
 
   @override
   void dispose() {
+    streamController?.close();
+    streamController = null;
     super.dispose();
     scrollController.removeListener(() {
       if (scrollController.position.userScrollDirection ==
@@ -318,6 +344,7 @@ class _PanegyriquesState extends State<Panegyriques> {
                 ]),
               )),
           floatingActionButton: SpeedDial(
+              heroTag: "paneyrique",
               //animatedIcon: AnimatedIcons.menu_close,
               backgroundColor: Colors.yellow.shade600,
               overlayOpacity: 0.4,

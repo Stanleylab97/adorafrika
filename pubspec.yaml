@@ -82,6 +82,7 @@ dependencies:
   profile: ^0.0.1
   file_picker: ^5.2.2
   audio_waveforms: ^0.1.5+1
+  flutter_staggered_grid_view: ^0.4.0
   
 
 
@@ -114,6 +115,7 @@ flutter:
     - assets/images/auth/
     - assets/images/playlist/
     - assets/images/panigeriques/
+    - assets/images/fashion/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

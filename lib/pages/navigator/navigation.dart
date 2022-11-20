@@ -3,8 +3,9 @@ import 'dart:ffi';
 import 'package:adorafrika/pages/account/profile.dart';
 import 'package:adorafrika/pages/navigator/account.dart';
 import 'package:adorafrika/pages/navigator/dashboard.dart';
+import 'package:adorafrika/pages/navigator/fashion.dart';
 import 'package:adorafrika/pages/navigator/panegyriques.dart';
-import 'package:adorafrika/pages/navigator/playlist.dart';
+import 'package:adorafrika/pages/navigator/musics.dart';
 import 'package:adorafrika/pages/player.dart';
 import 'package:adorafrika/pages/navigator/projects.dart';
 import 'package:adorafrika/pages/playlist/add_musique.dart';
@@ -12,6 +13,7 @@ import 'package:adorafrika/utils/config.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
 
@@ -47,9 +49,10 @@ class _NavigationState extends State<Navigation> {
             hideNavigation: hideNav,
             showNavigation: showNav,
           ),
-          AddMusic( hideNavigation: hideNav,
-            showNavigation: showNav,),
-          //Playlist(hideNavigation: hideNav,showNavigation: showNav),
+          FashionDashboard(),
+         /*  AddMusic( hideNavigation: hideNav,
+            showNavigation: showNav,), */
+          Playlist(hideNavigation: hideNav,showNavigation: showNav),
           Panegyriques(hideNavigation: hideNav,
             showNavigation: showNav,),
          // Projects(),
@@ -72,15 +75,16 @@ class _NavigationState extends State<Navigation> {
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+            padding: const EdgeInsets.symmetric( vertical: 8),
             child: GNav(
+
               rippleColor: Colors.orange,
               hoverColor: Colors.grey[100]!,
               gap: 8,
               activeColor: Colors.black,
               iconSize: 24,
               //style: optionStyles,
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 12),
               duration: Duration(milliseconds: 300),
               tabBackgroundColor: Colors.grey[100]!,
               color: Colors.black,
@@ -88,6 +92,10 @@ class _NavigationState extends State<Navigation> {
                 GButton(
                   icon: LineIcons.home,
                   text: 'Accueil',
+                ),
+                GButton(
+                  icon: FontAwesomeIcons.star,
+                  text: 'Fashion',
                 ),
                 GButton(
                   icon: LineIcons.music,
