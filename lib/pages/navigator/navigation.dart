@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:adorafrika/pages/account/profile.dart';
+import 'package:adorafrika/pages/musics/home.dart';
 import 'package:adorafrika/pages/navigator/account.dart';
 import 'package:adorafrika/pages/navigator/dashboard.dart';
 import 'package:adorafrika/pages/navigator/fashion.dart';
@@ -49,10 +50,10 @@ class _NavigationState extends State<Navigation> {
             hideNavigation: hideNav,
             showNavigation: showNav,
           ),
-          FashionDashboard(),
+       const MusicsDash(),
          /*  AddMusic( hideNavigation: hideNav,
             showNavigation: showNav,), */
-          Playlist(hideNavigation: hideNav,showNavigation: showNav),
+         // Playlist(hideNavigation: hideNav,showNavigation: showNav),
           Panegyriques(hideNavigation: hideNav,
             showNavigation: showNav,),
          // Projects(),
@@ -84,7 +85,7 @@ class _NavigationState extends State<Navigation> {
               activeColor: Colors.black,
               iconSize: 24,
               //style: optionStyles,
-              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 12),
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
               duration: Duration(milliseconds: 300),
               tabBackgroundColor: Colors.grey[100]!,
               color: Colors.black,
@@ -93,10 +94,7 @@ class _NavigationState extends State<Navigation> {
                   icon: LineIcons.home,
                   text: 'Accueil',
                 ),
-                GButton(
-                  icon: FontAwesomeIcons.star,
-                  text: 'Fashion',
-                ),
+               
                 GButton(
                   icon: LineIcons.music,
                   text: 'Musique',

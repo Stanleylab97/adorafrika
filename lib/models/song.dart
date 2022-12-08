@@ -18,10 +18,10 @@ class Song {
   static Song fromJson(json) => Song(
         title: json['titre'],
         typefile: json['typefile'],
-        thumnail: isNotNull(json['thumbnail']) ?  json['thumbnail']: "",
+        thumnail: isNotNull(json['thumbnail']) ?  json['thumbnail']: "https://img.freepik.com/free-vector/elegant-musical-notes-music-chord-background_1017-20759.jpg",
         file: json['fichier'],
         country: isNotNull(json['country'])? json['country'] : "",
-        rythme:  json['categories_id'].toString(),
+        rythme:  json['categorie']['libelle'],
         author:  isNotNull(json['blazartiste']) ? json['blazartiste'] : "",
         yearofproduction: isNotNull(json['yearofproduction']) ? json['yearofproduction'] : ""
       );

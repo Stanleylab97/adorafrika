@@ -9,11 +9,11 @@ class SizeConfig {
   static double? defaultSize;
   static Orientation? orientation;
 
- static  Color  secondaryColor= Color.fromRGBO(242,142,19,1);
- static Color bgColor = Color(0xFFFBFBFD);
- static Color primaryColor = Colors.green.shade600;
- static Color greenColor = Color.fromRGBO(142, 191, 69,1);
-
+  static Color secondaryColor = Colors.yellow.shade600;
+  static Color bgColor = Color(0xFFFBFBFD);
+  static Color primaryColor = Colors.green.shade600;
+  static Color greenColor = Color.fromRGBO(142, 191, 69, 1);
+  static Color red = Colors.red;
 
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
@@ -59,4 +59,3 @@ double getProportionateScreenWidth(double inputWidth) {
   // 375 is the layout width that designer use
   return (inputWidth / 375.0) * screenWidth;
 }
-

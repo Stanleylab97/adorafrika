@@ -1,24 +1,119 @@
+import 'dart:async';
+import 'dart:io';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:adorafrika/helpers/config.dart';
+import 'package:adorafrika/helpers/countrycodes.dart';
+import 'package:adorafrika/helpers/handle_native.dart';
+import 'package:adorafrika/helpers/route_handler.dart';
 import 'package:adorafrika/pages/account/abonnement.dart';
 import 'package:adorafrika/pages/auth/create-new-account.dart';
 import 'package:adorafrika/pages/auth/forgot-password.dart';
 import 'package:adorafrika/pages/auth/login-screen.dart';
+import 'package:adorafrika/pages/auth/pref.dart';
 import 'package:adorafrika/pages/navigator/dashboard.dart';
 import 'package:adorafrika/pages/navigator/navigation.dart';
 import 'package:adorafrika/pages/panegyriques/create_panegyrique.dart';
 import 'package:adorafrika/pages/player.dart';
+import 'package:adorafrika/pages/playlist/Player/audioplayer.dart';
 import 'package:adorafrika/pages/projects/projectdetails.dart';
 import 'package:adorafrika/pages/navigator/projects.dart';
 import 'package:adorafrika/providers/play_audio_provider.dart';
 import 'package:adorafrika/providers/record_audio_provider.dart';
+import 'package:adorafrika/services/audio_service.dart';
+import 'package:adorafrika/theme/app_theme.dart';
 import 'package:adorafrika/utils/config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_displaymode/flutter_displaymode.dart';
+import 'package:audio_service/audio_service.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:get_it/get_it.dart';
 
-void main() {
+Future<void> main() async {
+  
+  WidgetsFlutterBinding.ensureInitialized();
+  Paint.enableDithering = true;
+
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    await Hive.initFlutter('adorAfrika');
+  } else {
+    await Hive.initFlutter();
+  }
+  await openHiveBox('settings');
+  await openHiveBox('downloads');
+  await openHiveBox('Favorite Songs');
+  await openHiveBox('cache', limit: true);
+  if (Platform.isAndroid) {
+    setOptimalDisplayMode();
+  }
+  await startService();
+    
   runApp(const MyApp());
   configLoading();
+}
+
+Future<void> setOptimalDisplayMode() async {
+  final List<DisplayMode> supported = await FlutterDisplayMode.supported;
+  final DisplayMode active = await FlutterDisplayMode.active;
+
+  final List<DisplayMode> sameResolution = supported
+      .where(
+        (DisplayMode m) => m.width == active.width && m.height == active.height,
+      )
+      .toList()
+    ..sort(
+      (DisplayMode a, DisplayMode b) => b.refreshRate.compareTo(a.refreshRate),
+    );
+
+  final DisplayMode mostOptimalMode =
+      sameResolution.isNotEmpty ? sameResolution.first : active;
+
+  await FlutterDisplayMode.setPreferredMode(mostOptimalMode);
+}
+
+Future<void> startService() async {
+  final AudioPlayerHandler audioHandler = await AudioService.init(
+    builder: () => AudioPlayerHandlerImpl(),
+    config: AudioServiceConfig(
+      androidNotificationChannelId: 'com.stanleylab.adorafrika.channel.audio',
+      androidNotificationChannelName: 'adorAfrika',
+      androidNotificationOngoing: true,
+      androidNotificationIcon: 'drawable/ic_stat_music_note',
+      androidShowNotificationBadge: true,
+      // androidStopForegroundOnPause: Hive.box('settings')
+      // .get('stopServiceOnPause', defaultValue: true) as bool,
+      notificationColor: Colors.grey[900],
+    ),
+  );
+  GetIt.I.registerSingleton<AudioPlayerHandler>(audioHandler);
+  GetIt.I.registerSingleton<MyTheme>(MyTheme());
+}
+
+Future<void> openHiveBox(String boxName, {bool limit = false}) async {
+  final box = await Hive.openBox(boxName).onError((error, stackTrace) async {
+    final Directory dir = await getApplicationDocumentsDirectory();
+    final String dirPath = dir.path;
+    File dbFile = File('$dirPath/$boxName.hive');
+    File lockFile = File('$dirPath/$boxName.lock');
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      dbFile = File('$dirPath/BlackHole/$boxName.hive');
+      lockFile = File('$dirPath/BlackHole/$boxName.lock');
+    }
+    await dbFile.delete();
+    await lockFile.delete();
+    await Hive.openBox(boxName);
+    throw 'Failed to open $boxName Box\nError: $error';
+  });
+  // clear box if it grows large
+  if (limit && box.length > 500) {
+    box.clear();
+  }
 }
 
 void configLoading() {
@@ -38,31 +133,145 @@ void configLoading() {
   // ..customAnimation = CustomAnimation();
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Locale _locale = const Locale('en', '');
+
+  late StreamSubscription _intentDataStreamSubscription;
+
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  @override
+  void dispose() {
+    _intentDataStreamSubscription.cancel();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final String systemLangCode = Platform.localeName.substring(0, 2);
+    if (ConstantCodes.languageCodes.values.contains(systemLangCode)) {
+      _locale = Locale(systemLangCode);
+    } else {
+      final String lang =
+          Hive.box('settings').get('lang', defaultValue: 'English') as String;
+      _locale = Locale(ConstantCodes.languageCodes[lang] ?? 'en');
+    }
+
+    AppTheme.currentTheme.addListener(() {
+      setState(() {});
+    });
+
+    // For sharing or opening urls/text coming from outside the app while the app is in the memory
+    _intentDataStreamSubscription = ReceiveSharingIntent.getTextStream().listen(
+      (String value) {
+        handleSharedText(value, navigatorKey);
+      },
+      onError: (err) {
+        // print("ERROR in getTextStream: $err");
+      },
+    );
+
+    // For sharing or opening urls/text coming from outside the app while the app is closed
+    ReceiveSharingIntent.getInitialText().then(
+      (String? value) {
+        if (value != null) handleSharedText(value, navigatorKey);
+      },
+    );
+  }
+
+  void setLocale(Locale value) {
+    setState(() {
+      _locale = value;
+    });
+  }
+
+  Widget initialFuntion() {
+    return Hive.box('settings').get('userId') != null
+        ? Navigation()
+        : PrefScreen();
+  }
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return  MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => RecordAudioProvider()),
-        ChangeNotifierProvider(create: (_) => PlayAudioProvider()),
-      ],
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: AppTheme.themeMode == ThemeMode.dark
+            ? Colors.black38
+            : Colors.white,
+        statusBarIconBrightness: AppTheme.themeMode == ThemeMode.dark
+            ? Brightness.light
+            : Brightness.dark,
+        systemNavigationBarIconBrightness: AppTheme.themeMode == ThemeMode.dark
+            ? Brightness.light
+            : Brightness.dark,
+      ),
+    );
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+
+    /// LocalJsonLocalization.delegate.directories = ['assets/translations'];
+
+    /* return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => RecordAudioProvider()),
+          ChangeNotifierProvider(create: (_) => PlayAudioProvider()),
+        ],
 //GetMaterialApp(
-  child: MaterialApp(
-        title: 'Flutter Demo',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-            textTheme: Theme.of(context).textTheme.apply(
-                  bodyColor: Colors.black,
-                  displayColor: Colors.white,
-                ),
-            iconTheme: const IconThemeData(size: 22.0, color: Colors.black87),
-            primaryColor: SizeConfig.primaryColor),
-        home: const Navigation(),
-        builder: EasyLoading.init(),
-       /*  getPages: [
+        child: */
+
+    return MaterialApp(
+      title: 'adorAfrika',
+      debugShowCheckedModeBanner: false,
+      /* theme: ThemeData(
+          textTheme: Theme.of(context).textTheme.apply(
+                bodyColor: Colors.black,
+                displayColor: Colors.white,
+              ),
+          iconTheme: const IconThemeData(size: 22.0, color: Colors.black87),
+          primaryColor: SizeConfig.primaryColor),
+      //home: const Navigation(), */
+       themeMode: AppTheme.themeMode,
+      theme: AppTheme.lightTheme(
+        context: context,
+      ),
+      darkTheme: AppTheme.darkTheme(
+        context: context,
+      ),
+      builder: EasyLoading.init(),
+      locale: _locale,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: ConstantCodes.languageCodes.entries
+          .map((languageCode) => Locale(languageCode.value, ''))
+          .toList(),
+      routes: {
+        '/': (context) => initialFuntion(),
+        '/pref': (context) => const PrefScreen(),
+        '/login': (context) =>  LoginScreen(),
+      },
+      navigatorKey: navigatorKey,
+      onGenerateRoute: (RouteSettings settings) {
+        return HandleRoute.handleRoute(settings.name);
+      },
+      /*  getPages: [
           GetPage(name: '/', page: () => const Navigation()),
           GetPage(name: '/player', page: () => const Player()),
           GetPage(name: '/playlist', page: () => const Navigation()),
@@ -76,92 +285,6 @@ class MyApp extends StatelessWidget {
           GetPage(name: '/createPanegyrique', page: () => CreatePanegyrique()),   
 
         ] */
-        ));
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: "main",
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

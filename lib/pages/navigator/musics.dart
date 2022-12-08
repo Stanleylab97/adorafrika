@@ -43,7 +43,6 @@ class _PlaylistState extends State<Playlist> {
   final countryPicker = const FlCountryCodePicker();
   TextEditingController anneeprod = TextEditingController();
   TextEditingController blazArtist = TextEditingController();
-  Logger log = Logger();
   NetworkHandler networkHandler = NetworkHandler();
 
   bool isloading = false;
@@ -97,6 +96,8 @@ class _PlaylistState extends State<Playlist> {
           };
           var response = await networkHandler.unsecurepost(
               NetworkHandler.baseurl + "/musique/recherche", data);
+                Logger log = Logger();
+
           log.v(response.data['musiques']);
           if (response.statusCode == 200 || response.statusCode == 201) {
             setState(() {
@@ -107,7 +108,7 @@ class _PlaylistState extends State<Playlist> {
             anneeprod.clear();
             blazArtist.clear();
             codepays = "";
-            var jsonArray = response.data['message']==""?response.data['musiques'] :[];
+            var jsonArray = response.data['message']!="Aucun résultat ne correspond à votre recherche."?response.data['musiques'] :[];
            Navigator.pop(context);
             Navigator.push(
                 context,

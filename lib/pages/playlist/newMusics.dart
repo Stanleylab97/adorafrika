@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:adorafrika/pages/player.dart';
 import 'package:http/http.dart' as http;
 import 'package:adorafrika/models/song.dart';
 import 'package:adorafrika/pages/services/networkHandler.dart';
@@ -22,8 +23,7 @@ class _NewMusicsState extends State<NewMusics> {
     String blazartist = "";
     String country = "";
     String rythme = "";
-      ScrollController scrollController = ScrollController();
-
+    ScrollController scrollController = ScrollController();
 
     Future<List<Song>> geSongsList() async {
       try {
@@ -55,12 +55,18 @@ class _NewMusicsState extends State<NewMusics> {
                   //  return Text("Toto", style: TextStyle(color:Colors.black),);
                   final music = musics[index];
                   if (music.typefile == "AUDIO")
-                    return AudioItem(
-                        size: size,
-                        title: music.title!,
-                        blazartist: music.author!,
-                        country: music.country!,
-                        rythme: music.rythme!);
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Player(cover: music.thumnail, title: music.title, linkAudio: music.file,)));
+                      },
+                      child: AudioItem(
+                          size: size,
+                          title: music.title!,
+                          blazartist: music.author!,
+                          country: music.country!,
+                          rythme: music.rythme!),
+                    );
                   else
                     return GestureDetector(
                       onTap: () {},
@@ -112,8 +118,8 @@ class VideoItem extends StatelessWidget {
                                 "assets/images/panigeriques/play.jpg")))),
             Container(
               color: Color(0xFF30314D),
-              width: MediaQuery.of(context).size.width * .61,    
-              height:  MediaQuery.of(context).size.height * .12,  
+              width: MediaQuery.of(context).size.width * .61,
+              height: MediaQuery.of(context).size.height * .12,
               child: Row(
                 children: [
                   SizedBox(
@@ -124,7 +130,10 @@ class VideoItem extends StatelessWidget {
                     children: [
                       Text(
                         "${music.title}",
-                        style: TextStyle(fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 17,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
                         maxLines: 2,
                       ),
                       SizedBox(
@@ -138,10 +147,8 @@ class VideoItem extends StatelessWidget {
                       SizedBox(
                         height: MediaQuery.of(context).size.width * .02,
                       ),
-                      Text(
-                        "${music.country} -${music.rythme}",
-                        style:TextStyle(fontSize: 16, color: Colors.white)
-                      )
+                      Text("${music.country} -${music.rythme}",
+                          style: TextStyle(fontSize: 16, color: Colors.white))
                     ],
                   )
                 ],

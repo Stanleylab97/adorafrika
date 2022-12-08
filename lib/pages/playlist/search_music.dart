@@ -26,7 +26,7 @@ class _SearchState extends State<Search> {
                scrollDirection: Axis.vertical,
                 shrinkWrap: true,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      itemCount: songs!.length,
+      itemCount: songs.length,
       itemBuilder: (context, index) {
         //  return Text("Toto", style: TextStyle(color:Colors.black),);
         final music = songs[index];

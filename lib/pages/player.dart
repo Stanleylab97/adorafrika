@@ -5,9 +5,10 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:audioplayers/audioplayers.dart';
 
-
 class Player extends StatefulWidget {
-  const Player({super.key});
+  late String? cover, linkAudio, title;
+
+   Player({required this.cover, required this.linkAudio, required this.title});
 
   @override
   State<Player> createState() => _PlayerState();
@@ -24,7 +25,8 @@ class _PlayerState extends State<Player> {
   Duration? duration;
 
   void initPlayer() async {
-    await player.setSource(UrlSource("https://toutbaigne.com/?wpdmdl=9699/GBONVO"));
+    await player
+        .setSource(UrlSource(widget.linkAudio!));
     duration = await player.getDuration();
   }
 
@@ -34,6 +36,12 @@ class _PlayerState extends State<Player> {
     // TODO: implement initState
     super.initState();
     initPlayer();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override
@@ -47,7 +55,7 @@ class _PlayerState extends State<Player> {
             width: 300.0,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/images/logo.jpeg"),
+                image: NetworkImage(widget.cover!),
                 fit: BoxFit.cover,
               ),
             ),
@@ -65,8 +73,8 @@ class _PlayerState extends State<Player> {
               //setting the music cover
               ClipRRect(
                 borderRadius: BorderRadius.circular(30.0),
-                child: Image.asset(
-                  "assets/images/logo.jpeg",
+                child: Image.network(
+                  widget.cover!,
                   width: 250.0,
                 ),
               ),
@@ -74,7 +82,7 @@ class _PlayerState extends State<Player> {
                 height: 10.0,
               ),
               Text(
-                "Summer",
+                widget.title!,
                 style: TextStyle(
                     color: Colors.white, fontSize: 36, letterSpacing: 6),
               ),
@@ -107,7 +115,7 @@ class _PlayerState extends State<Player> {
                     ),
                   ),
                   Text(
-                  "",//  "${duration?.inMinutes} : ${duration!.inSeconds % 60}",
+                    "", //  "${duration?.inMinutes} : ${duration!.inSeconds % 60}",
                     style: TextStyle(color: Colors.white),
                   ),
                 ],
