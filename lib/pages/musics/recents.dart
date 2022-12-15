@@ -140,7 +140,7 @@ class _TopPageState extends State<TopPage>
     final bool isListEmpty = emptyTop;
     return Column(
       children: [
-        if (showList.length <= 2)
+        if (showList.length <= 0)
           Expanded(
             child: isListEmpty
                 ? emptyScreen(
@@ -195,7 +195,20 @@ class _TopPageState extends State<TopPage>
                             ),
                           )
                       else
-                          const Image( image: AssetImage('assets/images/cover.jpg'))
+                         CachedNetworkImage(
+                            width: MediaQuery.of(context).size.width * .12,
+                            height: MediaQuery.of(context).size.height * 1,
+                            fit: BoxFit.cover,
+                            imageUrl: "https://i.pinimg.com/736x/a7/a9/cb/a7a9cbcefc58f5b677d8c480cf4ddc5d.jpg",
+                            errorWidget: (context, _, __) => const Image(
+                              fit: BoxFit.cover,
+                              image: AssetImage('assets/images/cover.jpg'),
+                            ),
+                            placeholder: (context, url) => const Image(
+                              fit: BoxFit.cover,
+                              image: AssetImage('assets/images/cover.jpg'),
+                            ),
+                          )
                       ],
                     ),
                   ),

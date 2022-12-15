@@ -17,7 +17,6 @@
  * Copyright (c) 2021-2022, Ankit Sangwan
  */
 
-
 import 'package:adorafrika/apis/api.dart';
 import 'package:adorafrika/customWidgets/artist_like_button.dart';
 import 'package:adorafrika/customWidgets/bouncy_sliver_scroll_view.dart';
@@ -661,7 +660,7 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                                                                 entry.key ==
                                                                     'Latest Release')
                                                             ? 'assets/cover.jpg'
-                                                            : 'assets/album.png',
+                                                            : 'assets//images/album.png',
                                                       ),
                                                     ),
                                                     imageUrl:
@@ -677,7 +676,7 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                                                                 entry.key ==
                                                                     'Singles')
                                                             ? 'assets/cover.jpg'
-                                                            : 'assets/album.png',
+                                                            : 'assets//images/album.png',
                                                       ),
                                                     ),
                                                   ),

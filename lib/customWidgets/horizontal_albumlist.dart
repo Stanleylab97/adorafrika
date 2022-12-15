@@ -17,7 +17,6 @@
  * Copyright (c) 2021-2022, Ankit Sangwan
  */
 
-
 import 'package:adorafrika/customWidgets/like_button.dart';
 import 'package:adorafrika/customWidgets/on_hover.dart';
 import 'package:adorafrika/customWidgets/song_tile_trailing_menu.dart';
@@ -121,11 +120,11 @@ class HorizontalAlbumsList extends StatelessWidget {
                           image: (item['type'] == 'playlist' ||
                                   item['type'] == 'album')
                               ? const AssetImage(
-                                  'assets/album.png',
+                                  'assets/images//im/album.png',
                                 )
                               : item['type'] == 'artist'
                                   ? const AssetImage(
-                                      'assets/artist.png',
+                                      'assets/images/artist.png',
                                     )
                                   : const AssetImage(
                                       'assets/images/cover.jpg',
@@ -171,7 +170,7 @@ class HorizontalAlbumsList extends StatelessWidget {
                       image: (item['type'] == 'playlist' ||
                               item['type'] == 'album')
                           ? const AssetImage(
-                              'assets/album.png',
+                              'assets//images/album.png',
                             )
                           : item['type'] == 'artist'
                               ? const AssetImage(

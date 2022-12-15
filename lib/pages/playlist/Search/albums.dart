@@ -17,7 +17,6 @@
  * Copyright (c) 2021-2022, Ankit Sangwan
  */
 
-
 import 'package:adorafrika/apis/api.dart';
 import 'package:adorafrika/customWidgets/bouncy_sliver_scroll_view.dart';
 import 'package:adorafrika/customWidgets/copy_clipboard.dart';
@@ -155,7 +154,7 @@ class _AlbumSearchPageState extends State<AlbumSearchPage> {
                           title: widget.type,
                           placeholderImage: widget.type == 'Artists'
                               ? 'assets/artist.png'
-                              : 'assets/album.png',
+                              : 'assets//images/album.png',
                           sliverList: SliverList(
                             delegate: SliverChildListDelegate(
                               _searchedList!.map(
@@ -200,7 +199,7 @@ class _AlbumSearchPageState extends State<AlbumSearchPage> {
                                             image: AssetImage(
                                               widget.type == 'Artists'
                                                   ? 'assets/artist.png'
-                                                  : 'assets/album.png',
+                                                  : 'assets//images/album.png',
                                             ),
                                           ),
                                           imageUrl:
@@ -210,7 +209,7 @@ class _AlbumSearchPageState extends State<AlbumSearchPage> {
                                             image: AssetImage(
                                               widget.type == 'Artists'
                                                   ? 'assets/artist.png'
-                                                  : 'assets/album.png',
+                                                  : 'assets//images/album.png',
                                             ),
                                           ),
                                         ),

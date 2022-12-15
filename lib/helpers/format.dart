@@ -77,7 +77,7 @@ class FormatResponse {
       "validatedby": null,
       "validationstate": response['validationstate'],
       "fichier": response['fichier'],
-      "thumbnail": response['thumbnail'],
+      "thumbnail": response['thumbnail']??  "https://i.pinimg.com/736x/a7/a9/cb/a7a9cbcefc58f5b677d8c480cf4ddc5d.jpg",
       "compte_clients_id": response['compte_clients_id'],
       "categories_id": response['categories_id'],
       "created_at": response['updated_at'],

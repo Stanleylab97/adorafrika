@@ -123,7 +123,7 @@ class _SongsListPageState extends State<SongsListPage> {
         });
         ShowSnackBar().showSnackBar(
           context,
-          'Error: Unsupported Type ${widget.listItem['type']}',
+          'Error: Unsupported Type ${widget.listItem['typefile']}',
           duration: const Duration(seconds: 3),
         );
         break;
@@ -375,7 +375,7 @@ class _SongsListPageState extends State<SongsListPage> {
                                 ),
                                 clipBehavior: Clip.antiAlias,
                                 child: CachedNetworkImage(
-                                  width: MediaQuery.of(context).size.width * .15,
+                                  width: MediaQuery.of(context).size.width * .18,
                                   fit: BoxFit.cover,
                                   errorWidget: (context, _, __) => const Image(
                                     fit: BoxFit.cover,

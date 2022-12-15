@@ -95,8 +95,14 @@ class _PrefScreenState extends State<PrefScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
+                            Image(
+                    image: AssetImage(
+                      'assets/images/logo-AdorAfrika.png',
+                    ),
+                  ),
                             Expanded(
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   RichText(
                                     text: TextSpan(

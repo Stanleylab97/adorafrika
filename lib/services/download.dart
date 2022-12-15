@@ -82,11 +82,11 @@ class Download with ChangeNotifier {
     final int downFilename =
         Hive.box('settings').get('downFilename', defaultValue: 0) as int;
     if (downFilename == 0) {
-      filename = '${data["titre"]} - ${data["blazartist"]}';
+      filename = '${data["title"]} - ${data["artist"]}';
     } else if (downFilename == 1) {
-      filename = '${data["blazartist"]} - ${data["titre"]}';
+      filename = '${data["artist"]} - ${data["title"]}';
     } else {
-      filename = '${data["titre"]}';
+      filename = '${data["title"]}';
     }
     // String filename = '${data["title"]} - ${data["artist"]}';
     String dlPath =
@@ -319,7 +319,7 @@ class Download with ChangeNotifier {
     }
     // debugPrint('Audio path $filepath');
     // debugPrint('Image path $filepath2');
-    String kUrl = data['fichier'].toString();
+    String kUrl = data['url'].toString();
    
     if (data['url'].toString().contains('google')) {
       // filename = filename.replaceAll('.m4a', '.opus');
@@ -328,7 +328,7 @@ class Download with ChangeNotifier {
           ? data['highUrl'].toString()
           : data['lowUrl'].toString();
       if (kUrl == 'null') {
-        kUrl = data['fichier'].toString();
+        kUrl = data['url'].toString();
       }
       log("low quality is ${data['lowUrl']}");
       log("high quality is ${data['highUrl']}");

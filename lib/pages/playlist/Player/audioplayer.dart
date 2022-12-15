@@ -131,7 +131,7 @@ class _PlayScreenState extends State<PlayScreen> {
     }
     fromDownloads = widget.fromDownloads;
     if (widget.offline == null) {
-      if (audioHandler.mediaItem.value?.extras!['fichier'].startsWith('https')
+      if (audioHandler.mediaItem.value?.extras!['url'].startsWith('https')
           as bool) {
         offline = false;
       } else {
@@ -225,8 +225,8 @@ class _PlayScreenState extends State<PlayScreen> {
             genre: song['genre'].toString(),
             extras: {
               'url': song['fichier'].toString(),
-              'subtitle': song['subtitle'],
-              'quality': song['quality'],
+              'subtitle': song['subtitle']?? "Something",
+              'quality': song['quality']?? "96",
             },
           ),
         ),
@@ -264,10 +264,31 @@ class _PlayScreenState extends State<PlayScreen> {
   }
 
   void setValues(List response) {
+    final audio={
+      'id': response[0]['id'],
+      'album': "",
+      'album_id': "",
+      'artist': response[0]['blazartiste'],
+      'duration': "234",
+      'genre': response[0]['categories_id'],
+      'has_lyrics': false,
+      'image': response[0]['thumbnail'] ??  "https://i.pinimg.com/736x/a7/a9/cb/a7a9cbcefc58f5b677d8c480cf4ddc5d.jpg",
+      'language': "",
+      'release_date': response[0]['updated_at'],
+      'subtitle': "",
+      'title': response[0]['titre'],
+      'url': response[0]['fichier'].toString() ,
+      'lowUrl': response[0]['fichier'].toString(),
+      'highUrl': response[0]['fichier']?.toString(),
+      'year': response[0]['yearofproduction'].toString(),
+      '320kbps': "",
+      'quality': "High",
+      'perma_url': response[0]['fichier']?.toString(),
+    };
     globalQueue.addAll(
       response.map(
         (song) => MediaItemConverter.mapToMediaItem(
-          song as Map,
+          audio as Map,
           autoplay: widget.recommend,
         ),
       ),
@@ -375,7 +396,7 @@ class _PlayScreenState extends State<PlayScreen> {
                         tooltip: AppLocalizations.of(context)!.share,
                         onPressed: () {
                           Share.share(
-                            mediaItem.extras!['fichier'].toString(),
+                            mediaItem.extras!['url'].toString(),
                           );
                         },
                       ),
@@ -1002,7 +1023,7 @@ class ControlButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     final MediaItem mediaItem = audioHandler.mediaItem.value!;
     final bool online =
-        mediaItem.extras!['fichier'].toString().startsWith('https');
+        mediaItem.extras!['url'].toString().startsWith('https');
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       mainAxisSize: MainAxisSize.min,
@@ -1256,7 +1277,7 @@ class NowPlayingStream extends StatelessWidget {
                           onPressed: () {},
                         )
                       : queue[index]
-                              .extras!['fichier']
+                              .extras!['url']
                               .toString()
                               .startsWith('https')
                           ? Row(
@@ -1279,7 +1300,7 @@ class NowPlayingStream extends StatelessWidget {
                                         .toString(),
                                     'title': queue[index].title,
                                     'url': queue[index]
-                                        .extras?['fichier']
+                                        .extras?['file']
                                         .toString(),
                                     'year': queue[index]
                                         .extras?['yearofproduction']
@@ -1298,7 +1319,7 @@ class NowPlayingStream extends StatelessWidget {
                                     'subtitle':
                                         queue[index].extras?['categorie'],
                                     'perma_url':
-                                        queue[index].extras?['perma_url'],
+                                        queue[index].extras?['url'],
                                   },
                                 )
                               ],

@@ -218,7 +218,7 @@ class AddToPlaylist {
                                   dimension: 50,
                                   child: Image(
                                     image: AssetImage(
-                                      'assets/album.png',
+                                      'assets/images/album.png',
                                     ),
                                   ),
                                 ),
