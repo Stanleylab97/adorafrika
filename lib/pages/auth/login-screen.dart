@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:adorafrika/pages/auth/widgets/background-image.dart';
 import 'package:adorafrika/pages/auth/widgets/pallete.dart';
 import 'package:adorafrika/pages/auth/widgets/widgets.dart';
+import 'package:adorafrika/pages/navigator/home.dart';
 import 'package:adorafrika/pages/navigator/navigation.dart';
 import 'package:adorafrika/pages/services/networkHandler.dart';
 import 'package:adorafrika/utils/config.dart';
@@ -68,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
           validate = true;
           circular = false;
         });
-        Navigator.push(context,MaterialPageRoute(builder: (context) => Navigation()));
+        Navigator.push(context,MaterialPageRoute(builder: (context) => HomePage()));
       } else {
         setState(() {
           validate = false;

@@ -659,7 +659,7 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                                                                     'Top Songs' ||
                                                                 entry.key ==
                                                                     'Latest Release')
-                                                            ? 'assets/cover.jpg'
+                                                            ? 'assets/images/cover.jpg'
                                                             : 'assets//images/album.png',
                                                       ),
                                                     ),
@@ -675,7 +675,7 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                                                                     'Latest Release' ||
                                                                 entry.key ==
                                                                     'Singles')
-                                                            ? 'assets/cover.jpg'
+                                                            ? 'assets/images/cover.jpg'
                                                             : 'assets//images/album.png',
                                                       ),
                                                     ),

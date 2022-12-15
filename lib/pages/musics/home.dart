@@ -103,11 +103,9 @@ class _MusicsDashState extends State<MusicsDash> with TickerProviderStateMixin {
   OfflineAudioQuery offlineAudioQuery = OfflineAudioQuery();
   List<PlaylistModel> playlistDetails = [];
 
- 
   @override
   void initState() {
-    _tcontroller =
-        TabController(length: 3, vsync: this);
+    _tcontroller = TabController(length: 3, vsync: this);
     getData();
     super.initState();
   }
@@ -131,9 +129,9 @@ class _MusicsDashState extends State<MusicsDash> with TickerProviderStateMixin {
     playlistDetails = await offlineAudioQuery.getPlaylists();
     if (widget.cachedSongs == null) {
       _songs = (await offlineAudioQuery.getSongs(
-       /*  sortType: songSortTypes[sortValue],
+              /*  sortType: songSortTypes[sortValue],
         orderType: songOrderTypes[orderValue], */
-      ))
+              ))
           .where(
             (i) =>
                 (i.duration ?? 60000) > 1000 * minDuration &&
@@ -432,6 +430,7 @@ class _MusicsDashState extends State<MusicsDash> with TickerProviderStateMixin {
               child: Scaffold(
                 backgroundColor: Colors.transparent,
                 appBar: AppBar(
+                  leading: Text(''),
                   title: Text(
                     "AdorAfrika",
                   ),
@@ -449,8 +448,6 @@ class _MusicsDashState extends State<MusicsDash> with TickerProviderStateMixin {
                       Tab(
                         text: AppLocalizations.of(context)!.religious,
                       ),
-                     
-                      
                     ],
                   ),
                   actions: [
@@ -474,7 +471,6 @@ class _MusicsDashState extends State<MusicsDash> with TickerProviderStateMixin {
                         showFilterModal();
                       },
                     )
-                    
                   ],
                   centerTitle: true,
                   backgroundColor:
@@ -526,7 +522,7 @@ class _MusicsDashState extends State<MusicsDash> with TickerProviderStateMixin {
 //                   child: Stack(
 //                     children: [
 //                       const Image(
-//                         image: AssetImage('assets/cover.jpg'),
+//                         image: AssetImage('assets/images/cover.jpg'),
 //                       ),
 //                       if (_cachedVideos[index]['image'] == null)
 //                         const SizedBox()
@@ -1039,7 +1035,7 @@ class _SongsTabState extends State<SongsTab>
                           //                               ? const Image(
                           //                                   fit: BoxFit.cover,
                           //                                   image: AssetImage(
-                          //                                       'assets/cover.jpg'),
+                          //                                       'assets/images/cover.jpg'),
                           //                                 )
                           //                               : Image(
                           //                                   fit: BoxFit.cover,

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:adorafrika/pages/navigator/home.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:adorafrika/helpers/config.dart';
 import 'package:adorafrika/helpers/countrycodes.dart';
@@ -138,6 +139,9 @@ class MyApp extends StatefulWidget {
 
   @override
   State<MyApp> createState() => _MyAppState();
+
+   static _MyAppState of(BuildContext context) =>
+      context.findAncestorStateOfType<_MyAppState>()!;
 }
 
 class _MyAppState extends State<MyApp> {
@@ -195,7 +199,7 @@ class _MyAppState extends State<MyApp> {
 
   Widget initialFuntion() {
     return Hive.box('settings').get('userId') != null
-        ? Navigation()
+        ? HomePage()
         : PrefScreen();
   }
 
