@@ -102,8 +102,8 @@ Future<void> openHiveBox(String boxName, {bool limit = false}) async {
     File dbFile = File('$dirPath/$boxName.hive');
     File lockFile = File('$dirPath/$boxName.lock');
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      dbFile = File('$dirPath/BlackHole/$boxName.hive');
-      lockFile = File('$dirPath/BlackHole/$boxName.lock');
+      dbFile = File('$dirPath/AdorAfrika/$boxName.hive');
+      lockFile = File('$dirPath/AdorAfrika/$boxName.lock');
     }
     await dbFile.delete();
     await lockFile.delete();

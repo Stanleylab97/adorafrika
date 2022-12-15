@@ -35,13 +35,13 @@ class MediaItemConverter {
       'release_date': mediaItem.extras?['release_date'],
       'subtitle': mediaItem.extras?['subtitle'],
       'title': mediaItem.title,
-      'url': mediaItem.extras!['url'].toString(),
+      'url': mediaItem.extras!['fichier'].toString(),
       'lowUrl': mediaItem.extras!['lowUrl']?.toString(),
       'highUrl': mediaItem.extras!['highUrl']?.toString(),
-      'year': mediaItem.extras?['year'].toString(),
+      'year': mediaItem.extras?['yearofproductionn'].toString(),
       '320kbps': mediaItem.extras?['320kbps'],
       'quality': mediaItem.extras?['quality'],
-      'perma_url': mediaItem.extras?['perma_url'],
+      'perma_url': mediaItem.extras?['fichier'],
     };
   }
 

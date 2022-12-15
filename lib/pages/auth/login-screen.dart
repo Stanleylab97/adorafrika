@@ -15,7 +15,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'create-new-account.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -167,14 +167,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextInputField(
                     controller: email,
                     icon: FontAwesomeIcons.envelope,
-                    hint: 'Nom d\'utilisateur',
+                    hint: '${AppLocalizations.of(context)!.username}',
                     inputType: TextInputType.emailAddress,
                     inputAction: TextInputAction.next,
                   ),
                   PasswordInput(
                     controller: password,
                     icon: FontAwesomeIcons.lock,
-                    hint: 'Mot de passe',
+                    hint: '${AppLocalizations.of(context)!.password}',
                     inputAction: TextInputAction.done,
                   ),
                   GestureDetector(
@@ -201,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         login();
                       },
                       child: Text(
-                        "Se connecter",
+                        "${AppLocalizations.of(context)!.login}",
                         style: kBodyText.copyWith(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -218,7 +218,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         builder: (context) => CreateNewAccount())),
                 child: Container(
                   child: Text(
-                    'Créer un compte',
+                    '${AppLocalizations.of(context)!.createAccount}',
                     style: kBodyText,
                   ),
                   decoration: BoxDecoration(

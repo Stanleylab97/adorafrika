@@ -76,17 +76,17 @@ class Download with ChangeNotifier {
       }
     }
     final RegExp avoid = RegExp(r'[\.\\\*\:\"\?#/;\|]');
-    data['title'] = data['title'].toString().split('(From')[0].trim();
+    data['title'] = data['titre'].toString().split('(From')[0].trim();
 
     String filename = '';
     final int downFilename =
         Hive.box('settings').get('downFilename', defaultValue: 0) as int;
     if (downFilename == 0) {
-      filename = '${data["title"]} - ${data["artist"]}';
+      filename = '${data["titre"]} - ${data["blazartist"]}';
     } else if (downFilename == 1) {
-      filename = '${data["artist"]} - ${data["title"]}';
+      filename = '${data["blazartist"]} - ${data["titre"]}';
     } else {
-      filename = '${data["title"]}';
+      filename = '${data["titre"]}';
     }
     // String filename = '${data["title"]} - ${data["artist"]}';
     String dlPath =
@@ -104,7 +104,7 @@ class Download with ChangeNotifier {
           await ExtStorageProvider.getExtStorage(dirName: 'Music');
       dlPath = temp!;
     }
-    if (data['url'].toString().contains('google') && createYoutubeFolder) {
+    if (data['fichier'].toString().contains('google') && createYoutubeFolder) {
       dlPath = '$dlPath/YouTube';
       if (!await Directory(dlPath).exists()) {
         await Directory(dlPath).create();
@@ -155,7 +155,7 @@ class Download with ChangeNotifier {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '"${data['title']}" ${AppLocalizations.of(context)!.downAgain}',
+                    '"${data['titre']}" ${AppLocalizations.of(context)!.downAgain}',
                     softWrap: true,
                   ),
                   const SizedBox(
@@ -319,8 +319,8 @@ class Download with ChangeNotifier {
     }
     // debugPrint('Audio path $filepath');
     // debugPrint('Image path $filepath2');
-    String kUrl = data['url'].toString();
-
+    String kUrl = data['fichier'].toString();
+   
     if (data['url'].toString().contains('google')) {
       // filename = filename.replaceAll('.m4a', '.opus');
 
@@ -328,15 +328,10 @@ class Download with ChangeNotifier {
           ? data['highUrl'].toString()
           : data['lowUrl'].toString();
       if (kUrl == 'null') {
-        kUrl = data['url'].toString();
+        kUrl = data['fichier'].toString();
       }
       log("low quality is ${data['lowUrl']}");
       log("high quality is ${data['highUrl']}");
-    } else {
-      kUrl = kUrl.replaceAll(
-        '_96.',
-        "_${preferredDownloadQuality.replaceAll(' kbps', '')}.",
-      );
     }
 
     final client = Client();
@@ -363,7 +358,7 @@ class Download with ChangeNotifier {
 
         final client = HttpClient();
         final HttpClientRequest request2 =
-            await client.getUrl(Uri.parse(data['image'].toString()));
+            await client.getUrl(Uri.parse(data['thumbnail'].toString()));
         final HttpClientResponse response2 = await request2.close();
         final bytes2 = await consolidateHttpClientResponseBytes(response2);
         final File file2 = File(filepath2);

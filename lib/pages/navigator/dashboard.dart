@@ -376,22 +376,7 @@ class _CustomAppBar extends StatelessWidget with PreferredSizeWidget {
       elevation: 0,
       leading: const Icon(Icons.grid_view_rounded, color: Color.fromRGBO(253, 216, 53, 1)),
       backgroundColor: Colors.transparent,
-      actions: [
-        GestureDetector(
-          child: Container(
-              margin: EdgeInsets.only(right: 20),
-              child: CircleAvatar(
-                  child: CachedNetworkImage(
-                imageUrl:
-                    "https://www.betterteam.com/images/musician-job-description-6000x4000-20201118.jpeg?crop=1:1,smart&width=1200&dpr=2",
-                width: 30,
-              ))),
-              onTap: (() {
-                 Navigator.push(context,
-              MaterialPageRoute(builder: (context) => LoginScreen()));
-              }),
-        )
-      ],
+      
     );
   }
 

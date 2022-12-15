@@ -61,9 +61,7 @@ class _SongsListPageState extends State<SongsListPage> {
     _fetchSongs();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
-              _scrollController.position.maxScrollExtent &&
-          widget.listItem['type'].toString() == 'songs' &&
-          !loading) {
+              _scrollController.position.maxScrollExtent && !loading) {
         page += 1;
         _fetchSongs();
       }
@@ -78,8 +76,8 @@ class _SongsListPageState extends State<SongsListPage> {
 
   void _fetchSongs() {
     loading = true;
-    switch (widget.listItem['type'].toString()) {
-      case 'songs':
+    switch (widget.listItem['typefile'].toString()) {
+      case 'AUDIO':
         SaavnAPI()
             .fetchSongSearchResults(
           searchQuery: widget.listItem['id'].toString(),
@@ -100,30 +98,12 @@ class _SongsListPageState extends State<SongsListPage> {
           }
         });
         break;
-      case 'album':
+      case 'VIDEO':
         SaavnAPI()
-            .fetchAlbumSongs(widget.listItem['id'].toString())
+            .fetchSongSearchResults(searchQuery:widget.listItem['id'].toString(), page:page)
             .then((value) {
           setState(() {
-            songList = value['songs'] as List;
-            fetched = true;
-            loading = false;
-          });
-          if (value['error'].toString() != '') {
-            ShowSnackBar().showSnackBar(
-              context,
-              'Error: ${value["error"]}',
-              duration: const Duration(seconds: 3),
-            );
-          }
-        });
-        break;
-      case 'playlist':
-        SaavnAPI()
-            .fetchPlaylistSongs(widget.listItem['id'].toString())
-            .then((value) {
-          setState(() {
-            songList = value['songs'] as List;
+            songList = value['VIDEO'] as List;
             fetched = true;
             loading = false;
           });
@@ -152,6 +132,7 @@ class _SongsListPageState extends State<SongsListPage> {
 
   @override
   Widget build(BuildContext context) {
+    
     return GradientContainer(
       child: Column(
         children: [
@@ -168,38 +149,30 @@ class _SongsListPageState extends State<SongsListPage> {
                         MultiDownloadButton(
                           data: songList,
                           playlistName:
-                              widget.listItem['title']?.toString() ?? 'Songs',
+                              widget.listItem['titre']?.toString() ?? 'Songs',
                         ),
                         IconButton(
                           icon: const Icon(Icons.share_rounded),
                           tooltip: AppLocalizations.of(context)!.share,
                           onPressed: () {
                             Share.share(
-                              widget.listItem['perma_url'].toString(),
+                              widget.listItem['fichier'].toString(),
                             );
                           },
                         ),
                         PlaylistPopupMenu(
                           data: songList,
                           title:
-                              widget.listItem['title']?.toString() ?? 'Songs',
+                              widget.listItem['titre']?.toString() ?? 'Songs',
                         ),
                       ],
                       title: unescape.convert(
-                        widget.listItem['title']?.toString() ?? 'Songs',
+                        widget.listItem['titre']?.toString() ?? 'Songs',
                       ),
-                      placeholderImage: 'assets/album.png',
-                      imageUrl: widget.listItem['image']
+                      placeholderImage: 'assets/images/cover.jpg',
+                      imageUrl: widget.listItem['thumbnail']
                           ?.toString()
-                          .replaceAll('http:', 'https:')
-                          .replaceAll(
-                            '50x50',
-                            '500x500',
-                          )
-                          .replaceAll(
-                            '150x150',
-                            '500x500',
-                          ),
+                    ,
                       sliverList: SliverList(
                         delegate: SliverChildListDelegate([
                           Padding(
@@ -375,10 +348,11 @@ class _SongsListPageState extends State<SongsListPage> {
                             ),
                           ),
                           ...songList.map((entry) {
+                            print('morceau -> $entry');
                             return ListTile(
                               contentPadding: const EdgeInsets.only(left: 15.0),
                               title: Text(
-                                '${entry["title"]}',
+                                '${entry["titre"]}',
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w500,
@@ -387,11 +361,11 @@ class _SongsListPageState extends State<SongsListPage> {
                               onLongPress: () {
                                 copyToClipboard(
                                   context: context,
-                                  text: '${entry["title"]}',
+                                  text: '${entry["titre"]}',
                                 );
                               },
                               subtitle: Text(
-                                '${entry["subtitle"]}',
+                                '${entry["categorie"]}',
                                 overflow: TextOverflow.ellipsis,
                               ),
                               leading: Card(
@@ -401,6 +375,7 @@ class _SongsListPageState extends State<SongsListPage> {
                                 ),
                                 clipBehavior: Clip.antiAlias,
                                 child: CachedNetworkImage(
+                                  width: MediaQuery.of(context).size.width * .15,
                                   fit: BoxFit.cover,
                                   errorWidget: (context, _, __) => const Image(
                                     fit: BoxFit.cover,
@@ -409,7 +384,7 @@ class _SongsListPageState extends State<SongsListPage> {
                                     ),
                                   ),
                                   imageUrl:
-                                      '${entry["image"].replaceAll('http:', 'https:')}',
+                                      '${entry["thumbnail"]}',
                                   placeholder: (context, url) => const Image(
                                     fit: BoxFit.cover,
                                     image: AssetImage(

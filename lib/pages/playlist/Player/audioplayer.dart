@@ -37,6 +37,7 @@ import 'package:adorafrika/helpers/config.dart';
 import 'package:adorafrika/helpers/dominant_color.dart';
 import 'package:adorafrika/helpers/lyrics.dart';
 import 'package:adorafrika/helpers/mediaitem_converter.dart';
+import 'package:adorafrika/models/song.dart';
 import 'package:adorafrika/pages/playlist/Player/song_list.dart';
 import 'package:adorafrika/pages/playlist/Search/albums.dart';
 import 'package:audio_service/audio_service.dart';
@@ -90,7 +91,7 @@ class _PlayScreenState extends State<PlayScreen> {
       .get('gradientType', defaultValue: 'halfDark')
       .toString();
   final bool getLyricsOnline =
-      Hive.box('settings').get('getLyricsOnline', defaultValue: true) as bool;
+      Hive.box('settings').get('getLyricsOnline', defaultValue: false) as bool;
 
   List<MediaItem> globalQueue = [];
   int globalIndex = 0;
@@ -130,7 +131,7 @@ class _PlayScreenState extends State<PlayScreen> {
     }
     fromDownloads = widget.fromDownloads;
     if (widget.offline == null) {
-      if (audioHandler.mediaItem.value?.extras!['url'].startsWith('http')
+      if (audioHandler.mediaItem.value?.extras!['fichier'].startsWith('https')
           as bool) {
         offline = false;
       } else {
@@ -159,34 +160,37 @@ class _PlayScreenState extends State<PlayScreen> {
     }
   }
 
-  Future<MediaItem> setTags(SongModel response, Directory tempDir) async {
-    String playTitle = response.title;
+  Future<MediaItem> setTags(Song response, Directory tempDir) async {
+    String playTitle = response.title.toString();
+    print("Le titre ->${response.title.toString()}");
     playTitle == ''
-        ? playTitle = response.displayNameWOExt
-        : playTitle = response.title;
-    String playArtist = response.artist!;
+        ? playTitle = response.title.toString()
+        : playTitle = response.title.toString();
+    String playArtist = response.author.toString();
     playArtist == '<unknown>'
         ? playArtist = 'Unknown'
-        : playArtist = response.artist!;
+        : playArtist = response.author.toString();
 
-    final String playAlbum = response.album!;
-    final int playDuration = response.duration ?? 180000;
-    final String imagePath = '${tempDir.path}/${response.displayNameWOExt}.jpg';
+    final String playAlbum = ""; //response.album!;
+    final int playDuration = 1234; //response.duration ?? 180000;
+
+    final String imagePath = response.thumnail.toString();
+    print("IMG: -> $imagePath");
 
     final MediaItem tempDict = MediaItem(
-      id: response.id.toString(),
+      id: "1",
       album: playAlbum,
       duration: Duration(milliseconds: playDuration),
       title: playTitle.split('(')[0],
       artist: playArtist,
-      genre: response.genre,
+      genre: response.country,
       artUri: Uri.file(imagePath),
       extras: {
-        'url': response.data,
-        'date_added': response.dateAdded,
-        'date_modified': response.dateModified,
-        'size': response.size,
-        'year': response.getMap['year'],
+        'url': response.file.toString(),
+        'date_added': "", //response.dateAdded,
+        'date_modified': "", //response.dateModified,
+        'size': 5099847, //response.size,
+        'year': response.yearofproduction,
       },
     );
     return tempDict;
@@ -196,18 +200,19 @@ class _PlayScreenState extends State<PlayScreen> {
     getTemporaryDirectory().then((tempDir) async {
       final File file = File('${tempDir.path}/cover.jpg');
       if (!await file.exists()) {
-        final byteData = await rootBundle.load('assets/cover.jpg');
+        final byteData = await rootBundle.load('assets/images/cover.jpg');
         await file.writeAsBytes(
           byteData.buffer
               .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes),
         );
       }
+      print("Song Queue-> $response");
       globalQueue.addAll(
         response.map(
           (song) => MediaItem(
             id: song['id'].toString(),
             album: song['album'].toString(),
-            artist: song['artist'].toString(),
+            artist: song['blazartiste'].toString(),
             duration: Duration(
               seconds: int.parse(
                 (song['duration'] == null || song['duration'] == 'null')
@@ -215,11 +220,11 @@ class _PlayScreenState extends State<PlayScreen> {
                     : song['duration'].toString(),
               ),
             ),
-            title: song['title'].toString(),
+            title: song['titre'].toString(),
             artUri: Uri.file(file.path),
             genre: song['genre'].toString(),
             extras: {
-              'url': song['path'].toString(),
+              'url': song['fichier'].toString(),
               'subtitle': song['subtitle'],
               'quality': song['quality'],
             },
@@ -234,7 +239,7 @@ class _PlayScreenState extends State<PlayScreen> {
     getTemporaryDirectory().then((tempDir) async {
       final File file = File('${tempDir.path}/cover.jpg');
       if (!await file.exists()) {
-        final byteData = await rootBundle.load('assets/cover.jpg');
+        final byteData = await rootBundle.load('assets/images/cover.jpg');
         await file.writeAsBytes(
           byteData.buffer
               .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes),
@@ -242,7 +247,7 @@ class _PlayScreenState extends State<PlayScreen> {
       }
       for (int i = 0; i < response.length; i++) {
         globalQueue.add(
-          await setTags(response[i] as SongModel, tempDir),
+          await setTags(response[i] as Song, tempDir),
         );
       }
       updateNplay();
@@ -370,7 +375,7 @@ class _PlayScreenState extends State<PlayScreen> {
                         tooltip: AppLocalizations.of(context)!.share,
                         onPressed: () {
                           Share.share(
-                            mediaItem.extras!['perma_url'].toString(),
+                            mediaItem.extras!['fichier'].toString(),
                           );
                         },
                       ),
@@ -996,7 +1001,8 @@ class ControlButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final MediaItem mediaItem = audioHandler.mediaItem.value!;
-    final bool online = mediaItem.extras!['url'].toString().startsWith('http');
+    final bool online =
+        mediaItem.extras!['fichier'].toString().startsWith('https');
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       mainAxisSize: MainAxisSize.min,
@@ -1250,9 +1256,9 @@ class NowPlayingStream extends StatelessWidget {
                           onPressed: () {},
                         )
                       : queue[index]
-                              .extras!['url']
+                              .extras!['fichier']
                               .toString()
-                              .startsWith('http')
+                              .startsWith('https')
                           ? Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -1272,10 +1278,12 @@ class NowPlayingStream extends StatelessWidget {
                                         .inSeconds
                                         .toString(),
                                     'title': queue[index].title,
-                                    'url':
-                                        queue[index].extras?['url'].toString(),
-                                    'year':
-                                        queue[index].extras?['year'].toString(),
+                                    'url': queue[index]
+                                        .extras?['fichier']
+                                        .toString(),
+                                    'year': queue[index]
+                                        .extras?['yearofproduction']
+                                        .toString(),
                                     'language': queue[index]
                                         .extras?['language']
                                         .toString(),
@@ -1288,7 +1296,7 @@ class NowPlayingStream extends StatelessWidget {
                                     'album_id':
                                         queue[index].extras?['album_id'],
                                     'subtitle':
-                                        queue[index].extras?['subtitle'],
+                                        queue[index].extras?['categorie'],
                                     'perma_url':
                                         queue[index].extras?['perma_url'],
                                   },
@@ -1669,33 +1677,34 @@ class _ArtWorkWidgetState extends State<ArtWorkWidget> {
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       clipBehavior: Clip.antiAlias,
-                      child:
-                          widget.mediaItem.artUri.toString().startsWith('file')
-                              ? Image(
-                                  fit: BoxFit.contain,
-                                  width: widget.width * 0.85,
-                                  gaplessPlayback: true,
-                                  image: FileImage(
-                                    File(
-                                      widget.mediaItem.artUri!.toFilePath(),
-                                    ),
-                                  ),
-                                )
-                              : CachedNetworkImage(
-                                  fit: BoxFit.contain,
-                                  errorWidget: (BuildContext context, _, __) =>
-                                      const Image(
-                                    fit: BoxFit.cover,
-                                    image: AssetImage('assets/images/cover.jpg'),
-                                  ),
-                                  placeholder: (BuildContext context, _) =>
-                                      const Image(
-                                    fit: BoxFit.cover,
-                                    image: AssetImage('assets/images/cover.jpg'),
-                                  ),
-                                  imageUrl: widget.mediaItem.artUri.toString(),
-                                  width: widget.width * 0.85,
+                      child: widget.mediaItem.artUri
+                              .toString()
+                              .startsWith('file')
+                          ? Image(
+                              fit: BoxFit.contain,
+                              width: widget.width * 0.85,
+                              gaplessPlayback: true,
+                              image: FileImage(
+                                File(
+                                  widget.mediaItem.artUri!.toFilePath(),
                                 ),
+                              ),
+                            )
+                          : CachedNetworkImage(
+                              fit: BoxFit.contain,
+                              errorWidget: (BuildContext context, _, __) =>
+                                  const Image(
+                                fit: BoxFit.cover,
+                                image: AssetImage('assets/images/cover.jpg'),
+                              ),
+                              placeholder: (BuildContext context, _) =>
+                                  const Image(
+                                fit: BoxFit.cover,
+                                image: AssetImage('assets/images/cover.jpg'),
+                              ),
+                              imageUrl: widget.mediaItem.artUri.toString(),
+                              width: widget.width * 0.85,
+                            ),
                     ),
                     ValueListenableBuilder(
                       valueListenable: dragging,

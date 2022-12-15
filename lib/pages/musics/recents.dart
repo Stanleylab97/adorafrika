@@ -63,20 +63,7 @@ class _RecentsState extends State<Recents>
     final bool rotated = MediaQuery.of(context).size.height < screenWidth;
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: NotificationListener(
-        onNotification: (overscroll) {
-          if (overscroll is OverscrollNotification &&
-              overscroll.overscroll != 0 &&
-              overscroll.dragDetails != null) {}
-          return true;
-        },
-        child: const TabBarView(
-          physics: CustomPhysics(),
-          children: [
-            TopPage(type: 'top'),
-          ],
-        ),
-      ),
+      body: TopPage(type: 'top'),
     );
   }
 }
@@ -192,7 +179,7 @@ class _TopPageState extends State<TopPage>
                         const Image(
                           image: AssetImage('assets/images/cover.jpg'),
                         ),
-                        if (showList[index]['thumbnail'] != '')
+                        if (showList[index]['thumbnail'] != '' && showList[index]['thumbnail'] != null)
                           CachedNetworkImage(
                             width: MediaQuery.of(context).size.width * .12,
                             height: MediaQuery.of(context).size.height * 1,
@@ -206,7 +193,9 @@ class _TopPageState extends State<TopPage>
                               fit: BoxFit.cover,
                               image: AssetImage('assets/images/cover.jpg'),
                             ),
-                          ),
+                          )
+                      else
+                          const Image( image: AssetImage('assets/images/cover.jpg'))
                       ],
                     ),
                   ),

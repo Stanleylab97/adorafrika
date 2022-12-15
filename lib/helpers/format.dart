@@ -47,17 +47,10 @@ class FormatResponse {
     final List searchedList = [];
     for (int i = 0; i < responseList.length; i++) {
       Map? response;
-      switch (type) {
-        case 'song':
-        case 'album':
-        case 'playlist':
+      
           response = await formatSingleSongResponse(responseList[i] as Map);
-          break;
-        default:
-          break;
-      }
 
-      if (response!.containsKey('Error')) {
+      if (response.containsKey('Error')) {
         log('Error at index $i inside FormatSongsResponse: ${response["Error"]}');
       } else {
         searchedList.add(response);
@@ -72,67 +65,23 @@ class FormatResponse {
     //   return cachedSong;
     // }
     try {
-      final List artistNames = [];
-      if (response['more_info']?['artistMap']?['primary_artists'] == null ||
-          response['more_info']?['artistMap']?['primary_artists'].length == 0) {
-        if (response['more_info']?['artistMap']?['featured_artists'] == null ||
-            response['more_info']?['artistMap']?['featured_artists'].length ==
-                0) {
-          if (response['more_info']?['artistMap']?['artists'] == null ||
-              response['more_info']?['artistMap']?['artists'].length == 0) {
-            artistNames.add('Unknown');
-          } else {
-            try {
-              response['more_info']['artistMap']['artists'][0]['id']
-                  .forEach((element) {
-                artistNames.add(element['name']);
-              });
-            } catch (e) {
-              response['more_info']['artistMap']['artists'].forEach((element) {
-                artistNames.add(element['name']);
-              });
-            }
-          }
-        } else {
-          response['more_info']['artistMap']['featured_artists']
-              .forEach((element) {
-            artistNames.add(element['name']);
-          });
-        }
-      } else {
-        response['more_info']['artistMap']['primary_artists']
-            .forEach((element) {
-          artistNames.add(element['name']);
-        });
-      }
-
       return {
-        'id': response['id'],
-        'type': response['type'],
-        'album': response['more_info']['album'].toString().unescape(),
-        'year': response['year'],
-        'duration': response['more_info']['duration'],
-        'language': response['language'].toString().capitalize(),
-        'genre': response['language'].toString().capitalize(),
-        '320kbps': response['more_info']['320kbps'],
-        'has_lyrics': response['more_info']['has_lyrics'],
-        'lyrics_snippet':
-            response['more_info']['lyrics_snippet'].toString().unescape(),
-        'release_date': response['more_info']['release_date'],
-        'album_id': response['more_info']['album_id'],
-        'subtitle': response['subtitle'].toString().unescape(),
-        'title': response['title'].toString().unescape(),
-        'artist': artistNames.join(', ').unescape(),
-        'album_artist': response['more_info'] == null
-            ? response['music']
-            : response['more_info']['music'],
-        'image': response['image']
-            .toString()
-            .replaceAll('150x150', '500x500')
-            .replaceAll('50x50', '500x500')
-            .replaceAll('http:', 'https:'),
-        'perma_url': response['perma_url'],
-        'url': decode(response['more_info']['encrypted_media_url'].toString()),
+      "id": response['id'],
+      "typefile": response['typefile'],
+      "statut": response['statut'],
+      "titre": response['titre'],
+      "blazartiste": response['blazartiste'],
+      "duration": null,
+      "country": response['country'],
+      "yearofproduction": response['yearofproduction'],
+      "validatedby": null,
+      "validationstate": response['validationstate'],
+      "fichier": response['fichier'],
+      "thumbnail": response['thumbnail'],
+      "compte_clients_id": response['compte_clients_id'],
+      "categories_id": response['categories_id'],
+      "created_at": response['updated_at'],
+      "updated_at": response['updated_at']
       };
       // Hive.box('cache').put(response['id'].toString(), info);
     } catch (e) {

@@ -21,15 +21,17 @@ class ConstantCodes {
   static const Map<String, String> countryCodes = {
 
     'France': 'fr',
-    'United Kingdom': 'gb',
     'United States': 'us',
+    'Kenya':'ken'
     
   };
 
   // supported languages and their code
   static const Map<String, String> languageCodes = {
-'French': 'fr',
+'Français': 'fr',
 'English': 'en',
+ 'Kiswahili': 'sw'
+
     
   };
 }

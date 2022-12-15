@@ -38,6 +38,8 @@ class _PrefScreenState extends State<PrefScreen> {
   List<String> languages = [
     'English',
     'French',
+    'Swahili'
+
   ];
   List<bool> isSelected = [true, false];
   List preferredLanguage = Hive.box('settings')
@@ -225,7 +227,20 @@ class _PrefScreenState extends State<PrefScreen> {
                                                           languages.length,
                                                       itemBuilder:
                                                           (context, idx) {
-                                                        return CheckboxListTile(
+                                                         /*    return RadioListTile<String>(
+          value: checked.contains(languages[idx]),
+          groupValue: languages[idx],
+          title: Text(languages[idx]),
+           onChanged:(bool? value) {
+                     value! ? checked.add(languages[idx]) : checked.remove(languages[idx]);
+                             setStt(() {});
+                                                        
+          },
+         /* selected: selectedUser == user, */
+          activeColor: Theme.of(context).colorScheme.secondary
+      );
+                           */                            
+                            return CheckboxListTile(
                                                           activeColor: Theme.of(
                                                             context,
                                                           )
@@ -252,7 +267,7 @@ class _PrefScreenState extends State<PrefScreen> {
                                                                   );
                                                             setStt(() {});
                                                           },
-                                                        );
+                                                        ); 
                                                       },
                                                     ),
                                                   ),
