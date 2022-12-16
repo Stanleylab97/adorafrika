@@ -156,7 +156,7 @@ class _TopPageState extends State<TopPage>
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
-                      CircularProgressIndicator(),
+                      Center(child: CircularProgressIndicator()),
                     ],
                   ),
           )

@@ -30,6 +30,7 @@ import 'package:adorafrika/customWidgets/snackbar.dart';
 import 'package:adorafrika/helpers/audio_query.dart';
 import 'package:adorafrika/pages/musics/recents.dart';
 import 'package:adorafrika/pages/playlist/Player/audioplayer.dart';
+import 'package:adorafrika/pages/playlist/add_musique.dart';
 import 'package:adorafrika/pages/services/networkHandler.dart';
 import 'package:data_connection_checker_tv/data_connection_checker.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
@@ -428,6 +429,7 @@ class _MusicsDashState extends State<MusicsDash> with TickerProviderStateMixin {
             child: DefaultTabController(
               length: 3,
               child: Scaffold(
+                
                 backgroundColor: Colors.transparent,
                 appBar: AppBar(
                   leading: Text(''),
@@ -492,6 +494,15 @@ class _MusicsDashState extends State<MusicsDash> with TickerProviderStateMixin {
                           const Placeholder()
                         ],
                       ),
+
+                      floatingActionButton: FloatingActionButton(
+                        heroTag: "create-music",
+              backgroundColor: Colors.yellow.shade600,
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const AddMusic()));
+              },
+              child: Icon(Icons.add))
               ),
             ),
           ),

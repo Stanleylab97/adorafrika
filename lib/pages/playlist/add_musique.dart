@@ -578,6 +578,7 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
                               child: VideoPlayer(_videoPlayerController!))
                           : Center(
                               child: FloatingActionButton.extended(
+                                heroTag: "select-video",
                                 label:
                                     Text('Sélectionnez la vidéo'), // <-- Text
                                 backgroundColor: Colors.white,
@@ -617,6 +618,7 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
                             )
                           : Center(
                               child: FloatingActionButton.extended(
+                                heroTag: "select-fichierr",
                                 label:
                                     Text('Sélectionnez le fichier'), // <-- Text
                                 backgroundColor: Colors.white,
