@@ -132,24 +132,7 @@ class _PrefScreenState extends State<PrefScreen> {
                                             color: Colors.red,
                                           ),
                                         ),
-                                        TextSpan(
-                                          text: AppLocalizations.of(context)!
-                                              .prefReq,
-                                          style: const TextStyle(
-                                            height: 1.5,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        // TextSpan(
-                                        //   text: '?',
-                                        //   style: TextStyle(
-                                        //     fontWeight: FontWeight.bold,
-                                        //     fontSize: 20,
-                                        //     color: Theme.of(context).accentColor,
-                                        //   ),
-                                        // ),
+                                       
                                       ],
                                     ),
                                   ),

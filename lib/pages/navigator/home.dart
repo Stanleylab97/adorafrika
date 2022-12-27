@@ -32,6 +32,7 @@ import 'package:adorafrika/pages/Settings/setting.dart';
 import 'package:adorafrika/pages/account/profile.dart';
 import 'package:adorafrika/pages/home/saavn.dart';
 import 'package:adorafrika/pages/musics/home.dart';
+import 'package:adorafrika/pages/navigator/panegyrics.dart';
 import 'package:adorafrika/pages/navigator/panegyriques.dart';
 import 'package:adorafrika/pages/playlist/Search/search.dart';
 import 'package:adorafrika/services/ext_storage_provider.dart';
@@ -855,10 +856,11 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                             const MusicsDash(),
-                            Panegyriques(
+                            Panegerycs(),
+                           /*  Panegyriques(
                               hideNavigation: hideNav,
                               showNavigation: showNav,
-                            ),
+                            ), */
                             // Projects(),
                             Profil()
                           ],

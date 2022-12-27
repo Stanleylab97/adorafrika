@@ -1,27 +1,30 @@
 class Panegyrique {
-  late String name,useriD, state, region, url, statut, fichier_audio, type;
+  late String name,username, state, region, url, statut, fichier, type;
   String? countryCode;
+  late int id;
 
   Panegyrique(
       {required this.name,
       required this.region,
       required this.statut,
-      required this.fichier_audio,
+      required this.fichier,
       this.countryCode,
+      required this.id,
       required this.state,
-      required this.useriD,
+      required this.username,
       required this.url,
       required this.type});
 
   static Panegyrique fromJson(json) => Panegyrique(
+      id:json['id'],
       name: json['nom_famille'],
       region: json['region'],
-      statut: json['statut'],
+      statut: json['statut']==null?"":json['statut'],
       countryCode: json['pays'],
-      fichier_audio: json['fichier'],
+      fichier: json['fichier'],
       type: json['type_fichier'],
       url: "",
       state:json['state'] ,
-      useriD:json['compte_clients_id']
+      username:json['compte_client']['username']
       );
 }

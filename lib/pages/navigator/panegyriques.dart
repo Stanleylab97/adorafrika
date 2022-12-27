@@ -38,7 +38,8 @@ class _PanegyriquesState extends State<Panegyriques> {
           await http.get(Uri.parse(NetworkHandler.baseurl + "/panegyrique"));
       var jsonData = json.decode(response.body);
       var jsonArray = jsonData['panegyriques'];
-     
+      print(jsonArray);
+
       return jsonArray.map<Panegyrique>(Panegyrique.fromJson).toList();
 
       /*    var req = new http.Request(
@@ -158,7 +159,11 @@ class _PanegyriquesState extends State<Panegyriques> {
                                 padding: const EdgeInsets.only(
                                     left: 20, right: 20, bottom: 10),
                                 child: TextField(
+                                  
+                                  style: TextStyle(color: Colors.black),
                                   decoration: InputDecoration(
+
+                                    hintStyle: TextStyle(color: Colors.black),
                                       labelStyle:
                                           TextStyle(color: Colors.black),
                                       contentPadding:
@@ -177,7 +182,7 @@ class _PanegyriquesState extends State<Panegyriques> {
                                               BorderRadius.circular(30),
                                           borderSide: BorderSide(
                                               width: 1.0,
-                                              color: Colors.grey.shade400))),
+                                              color: Colors.black))),
                                 ),
                               ),
                               Padding(
@@ -191,6 +196,7 @@ class _PanegyriquesState extends State<Panegyriques> {
                                           builder: (context, snapshot) {
                                             if (snapshot.hasData) {
                                               var panegeriques = snapshot.data!;
+                                              print(panegeriques);
                                               return ListView.builder(
                                                 padding: EdgeInsets.symmetric(
                                                     horizontal: 10,
@@ -201,129 +207,152 @@ class _PanegyriquesState extends State<Panegyriques> {
                                                       panegeriques[index];
                                                   if (pane.type == "AUDIO")
                                                     return ListTile(
-                                                        leading: FaIcon(
-                                                          FontAwesomeIcons
-                                                              .music,
-                                                          size: 35,
-                                                          color: Colors.orange,
-                                                        ),
-                                                        title: Text(
-                                                          "Famille " +
-                                                              pane.name,
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 20),
-                                                        ),
-                                                        subtitle: Row(
-                                                          children: [
-                                                            Icon(
-                                                              Icons.map,
-                                                              color: Colors.red,
-                                                            ),
-                                                            SizedBox(
-                                                              width: 5,
-                                                            ),
-                                                            Text(pane.region,
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .black)),
-                                                          ],
-                                                        ), trailing: Visibility(
-                      visible: true,
-                      child: Icon(
-                        Icons.verified_rounded,
-                        color: Colors.green,
-                      )),);
+                                                      leading: FaIcon(
+                                                        FontAwesomeIcons.music,
+                                                        size: 35,
+                                                        color: Colors.orange,
+                                                      ),
+                                                      title: Text(
+                                                        "Famille " + pane.name,
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 20),
+                                                      ),
+                                                      subtitle: Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons.map,
+                                                            color: Colors.red,
+                                                          ),
+                                                          SizedBox(
+                                                            width: 5,
+                                                          ),
+                                                          Text(pane.region,
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black)),
+                                                        ],
+                                                      ),
+                                                      trailing: Visibility(
+                                                          visible: true,
+                                                          child: Icon(
+                                                            Icons
+                                                                .verified_rounded,
+                                                            color: Colors.green,
+                                                          )),
+                                                    );
                                                   else
                                                     return GestureDetector(
-                                                      child: Container(
-                                                        height: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .height *
-                                                            .09,
-                                                        child: Column(
-                                                          children: [
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .start,
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                            height: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .height *
+                                                                .09,
+                                                            child: Column(
                                                               children: [
-                                                                Container(
-                                                                  width: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .width *
-                                                                      .2,
-                                                                  height: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .height *
-                                                                      .07,
-                                                                  decoration: BoxDecoration(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              18),
-                                                                      image: DecorationImage(
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                          image:
-                                                                              AssetImage("assets/images/panigeriques/play.jpg"))),
-                                                                ),
-                                                                SizedBox(
-                                                                  width: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .width *
-                                                                      .01,
-                                                                ),
-                                                                Column(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
                                                                           .start,
                                                                   children: [
-                                                                    Text(
-                                                                      "Famille " +
-                                                                          pane.name,
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              18,
-                                                                          color:
-                                                                              Colors.black),
-                                                                    ),
-                                                                    SizedBox(
-                                                                      height: MediaQuery.of(context)
+                                                                    Container(
+                                                                      width: MediaQuery.of(
+                                                                                  context)
                                                                               .size
                                                                               .width *
-                                                                          .02,
+                                                                          .2,
+                                                                      height: MediaQuery.of(
+                                                                                  context)
+                                                                              .size
+                                                                              .height *
+                                                                          .07,
+                                                                      decoration: BoxDecoration(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(
+                                                                                  18),
+                                                                          image: DecorationImage(
+                                                                              fit: BoxFit
+                                                                                  .cover,
+                                                                              image:
+                                                                                  AssetImage("assets/images/panigeriques/play.jpg"))),
                                                                     ),
-                                                                    Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
+                                                                    SizedBox(
+                                                                      width: MediaQuery.of(
+                                                                                  context)
+                                                                              .size
+                                                                              .width *
+                                                                          .01,
+                                                                    ),
+                                                                    Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
                                                                               .start,
                                                                       children: [
-                                                                       Text(
-                                                                            pane.countryCode!,
-                                                                            style:
-                                                                                TextStyle(color: Colors.black)),
-                                                                        SizedBox(
-                                                                          width:
-                                                                              5,
-                                                                        ),
                                                                         Text(
-                                                                            pane
-                                                                                .region,
-                                                                            style:
-                                                                                TextStyle(color: Colors.black)),
+                                                                          "Famille " +
+                                                                              pane.name,
+                                                                          style: TextStyle(
+                                                                              fontSize:
+                                                                                  18,
+                                                                              color:
+                                                                                  Colors.black),
+                                                                        ),
+                                                                        SizedBox(
+                                                                          height: MediaQuery.of(context)
+                                                                                  .size
+                                                                                  .width *
+                                                                              .02,
+                                                                        ),
+                                                                        Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment
+                                                                                  .start,
+                                                                          children: [
+                                                                            Text(
+                                                                                pane
+                                                                                    .countryCode!,
+                                                                                style:
+                                                                                    TextStyle(color: Colors.black)),
+                                                                            SizedBox(
+                                                                              width:
+                                                                                  5,
+                                                                            ),
+                                                                            Text(
+                                                                                pane
+                                                                                    .region,
+                                                                                style:
+                                                                                    TextStyle(color: Colors.black)),
+                                                                                     SizedBox(
+                                                                              width:
+                                                                                  5,
+                                                                            ),
+                                                                            Text(
+                                                                                pane
+                                                                                    .username,
+                                                                                style:
+                                                                                    TextStyle(color: Colors.black)),
+                                                                          ],
+                                                                        )
                                                                       ],
                                                                     )
                                                                   ],
                                                                 )
                                                               ],
-                                                            )
-                                                          ],
-                                                        ),
+                                                            ),
+                                                          ),
+
+                                                         Visibility(
+                                                          visible: true,
+                                                          child: Icon(
+                                                            Icons
+                                                                .verified_rounded,
+                                                            color: Colors.green,
+                                                          )) 
+                                                        ],
                                                       ),
                                                     );
                                                 },
@@ -374,6 +403,5 @@ class _PanegyriquesState extends State<Panegyriques> {
                     }),
               ])),
     );
-
   }
 }

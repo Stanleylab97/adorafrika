@@ -204,14 +204,15 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
           var request = http.MultipartRequest('POST',
               Uri.parse(NetworkHandler.baseurl + "/panegyrique/creation"));
           request.files.add(await http.MultipartFile.fromPath(
-              "fichier_audio", panegyrique_path));
+              "fichier", panegyrique_path));
           request.fields['nom_famille'] = _famille.text.trim();
           request.fields['type_fichier'] = "AUDIO";
           request.fields['pays'] = countryValue;
-           request.fields['state'] = stateValue;
-           request.fields['region'] = cityValue;
-          request.fields['isPanegyric'] = "true";
+          request.fields['state'] = stateValue;
+          request.fields['region'] = cityValue;
+          request.fields['isPanegyric'] = true.toString();
           request.fields['statut'] = "NOUVEAU";
+          request.fields['compte_clients_id'] = 1.toString();
           request.headers.addAll({
             "Content-type": "multipart/form-data",
             //"Authorization": "Bearer $token"
@@ -221,6 +222,7 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
           try {
             final streamedResponse = await request.send();
             final response = await http.Response.fromStream(streamedResponse);
+            print(response.statusCode);
             if (response.statusCode == 200 || response.statusCode == 201) {
               Map<String, dynamic> output = json.decode(response.body);
               EasyLoading.showSuccess('Panégyrique enregistré!');
@@ -386,7 +388,7 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
                               onCountryChanged: (value) {
                                 setState(() {
                                   countryValue = value;
-                                  print(countryValue.substring(0,3));
+                                  print(countryValue.substring(0, 3));
                                 });
                               },
                               onStateChanged: (value) {
