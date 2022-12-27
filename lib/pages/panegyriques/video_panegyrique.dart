@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:adorafrika/pages/navigator/home.dart';
+import 'package:adorafrika/pages/navigator/panegyrics.dart';
 import 'package:adorafrika/pages/services/networkHandler.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cherry_toast/cherry_toast.dart';
@@ -114,8 +115,10 @@ class _PicknUploadPaneegyriqueState extends State<PicknUploadPaneegyrique> {
             request.fields['region'] = _region.text.trim();
             request.fields['pays'] = country.text.trim();
             request.fields['type_fichier'] = "VIDEO";
+            request.fields['state'] = "";
+            request.fields['isPanegyric'] = 1.toString();
             request.fields['statut'] = "NOUVEAU";
-            request.fields['compte_clients_id'] = "1";
+            request.fields['compte_clients_id'] = 1.toString();
             request.headers.addAll({
               "Content-type": "multipart/form-data",
               //"Authorization": "Bearer $token"
@@ -194,7 +197,7 @@ class _PicknUploadPaneegyriqueState extends State<PicknUploadPaneegyrique> {
         leading: GestureDetector(
           onTap: () {
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => HomePage()));
+                context, MaterialPageRoute(builder: (context) => Panegerycs()));
             //Navigator.pop(context);
           },
           child: const Icon(
@@ -205,7 +208,7 @@ class _PicknUploadPaneegyriqueState extends State<PicknUploadPaneegyrique> {
         backgroundColor: Colors.transparent,
         title: Text(
           "Ajout de panégyrique",
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.green),
         ),
         centerTitle: true,
       ),
@@ -243,8 +246,8 @@ class _PicknUploadPaneegyriqueState extends State<PicknUploadPaneegyrique> {
                       InkWell(
                         onTap: _getVideofromgallery,
                         child: Icon(
-                          FontAwesomeIcons.fileVideo,
-                          color: Colors.red,
+                          FontAwesomeIcons.paperclip,
+                          color: Colors.yellow.shade600,
                           size: 40.0,
                         ),
                       ),
@@ -253,7 +256,7 @@ class _PicknUploadPaneegyriqueState extends State<PicknUploadPaneegyrique> {
                       ),
                       Text(
                         "ou",
-                        style: TextStyle(color: Colors.black, fontSize: 18),
+                        style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
                       SizedBox(
                         width: 10,
@@ -262,7 +265,7 @@ class _PicknUploadPaneegyriqueState extends State<PicknUploadPaneegyrique> {
                         onTap: _getVideofromCamera,
                         child: Icon(
                           FontAwesomeIcons.camera,
-                          color: Colors.red,
+                          color: Colors.yellow.shade600,
                           size: 40.0,
                         ),
                       ),
@@ -286,10 +289,11 @@ class _PicknUploadPaneegyriqueState extends State<PicknUploadPaneegyrique> {
                                       return 'Veuillez indiquer la famille';
                                     return null;
                                   },
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
                                     errorText: validate ? null : errorText,
                                     labelText: 'Nom de famille',
+                                    labelStyle: TextStyle(color: Colors.white),
                                     prefixIcon: Icon(Icons.person),
                                     enabledBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
@@ -308,10 +312,11 @@ class _PicknUploadPaneegyriqueState extends State<PicknUploadPaneegyrique> {
                                       return 'Indiquez le pays';
                                     return null;
                                   },
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
                                     errorText: validate ? null : errorText,
                                     labelText: 'Pays',
+                                    labelStyle: TextStyle(color: Colors.white),
                                     prefixIcon:
                                         Icon(FontAwesomeIcons.mapLocation),
                                     focusedBorder: UnderlineInputBorder(
@@ -332,10 +337,11 @@ class _PicknUploadPaneegyriqueState extends State<PicknUploadPaneegyrique> {
                                       return 'Indiquez la région';
                                     return null;
                                   },
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
                                     errorText: validate ? null : errorText,
                                     labelText: 'Région',
+                                    labelStyle: TextStyle(color: Colors.white),
                                     prefixIcon: Icon(Icons.map_outlined),
                                     focusedBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(

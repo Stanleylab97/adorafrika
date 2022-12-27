@@ -167,7 +167,7 @@ class _PanegerycsState extends State<Panegerycs> {
                               leading: FaIcon(
                                 FontAwesomeIcons.music,
                                 size: 35,
-                                color: Colors.orange,
+                                color: Colors.red,
                               ),
                               title: Text(
                                 "Famille " + pane.name,
@@ -176,7 +176,7 @@ class _PanegerycsState extends State<Panegerycs> {
                               ),
                               subtitle: Row(
                                 children: [
-                                  Text(pane.region,
+                                  Text(pane.countryCode.toString().substring(0,2)+" "+pane.region.toString()+" "+pane.username,
                                       style: TextStyle(color: Colors.white)),
                                 ],
                               ),

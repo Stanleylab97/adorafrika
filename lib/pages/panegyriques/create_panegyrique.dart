@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:adorafrika/pages/navigator/home.dart';
+import 'package:adorafrika/pages/navigator/panegyrics.dart';
 import 'package:adorafrika/pages/services/networkHandler.dart';
 import 'package:adorafrika/providers/play_audio_provider.dart';
 import 'package:adorafrika/providers/record_audio_provider.dart';
@@ -210,7 +211,7 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
           request.fields['pays'] = countryValue;
           request.fields['state'] = stateValue;
           request.fields['region'] = cityValue;
-          request.fields['isPanegyric'] = true.toString();
+          request.fields['isPanegyric'] = 1.toString();
           request.fields['statut'] = "NOUVEAU";
           request.fields['compte_clients_id'] = 1.toString();
           request.headers.addAll({
@@ -319,7 +320,7 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
           leading: GestureDetector(
             onTap: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => HomePage()));
+                  context, MaterialPageRoute(builder: (context) => Panegerycs()));
               //Navigator.pop(context);
             },
             child: const Icon(
