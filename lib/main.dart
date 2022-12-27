@@ -11,8 +11,6 @@ import 'package:adorafrika/pages/auth/create-new-account.dart';
 import 'package:adorafrika/pages/auth/forgot-password.dart';
 import 'package:adorafrika/pages/auth/login-screen.dart';
 import 'package:adorafrika/pages/auth/pref.dart';
-import 'package:adorafrika/pages/navigator/dashboard.dart';
-import 'package:adorafrika/pages/navigator/navigation.dart';
 import 'package:adorafrika/pages/panegyriques/create_panegyrique.dart';
 import 'package:adorafrika/pages/player.dart';
 import 'package:adorafrika/pages/playlist/Player/audioplayer.dart';
@@ -128,7 +126,7 @@ void configLoading() {
     ..backgroundColor = Colors.green
     ..indicatorColor = Colors.yellow
     ..textColor = Colors.yellow
-    ..maskColor = Colors.blue.withOpacity(0.5)
+    ..maskColor = Colors.green.withOpacity(0.5)
     ..userInteractions = true
     ..dismissOnTap = false;
   // ..customAnimation = CustomAnimation();
@@ -229,15 +227,15 @@ class _MyAppState extends State<MyApp> {
 
     /// LocalJsonLocalization.delegate.directories = ['assets/translations'];
 
-    /* return MultiProvider(
+     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => RecordAudioProvider()),
           ChangeNotifierProvider(create: (_) => PlayAudioProvider()),
         ],
 //GetMaterialApp(
-        child: */
+        child: 
 
-    return MaterialApp(
+     MaterialApp(
       title: 'adorAfrika',
       debugShowCheckedModeBanner: false,
       /* theme: ThemeData(
@@ -289,6 +287,6 @@ class _MyAppState extends State<MyApp> {
           GetPage(name: '/createPanegyrique', page: () => CreatePanegyrique()),   
 
         ] */
-    );
+    ));
   }
 }

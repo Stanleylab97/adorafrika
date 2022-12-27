@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'package:adorafrika/models/categorie_music.dart';
 import 'package:adorafrika/pages/services/networkHandler.dart';
+import 'package:adorafrika/theme/app_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:data_connection_checker_tv/data_connection_checker.dart';
 import 'package:dio/dio.dart';
@@ -368,7 +369,7 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
             state: currentStep > 1 ? StepState.complete : StepState.indexed,
             title: Text('Catégorisation',
                 style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.w700)),
             content: Column(children: [
@@ -416,9 +417,9 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
                     )),
                 dropdownDecoratorProps: DropDownDecoratorProps(
                   dropdownSearchDecoration: InputDecoration(
-                      hintStyle: TextStyle(color: Colors.black),
+                      hintStyle: TextStyle(color: Colors.white),
                       labelText: "Définissez le rythme musical",
-                      labelStyle: TextStyle(color: Colors.black)),
+                      labelStyle: TextStyle(color: Colors.white)),
                 ),
                 asyncItems: (String filter) async {
                   var response = await Dio().get(
@@ -441,24 +442,24 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
             state: currentStep > 0 ? StepState.complete : StepState.indexed,
             title: Text('Identification',
                 style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.w700)),
             content: Column(
               children: [
                 TextFormField(
                   controller: titleCtrl,
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(labelText: 'Titre de la chanson'),
                 ),
                 TextFormField(
                   controller: blazArtistCtrl,
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(labelText: "Nom de l'artiste"),
                 ),
                 TextFormField(
                   controller: yearproduction,
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: Colors.white),
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(labelText: "Année de production"),
                 )
@@ -469,7 +470,7 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
             state: currentStep > 2 ? StepState.complete : StepState.indexed,
             title: Text('Couverture',
                 style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.w700)),
             content: Column(children: [
@@ -508,7 +509,7 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
               ),
               TextFormField(
                 controller: language,
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.white),
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(labelText: "Langue"),
               ),
@@ -518,9 +519,9 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
               Center(
                 child: codepays.isEmpty
                     ? FloatingActionButton.extended(
-                      heroTag: "country",
+                      heroTag: "selection-country",
                         elevation: 8,
-                        label: Text('Sélectionnez le pays'), // <-- Text
+                        label: Text('Sélectionnez le pays', style: TextStyle(color: Colors.black),), // <-- Text
                         backgroundColor: Colors.white,
                         icon: Icon(
                           // <-- Icon
@@ -552,7 +553,7 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
                         child: TextFormField(
                           controller: pays,
                           enabled: false,
-                          style: TextStyle(color: Colors.black),
+                          style: TextStyle(color: Colors.white),
                           keyboardType: TextInputType.text,
                           decoration:
                               InputDecoration(labelText: "Pays séctionné"),
@@ -565,7 +566,7 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
             state: currentStep > 3 ? StepState.complete : StepState.indexed,
             title: Text('Chargement',
                 style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.w700)),
             content: plan == 1
@@ -580,7 +581,7 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
                               child: FloatingActionButton.extended(
                                 heroTag: "select-video",
                                 label:
-                                    Text('Sélectionnez la vidéo'), // <-- Text
+                                    Text('Sélectionnez la vidéo', style: TextStyle(color: Colors.black),), // <-- Text
                                 backgroundColor: Colors.white,
                                 icon: Icon(
                                   // <-- Icon
@@ -620,7 +621,7 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
                               child: FloatingActionButton.extended(
                                 heroTag: "select-fichierr",
                                 label:
-                                    Text('Sélectionnez le fichier'), // <-- Text
+                                    Text('Sélectionnez le fichier',style: TextStyle(color: Colors.black)), // <-- Text
                                 backgroundColor: Colors.white,
                                 icon: Icon(
                                   // <-- Icon
@@ -665,9 +666,8 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
   }
 
   @override
-  void dispose() {
+  void dispose() async {
     playerController.stopAllPlayers();
-
     playerController.dispose();
     
     super.dispose();
@@ -686,9 +686,12 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
     return SingleChildScrollView(
      
         child: Material(
+          color: Colors.black,
+          
       child: Theme(
-        data: Theme.of(context)
-            .copyWith(colorScheme: ColorScheme.light(primary: Colors.green)),
+        data: AppTheme.darkTheme(
+        context: context,
+      ),
         child: Column(
           children: [
             Padding(
@@ -759,6 +762,7 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
                       if (currentStep != 0)
                         Expanded(
                             child: ElevatedButton(
+                              
                                 child: Text("Précédant"),
                                 onPressed: controls.onStepCancel)),
                       SizedBox(

@@ -4,7 +4,6 @@ import 'package:adorafrika/pages/auth/widgets/background-image.dart';
 import 'package:adorafrika/pages/auth/widgets/pallete.dart';
 import 'package:adorafrika/pages/auth/widgets/widgets.dart';
 import 'package:adorafrika/pages/navigator/home.dart';
-import 'package:adorafrika/pages/navigator/navigation.dart';
 import 'package:adorafrika/pages/services/networkHandler.dart';
 import 'package:adorafrika/utils/config.dart';
 import 'package:another_flushbar/flushbar.dart';
@@ -14,6 +13,7 @@ import 'package:data_connection_checker_tv/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -41,35 +41,40 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       circular = true;
     });
-   // print("password=: ${password.text.trim()}");
+    // print("password=: ${password.text.trim()}");
     Map<String, dynamic> data = {
       "username": email.text.trim(),
       "password": password.text.trim(),
     };
     DataConnectionStatus status = await isConnected();
     if (status == DataConnectionStatus.connected) {
-      var response = await networkHandler.unsecurepost(NetworkHandler.baseurl+"/client/login", data);
+      var response = await networkHandler.unsecurepost(
+          NetworkHandler.baseurl + "/client/login", data);
       log.v(response.data);
+      log.v(response.data['user']['nom']);
       if (response.statusCode == 200 || response.statusCode == 201) {
+        final x = {
+          "id": response.data['user']['id'],
+            "nom": response.data['user']['nom'],
+            "prenom":response.data['user']['prenom'],
+            "username": response.data['user']['username'],
+            "profil":response.data['user']['profil'],
+        };
         print("Login susscessfull");
-       // Map<String, dynamic> output = json.decode(response.data);
-        /*  if (!statut) {
-           await prefs.setString('nom', nom.text.trim());
-           await prefs.setString('prenom', prenom.text.trim());
-           await prefs.setString('email', email.text.trim());
-           await prefs.setString('tel', email.text.trim());
-         } else {
-           await prefs.setString('raison', raison.text.trim());
-           await prefs.setString('rccm', rccm.text.trim());
-           await prefs.setString('email', email.text.trim());
-           await prefs.setString('tel', tel.text.trim());
-         } */
-        // await storage.write(key: "token" , value:  output["token"]);
+        //Map<String, dynamic> output = json.decode(x);
+
+        /*   await prefs.setString('nom', output['nom']);
+           await prefs.setString('prenom', output['prenom']);
+           await prefs.setString('username', output['stanley97']);
+           await prefs.setString('nom', output['nom']); */
+
+        Hive.box('settings').put('currentUser', x);
         setState(() {
           validate = true;
           circular = false;
         });
-        Navigator.push(context,MaterialPageRoute(builder: (context) => HomePage()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => HomePage()));
       } else {
         setState(() {
           validate = false;
@@ -181,7 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   GestureDetector(
                     onTap: () => Navigator.pushNamed(context, 'ForgotPassword'),
                     child: Text(
-                      'Mot de passe oublié ?',
+                      "${AppLocalizations.of(context)!.forgotpassword}",
                       style: TextStyle(
                           fontSize: 14, color: Colors.white, height: 1.5),
                     ),
@@ -189,24 +194,31 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(
                     height: 25,
                   ),
-                 circular? Center(child: CircularProgressIndicator(color:Colors.yellow)): Container(
-                    height: size.height * 0.08,
-                    width: size.width * 0.8,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      color: kBlue,
-                    ),
-                    child: TextButton(
-                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(SizeConfig.primaryColor)),
-                      onPressed: () {
-                        login();
-                      },
-                      child: Text(
-                        "${AppLocalizations.of(context)!.login}",
-                        style: kBodyText.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
+                  circular
+                      ? Center(
+                          child:
+                              CircularProgressIndicator(color: Colors.yellow))
+                      : Container(
+                          height: size.height * 0.08,
+                          width: size.width * 0.8,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            color: kBlue,
+                          ),
+                          child: TextButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    SizeConfig.primaryColor)),
+                            onPressed: () {
+                              login();
+                            },
+                            child: Text(
+                              "${AppLocalizations.of(context)!.login}",
+                              style: kBodyText.copyWith(
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
                   SizedBox(
                     height: 25,
                   ),

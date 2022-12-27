@@ -78,6 +78,7 @@ class _CreateProjectState extends State<CreateProject> {
             ),
             Center(
               child: FloatingActionButton.extended(
+                heroTag: "create-cover-project",
                 label: Text('Image de couverture'), // <-- Text
                 backgroundColor: Colors.black,
                 icon: Icon(

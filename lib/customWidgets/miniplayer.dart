@@ -130,7 +130,7 @@ class _MiniPlayerState extends State<MiniPlayer> {
                         rotated;
                     final List preferredMiniButtons = Hive.box('settings').get(
                       'preferredMiniButtons',
-                      defaultValue: ['Like', 'Play/Pause', 'Next'],
+                      defaultValue: ['Like', 'Play/Pause', 'Next', 'Close'],
                     )?.toList() as List;
 
                     return Card(
@@ -233,7 +233,7 @@ class _MiniPlayerState extends State<MiniPlayer> {
                                   buttons: mediaItem.artUri
                                           .toString()
                                           .startsWith('file:')
-                                      ? ['Like', 'Play/Pause', 'Next']
+                                      ? ['Like', 'Play/Pause', 'Next', 'Close']
                                       : preferredMiniButtons,
                                 ),
                               ),

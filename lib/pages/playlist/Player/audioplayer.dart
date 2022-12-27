@@ -1015,7 +1015,7 @@ class ControlButtons extends StatelessWidget {
     this.audioHandler, {
     this.shuffle = false,
     this.miniplayer = false,
-    this.buttons = const ['Previous', 'Play/Pause', 'Next'],
+    this.buttons = const ['Previous', 'Play/Pause', 'Next', 'Close'],
     this.dominantColor,
   });
 
@@ -1052,6 +1052,18 @@ class ControlButtons extends StatelessWidget {
                 );
               },
             );
+             case 'Close':
+            
+                return IconButton(
+                  icon: const Icon(Icons.close),
+                  iconSize: miniplayer ? 24.0 : 45.0,
+                  tooltip: AppLocalizations.of(context)!.close,
+                  color: dominantColor ?? Theme.of(context).iconTheme.color,
+                  onPressed:(){
+                   // miniplayer=false;
+                  } 
+                );
+              ;
           case 'Play/Pause':
             return SizedBox(
               height: miniplayer ? 40.0 : 65.0,
@@ -1105,6 +1117,7 @@ class ControlButtons extends StatelessWidget {
                             child: Center(
                               child: playing
                                   ? FloatingActionButton(
+                                    heroTag: "Music-pause",
                                       elevation: 10,
                                       tooltip:
                                           AppLocalizations.of(context)!.pause,
@@ -1117,6 +1130,7 @@ class ControlButtons extends StatelessWidget {
                                       ),
                                     )
                                   : FloatingActionButton(
+                                    heroTag: "Music-play",
                                       elevation: 10,
                                       tooltip:
                                           AppLocalizations.of(context)!.play,

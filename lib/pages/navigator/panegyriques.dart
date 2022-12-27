@@ -298,12 +298,10 @@ class _PanegyriquesState extends State<Panegyriques> {
                                                                           MainAxisAlignment
                                                                               .start,
                                                                       children: [
-                                                                        Icon(
-                                                                          Icons
-                                                                              .map,
-                                                                          color:
-                                                                              Colors.red,
-                                                                        ),
+                                                                       Text(
+                                                                            pane.countryCode!,
+                                                                            style:
+                                                                                TextStyle(color: Colors.black)),
                                                                         SizedBox(
                                                                           width:
                                                                               5,
@@ -343,7 +341,7 @@ class _PanegyriquesState extends State<Panegyriques> {
                 ]),
               )),
           floatingActionButton: SpeedDial(
-              heroTag: "paneyrique",
+              heroTag: "create-paneyrique",
               //animatedIcon: AnimatedIcons.menu_close,
               backgroundColor: Colors.yellow.shade600,
               overlayOpacity: 0.4,

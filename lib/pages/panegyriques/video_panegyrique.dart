@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:adorafrika/pages/navigator/navigation.dart';
+import 'package:adorafrika/pages/navigator/home.dart';
 import 'package:adorafrika/pages/services/networkHandler.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cherry_toast/cherry_toast.dart';
@@ -194,7 +194,7 @@ class _PicknUploadPaneegyriqueState extends State<PicknUploadPaneegyrique> {
         leading: GestureDetector(
           onTap: () {
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Navigation()));
+                context, MaterialPageRoute(builder: (context) => HomePage()));
             //Navigator.pop(context);
           },
           child: const Icon(

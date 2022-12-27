@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:adorafrika/pages/navigator/navigation.dart';
+import 'package:adorafrika/pages/navigator/home.dart';
 import 'package:adorafrika/pages/services/networkHandler.dart';
 import 'package:adorafrika/providers/play_audio_provider.dart';
 import 'package:adorafrika/providers/record_audio_provider.dart';
@@ -306,7 +306,7 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
               Navigator.push(
     context,
     MaterialPageRoute(
-        builder: (context) => Navigation()));
+        builder: (context) => HomePage()));
               //Navigator.pop(context);
             },
             child: const Icon(

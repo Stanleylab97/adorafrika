@@ -86,6 +86,13 @@ class AppTheme {
           elevation: 0.0,
         ),
       ),
+      textTheme: const TextTheme(
+      headline1: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color:Colors.white),
+      headline2: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color:Colors.white),
+      headline6: TextStyle(fontSize: 26.0, fontStyle: FontStyle.italic,color:Colors.white),
+      bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind', color:Colors.white),
+    ),
+  
       textSelectionTheme: TextSelectionThemeData(
         selectionHandleColor: currentTheme.currentColor(),
         cursorColor: currentTheme.currentColor(),
@@ -93,6 +100,7 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         focusedBorder: UnderlineInputBorder(
+          
           borderSide:
               BorderSide(width: 1.5, color: currentTheme.currentColor()),
         ),
@@ -127,7 +135,7 @@ class AppTheme {
       ),
       indicatorColor: currentTheme.currentColor(),
       colorScheme: Theme.of(context).colorScheme.copyWith(
-            primary: Colors.white,
+            primary: Colors.green,
             secondary: currentTheme.currentColor(),
             brightness: Brightness.dark,
           ),
