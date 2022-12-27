@@ -22,6 +22,9 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_ripple_animation/simple_ripple_animation.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:csc_picker/csc_picker.dart';
+
+//import 'package:country_state_city_picker/country_state_city_picker.dart';
 
 class CreatePanegyrique extends StatefulWidget {
   const CreatePanegyrique({super.key});
@@ -35,11 +38,15 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
   NetworkHandler networkHandler = NetworkHandler();
   final TextEditingController _famille = TextEditingController();
   final TextEditingController _region = TextEditingController();
-   TextEditingController country=TextEditingController();
+  TextEditingController country = TextEditingController();
   bool validate = false;
   Logger log = Logger();
   late String errorText = "";
   bool isloading = false;
+  String countryValue = "";
+  String stateValue = "";
+  String cityValue = "";
+  String address = "";
 
   isConnected() async {
     return await DataConnectionChecker().connectionStatus;
@@ -199,9 +206,11 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
           request.files.add(await http.MultipartFile.fromPath(
               "fichier_audio", panegyrique_path));
           request.fields['nom_famille'] = _famille.text.trim();
-           request.fields['type_fichier'] = "AUDIO";
-           request.fields['pays'] = country.text.trim();
-          request.fields['region'] = _region.text.trim();
+          request.fields['type_fichier'] = "AUDIO";
+          request.fields['pays'] = countryValue;
+           request.fields['state'] = stateValue;
+           request.fields['region'] = cityValue;
+          request.fields['isPanegyric'] = "true";
           request.fields['statut'] = "NOUVEAU";
           request.headers.addAll({
             "Content-type": "multipart/form-data",
@@ -216,11 +225,11 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
               Map<String, dynamic> output = json.decode(response.body);
               EasyLoading.showSuccess('Panégyrique enregistré!');
               print("Upload done");
-               EasyLoading.dismiss();
+              EasyLoading.dismiss();
               setState(() {
                 isloading = false;
               });
-             
+
               Navigator.pop(context);
             } else {
               EasyLoading.dismiss();
@@ -247,23 +256,26 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
             isloading = false;
           });
           CherryToast.error(
+                  title: Text("Erreur"),
+                  displayTitle: false,
+                  description: Text(
+                      "Il semble que votre connexion soit instable",
+                      style: TextStyle(color: Colors.black)),
+                  animationType: AnimationType.fromRight,
+                  animationDuration: Duration(milliseconds: 1000),
+                  autoDismiss: true)
+              .show(context);
+        }
+      } else {
+        CherryToast.error(
                 title: Text("Erreur"),
                 displayTitle: false,
-                description: Text("Il semble que votre connexion soit instable", style:TextStyle(color:Colors.black)),
+                description: Text("Il manque fichier à charger",
+                    style: TextStyle(color: Colors.black)),
                 animationType: AnimationType.fromRight,
                 animationDuration: Duration(milliseconds: 1000),
                 autoDismiss: true)
             .show(context);
-          }
-      } else {
-         CherryToast.error(
-                title: Text("Erreur"),
-                displayTitle: false,
-                description: Text("Il manque fichier à charger",style:TextStyle(color:Colors.black)),
-                animationType: AnimationType.fromRight,
-                animationDuration: Duration(milliseconds: 1000),
-                autoDismiss: true)
-            .show(context); 
         print("Il manque fichier à charger");
         Flushbar(
           margin: EdgeInsets.all(8),
@@ -296,33 +308,33 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
   Widget build(BuildContext context) {
     final _recordProvider = Provider.of<RecordAudioProvider>(context);
     final _playProvider = Provider.of<PlayAudioProvider>(context);
+    GlobalKey<CSCPickerState> _cscPickerKey = GlobalKey();
+
     return Scaffold(
-      //resizeToAvoidBottomInset : false,
-      
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           elevation: 0,
           leading: GestureDetector(
             onTap: () {
               Navigator.push(
-    context,
-    MaterialPageRoute(
-        builder: (context) => HomePage()));
+                  context, MaterialPageRoute(builder: (context) => HomePage()));
               //Navigator.pop(context);
             },
             child: const Icon(
               Icons.arrow_back_ios,
-              color: Colors.black,
+              color: Colors.white,
             ),
           ),
-          backgroundColor: Colors.transparent,
+          //backgroundColor: Colors.black,
           title: Text(
             "Ajout de panégyrique",
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.white),
           ),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
-              physics: ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
+          physics:
+              ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
           padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 20),
           child: Center(
             child: Container(
@@ -355,10 +367,11 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
 
                                   return null;
                                 },
-                                style: TextStyle(color: Colors.black),
+                                style: TextStyle(color: Colors.white),
                                 decoration: InputDecoration(
                                   errorText: validate ? null : errorText,
                                   labelText: 'Nom de famille',
+                                  labelStyle: TextStyle(color: Colors.white),
                                   prefixIcon: Icon(Icons.person),
                                   enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
@@ -369,30 +382,59 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
                                 //onSaved: (input) => _email = input
                               ),
                             ),
-                                                 Container(
-  child: TextFormField(
-    controller: country,
-    validator: (input) {
-      if (input!.isEmpty)
-        return 'Indiquez le pays';
-      return null;
-    },
-  style:TextStyle(color: Colors.black),
-    decoration: InputDecoration(
-       errorText: validate ? null : errorText,
-      labelText: 'Pays',
-      prefixIcon: Icon(FontAwesomeIcons.mapLocation),
-      focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.black,
-          width: 2,
-        ),
-      ),
-    ),
-    //onSaved: (input) => _password = input
-  ),
-),
-
+                            CSCPicker(
+                              onCountryChanged: (value) {
+                                setState(() {
+                                  countryValue = value;
+                                  print(countryValue.substring(0,3));
+                                });
+                              },
+                              onStateChanged: (value) {
+                                setState(() {
+                                  stateValue = value.toString();
+                                });
+                              },
+                              onCityChanged: (value) {
+                                setState(() {
+                                  cityValue = value.toString();
+                                });
+                              },
+                              selectedItemStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                              ),
+                              dropdownItemStyle: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                              ),
+                              dropdownHeadingStyle: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            /*  Container(
+                              child: TextFormField(
+                                controller: country,
+                                validator: (input) {
+                                  if (input!.isEmpty) return 'Indiquez le pays';
+                                  return null;
+                                },
+                                style: TextStyle(color: Colors.black),
+                                decoration: InputDecoration(
+                                  errorText: validate ? null : errorText,
+                                  labelText: 'Pays',
+                                  prefixIcon:
+                                      Icon(FontAwesomeIcons.mapLocation),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                      width: 2,
+                                    ),
+                                  ),
+                                ),
+                                //onSaved: (input) => _password = input
+                              ),
+                            ),
                             Container(
                               child: TextFormField(
                                 controller: _region,
@@ -401,9 +443,9 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
                                     return 'Indiquez la région';
                                   return null;
                                 },
-style: TextStyle(color: Colors.black),
+                                style: TextStyle(color: Colors.white),
                                 decoration: InputDecoration(
-                                   errorText: validate ? null : errorText,
+                                  errorText: validate ? null : errorText,
                                   labelText: 'Région',
                                   prefixIcon: Icon(Icons.map_outlined),
                                   focusedBorder: UnderlineInputBorder(
@@ -415,7 +457,7 @@ style: TextStyle(color: Colors.black),
                                 ),
                                 //onSaved: (input) => _password = input
                               ),
-                            ),
+                            ), */
                             const SizedBox(height: 10),
                             const SizedBox(height: 40),
                             _recordProvider.recordedFilePath.isEmpty

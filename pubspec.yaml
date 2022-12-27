@@ -108,6 +108,8 @@ dependencies:
   package_info_plus: ^3.0.2
   salomon_bottom_bar: ^3.3.1
   flutter_archive: ^5.0.0
+  country_state_city_picker: ^1.2.8
+  csc_picker: ^0.2.6
 
 
 dev_dependencies:

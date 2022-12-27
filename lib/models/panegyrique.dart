@@ -1,5 +1,5 @@
 class Panegyrique {
-  late String name, region, url, statut, fichier_audio, type;
+  late String name,useriD, state, region, url, statut, fichier_audio, type;
   String? countryCode;
 
   Panegyrique(
@@ -8,6 +8,8 @@ class Panegyrique {
       required this.statut,
       required this.fichier_audio,
       this.countryCode,
+      required this.state,
+      required this.useriD,
       required this.url,
       required this.type});
 
@@ -15,8 +17,11 @@ class Panegyrique {
       name: json['nom_famille'],
       region: json['region'],
       statut: json['statut'],
-      countryCode: json['country'],
+      countryCode: json['pays'],
       fichier_audio: json['fichier'],
       type: json['type_fichier'],
-      url: "");
+      url: "",
+      state:json['state'] ,
+      useriD:json['compte_clients_id']
+      );
 }

@@ -101,20 +101,9 @@ class _SettingPageState extends State<SettingPage> {
   int downFilename =
       Hive.box('settings').get('downFilename', defaultValue: 0) as int;
   List<String> languages = [
-    'Hindi',
+    
+    
     'English',
-    'Punjabi',
-    'Tamil',
-    'Telugu',
-    'Marathi',
-    'Gujarati',
-    'Bengali',
-    'Kannada',
-    'Bhojpuri',
-    'Malayalam',
-    'Urdu',
-    'Haryanvi',
-    'Rajasthani',
     'Odia',
     'Assamese'
   ];

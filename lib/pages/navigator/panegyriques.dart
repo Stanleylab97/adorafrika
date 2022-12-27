@@ -229,7 +229,12 @@ class _PanegyriquesState extends State<Panegyriques> {
                                                                     color: Colors
                                                                         .black)),
                                                           ],
-                                                        ));
+                                                        ), trailing: Visibility(
+                      visible: true,
+                      child: Icon(
+                        Icons.verified_rounded,
+                        color: Colors.green,
+                      )),);
                                                   else
                                                     return GestureDetector(
                                                       child: Container(
