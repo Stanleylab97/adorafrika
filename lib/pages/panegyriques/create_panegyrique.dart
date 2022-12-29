@@ -8,10 +8,13 @@ import 'package:adorafrika/providers/record_audio_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cherry_toast/resources/arrays.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/instance_manager.dart';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:another_flushbar/flushbar.dart';
 import 'package:data_connection_checker_tv/data_connection_checker.dart';
@@ -48,6 +51,11 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
   String stateValue = "";
   String cityValue = "";
   String address = "";
+  Map currentUser =
+      Hive.box('settings').get('currentUser', defaultValue: {}) as Map;
+  bool typeFichier = true;
+  bool isPanegyric = true;
+  String audiofilePicked = "";
 
   isConnected() async {
     return await DataConnectionChecker().connectionStatus;
@@ -92,10 +100,127 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
       );
     }
 
-    return InkWell(
+    return  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+       InkWell(
       onTap: () async => await _recordProviderWithoutListener.recordVoice(),
-      child: _commonIconSection(),
+      child: _commonIconSection()),
+        SizedBox(
+          width: 6,
+        ),
+        Text('ou'),
+        SizedBox(
+          width: 6,
+        ),
+        _selectFileSection()
+      ]
     );
+  }
+
+ _recordingVideoNPickSection() {
+    final _recordProvider = Provider.of<RecordAudioProvider>(context);
+    final _recordProviderWithoutListener =
+        Provider.of<RecordAudioProvider>(context, listen: false);
+
+    if (_recordProvider.isRecording) {
+      return InkWell(
+        onTap: (){} 
+      );
+    }
+
+    return  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              InkWell(
+      onTap: () async => await _recordProvider.recordWithCamera(),
+      child: _recordVideoIconSection()),
+        SizedBox(
+          width: 6,
+        ),
+        Text('ou'),
+        SizedBox(
+          width: 6,
+        ),
+        InkWell(
+      onTap: () async => await _recordProvider.pickVideoFile(),
+      child: _videoFileIconSection())
+      ]
+    );
+  }
+
+    _selectVideoFileSection() {
+    final _recordProvider = Provider.of<RecordAudioProvider>(context);
+    final _recordProviderWithoutListener =
+        Provider.of<RecordAudioProvider>(context, listen: false);
+
+    /*  if (_recordProvider.isRecording) {
+      return InkWell(
+        onTap: () async => await _recordProviderWithoutListener.stopRecording(),
+        child: RippleAnimation(
+          repeat: true,
+          color: const Color(0xff4BB543),
+          minRadius: 40,
+          ripplesCount: 6,
+          child: _commonIconSection(),
+        ),
+      );
+    } */
+
+    return InkWell(
+      onTap: () {
+        _recordProvider.pickAudioFile();
+        print("File selected");
+      },
+      child: _recordVideoIconSection(),
+    );
+  }
+
+  _selectFileSection() {
+    final _recordProvider = Provider.of<RecordAudioProvider>(context);
+    final _recordProviderWithoutListener =
+        Provider.of<RecordAudioProvider>(context, listen: false);
+
+    /*  if (_recordProvider.isRecording) {
+      return InkWell(
+        onTap: () async => await _recordProviderWithoutListener.stopRecording(),
+        child: RippleAnimation(
+          repeat: true,
+          color: const Color(0xff4BB543),
+          minRadius: 40,
+          ripplesCount: 6,
+          child: _commonIconSection(),
+        ),
+      );
+    } */
+
+    return InkWell(
+      onTap: () {
+        _recordProvider.pickAudioFile();
+        print("File selected");
+      },
+      child: _fileIconSection(),
+    );
+  }
+
+  _pickAudio() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: false,
+      type: FileType.custom,
+      allowedExtensions: ['mp3', 'aac', 'wav'],
+    );
+
+    if (result != null) {
+      File file = File(result.files.single.path!);
+      setState(() {
+        audiofilePicked = file.path;
+      });
+    } else {
+      // User canceled the picker
+      return;
+    }
+    // if no file is picked
+    if (result == null) return;
+    // first picked file (if multiple are selected)
+    print(result.files.first.name);
+    print(result.files.first.size);
+    print(result.files.first.path);
   }
 
   _commonIconSection() {
@@ -109,6 +234,62 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
       ),
       child: const Icon(Icons.keyboard_voice_rounded,
           color: Colors.white, size: 30),
+    );
+  }
+
+   _recordVideoIconSection() {
+    return Container(
+      width: 70,
+      height: 70,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: const Color(0xff4BB543),
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child: const Icon(FontAwesomeIcons.video,
+          color: Colors.white, size: 30),
+    );
+  }
+
+   _selectVideoIconSection() {
+    return Container(
+      width: 70,
+      height: 70,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: const Color(0xff4BB543),
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child: const Icon(FontAwesomeIcons.video,
+          color: Colors.white, size: 30),
+    );
+  }
+
+  _fileIconSection() {
+    return Container(
+      width: 70,
+      height: 70,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: const Color(0xff4BB543),
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child:
+          const Icon(FontAwesomeIcons.paperclip, color: Colors.white, size: 30),
+    );
+  }
+
+   _videoFileIconSection() {
+    return Container(
+      width: 70,
+      height: 70,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: const Color(0xff4BB543),
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child:
+          const Icon(FontAwesomeIcons.paperclip, color: Colors.white, size: 30),
     );
   }
 
@@ -186,109 +367,6 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
     return input?.isNotEmpty ?? false;
   }
 
-  savePanegyrique() async {
-    final prefs = await SharedPreferences.getInstance();
-    String panegyrique_path = "";
-
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      setState(() {
-        isloading = true;
-      });
-      panegyrique_path = prefs.getString("panegyrique_path").toString();
-      log.v("Pane" + panegyrique_path);
-      var x = isNull(panegyrique_path);
-      if (panegyrique_path.isNotEmpty) {
-        DataConnectionStatus status = await isConnected();
-
-        if (status == DataConnectionStatus.connected) {
-          var request = http.MultipartRequest('POST',
-              Uri.parse(NetworkHandler.baseurl + "/panegyrique/creation"));
-          request.files.add(await http.MultipartFile.fromPath(
-              "fichier", panegyrique_path));
-          request.fields['nom_famille'] = _famille.text.trim();
-          request.fields['type_fichier'] = "AUDIO";
-          request.fields['pays'] = countryValue;
-          request.fields['state'] = stateValue;
-          request.fields['region'] = cityValue;
-          request.fields['isPanegyric'] = 1.toString();
-          request.fields['statut'] = "NOUVEAU";
-          request.fields['compte_clients_id'] = 1.toString();
-          request.headers.addAll({
-            "Content-type": "multipart/form-data",
-            //"Authorization": "Bearer $token"
-          });
-          EasyLoading.show(status: 'Chargement du fichier...');
-
-          try {
-            final streamedResponse = await request.send();
-            final response = await http.Response.fromStream(streamedResponse);
-            print(response.statusCode);
-            if (response.statusCode == 200 || response.statusCode == 201) {
-              Map<String, dynamic> output = json.decode(response.body);
-              EasyLoading.showSuccess('Panégyrique enregistré!');
-              print("Upload done");
-              EasyLoading.dismiss();
-              setState(() {
-                isloading = false;
-              });
-
-              Navigator.pop(context);
-            } else {
-              EasyLoading.dismiss();
-              Map<String, dynamic> output = json.decode(response.body);
-              setState(() {
-                validate = false;
-                errorText = output['status'];
-                log.e(errorText);
-                isloading = false;
-              });
-            }
-          } catch (e) {
-            print(e);
-            EasyLoading.dismiss();
-            log.e(e);
-            setState(() {
-              isloading = false;
-            });
-
-            return null;
-          }
-        } else {
-          setState(() {
-            isloading = false;
-          });
-          CherryToast.error(
-                  title: Text("Erreur"),
-                  displayTitle: false,
-                  description: Text(
-                      "Il semble que votre connexion soit instable",
-                      style: TextStyle(color: Colors.black)),
-                  animationType: AnimationType.fromRight,
-                  animationDuration: Duration(milliseconds: 1000),
-                  autoDismiss: true)
-              .show(context);
-        }
-      } else {
-        CherryToast.error(
-                title: Text("Erreur"),
-                displayTitle: false,
-                description: Text("Il manque fichier à charger",
-                    style: TextStyle(color: Colors.black)),
-                animationType: AnimationType.fromRight,
-                animationDuration: Duration(milliseconds: 1000),
-                autoDismiss: true)
-            .show(context);
-        print("Il manque fichier à charger");
-        Flushbar(
-          margin: EdgeInsets.all(8),
-          borderRadius: BorderRadius.circular(8),
-          message: "Il manque fichier à charger",
-        );
-      }
-    }
-  }
-
   showError(String errormessage) {
     showDialog(
         context: context,
@@ -313,14 +391,122 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
     final _playProvider = Provider.of<PlayAudioProvider>(context);
     GlobalKey<CSCPickerState> _cscPickerKey = GlobalKey();
 
+    savePanegyrique() async {
+      final prefs = await SharedPreferences.getInstance();
+
+      String panegyrique_path = "";
+
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        setState(() {
+          isloading = true;
+        });
+        panegyrique_path = prefs.getString("panegyrique_path").toString();
+        log.v("Pane" + panegyrique_path);
+        var x = isNull(panegyrique_path);
+        if (panegyrique_path.isNotEmpty) {
+          DataConnectionStatus status = await isConnected();
+
+          if (status == DataConnectionStatus.connected) {
+            var request = http.MultipartRequest('POST',
+                Uri.parse(NetworkHandler.baseurl + "/panegyrique/creation"));
+            request.files.add(
+                await http.MultipartFile.fromPath("fichier", panegyrique_path));
+            request.fields['nom_famille'] = _famille.text.trim();
+            request.fields['country_libelle'] = countryValue;
+            request.fields['country_code'] = countryValue.substring(0, 2);
+            request.fields['state'] = stateValue;
+            request.fields['region'] = cityValue;
+            request.fields['type_fichier'] = typeFichier ? "AUDIO" : "VIDEO";
+            request.fields['isPanegyric'] =
+                isPanegyric ? 1.toString() : 0.toString();
+            request.fields['statut'] = "NOUVEAU";
+            request.fields['compte_clients_id'] = currentUser['id'].toString();
+            request.headers.addAll({
+              "Content-type": "multipart/form-data",
+              //"Authorization": "Bearer $token"
+            });
+            EasyLoading.show(status: 'Chargement du fichier...');
+
+            try {
+              final streamedResponse = await request.send();
+              final response = await http.Response.fromStream(streamedResponse);
+              print(response.statusCode);
+              if (response.statusCode == 200 || response.statusCode == 201) {
+                Map<String, dynamic> output = json.decode(response.body);
+                EasyLoading.showSuccess('Panégyrique enregistré!');
+                print("Upload done");
+                EasyLoading.dismiss();
+
+                setState(() {
+                  isloading = false;
+                });
+                _recordProvider.clearOldData();
+                Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Panegerycs()));
+              } else {
+                EasyLoading.dismiss();
+                Map<String, dynamic> output = json.decode(response.body);
+                setState(() {
+                  validate = false;
+                  errorText = output['status'];
+                  log.e(errorText);
+                  isloading = false;
+                });
+              }
+            } catch (e) {
+              print(e);
+              EasyLoading.dismiss();
+              log.e(e);
+              setState(() {
+                isloading = false;
+              });
+
+              return null;
+            }
+          } else {
+            setState(() {
+              isloading = false;
+            });
+            CherryToast.error(
+                    title: Text("Erreur"),
+                    displayTitle: false,
+                    description: Text(
+                        "Il semble que votre connexion soit instable",
+                        style: TextStyle(color: Colors.black)),
+                    animationType: AnimationType.fromRight,
+                    animationDuration: Duration(milliseconds: 1000),
+                    autoDismiss: true)
+                .show(context);
+          }
+        } else {
+          CherryToast.error(
+                  title: Text("Erreur"),
+                  displayTitle: false,
+                  description: Text("Il manque fichier à charger",
+                      style: TextStyle(color: Colors.black)),
+                  animationType: AnimationType.fromRight,
+                  animationDuration: Duration(milliseconds: 1000),
+                  autoDismiss: true)
+              .show(context);
+          print("Il manque fichier à charger");
+          Flushbar(
+            margin: EdgeInsets.all(8),
+            borderRadius: BorderRadius.circular(8),
+            message: "Il manque fichier à charger",
+          );
+        }
+      }
+    }
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           elevation: 0,
           leading: GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Panegerycs()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Panegerycs()));
               //Navigator.pop(context);
             },
             child: const Icon(
@@ -384,6 +570,47 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
                                 ),
                                 //onSaved: (input) => _email = input
                               ),
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * .05,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                FlutterSwitch(
+                                  activeText: "Format audio",
+                                  inactiveText: "Format video",
+                                  value: typeFichier,
+                                  valueFontSize: 16.0,
+                                  width: 140,
+                                  height: 30,
+                                  borderRadius: 30.0,
+                                  showOnOff: true,
+                                  onToggle: (val) {
+                                    setState(() {
+                                      typeFichier = val;
+                                    });
+                                  },
+                                ),
+                                FlutterSwitch(
+                                  activeText: "Panegyric",
+                                  inactiveText: "Story",
+                                  value: isPanegyric,
+                                  valueFontSize: 16.0,
+                                  width: 140,
+                                  height: 30,
+                                  borderRadius: 30.0,
+                                  showOnOff: true,
+                                  onToggle: (val) {
+                                    setState(() {
+                                      isPanegyric = val;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * .05,
                             ),
                             CSCPicker(
                               onCountryChanged: (value) {
@@ -463,9 +690,30 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
                             ), */
                             const SizedBox(height: 10),
                             const SizedBox(height: 40),
-                            _recordProvider.recordedFilePath.isEmpty
-                                ? _recordingSection()
-                                : _audioPlayingSection(),
+                            typeFichier
+                                ? _recordProvider.recordedFilePath.isEmpty
+                                    ? _recordingSection()
+                                    : _audioPlayingSection()
+                                : _recordProvider.recordedFilePath.isEmpty
+                                    ? _recordingVideoNPickSection()
+                                    : Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children:[ Icon(
+                Icons.video_file,
+                color: Colors.white,
+                size: 22,
+              ), Text(_recordProvider.pickedVideoFilename, style:TextStyle(color: Colors.white, fontSize: 14)), SizedBox(width: 1),
+          GestureDetector(
+              onTap: () {
+                final _recordProvider =
+                    Provider.of<RecordAudioProvider>(context, listen: false);
+                _recordProvider.clearOldData();
+              },
+              child: Icon(
+                Icons.delete_rounded,
+                color: Colors.red,
+                size: 35,
+              ))] ),
                             if (_recordProvider.recordedFilePath.isNotEmpty &&
                                 !_playProvider.isSongPlaying)
                               isloading

@@ -1,10 +1,11 @@
 import 'dart:convert';
-
+import 'package:provider/provider.dart';
 import 'package:adorafrika/pages/auth/widgets/background-image.dart';
 import 'package:adorafrika/pages/auth/widgets/pallete.dart';
 import 'package:adorafrika/pages/auth/widgets/widgets.dart';
 import 'package:adorafrika/pages/navigator/home.dart';
 import 'package:adorafrika/pages/services/networkHandler.dart';
+import 'package:adorafrika/providers/user_info_provider.dart';
 import 'package:adorafrika/utils/config.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cherry_toast/cherry_toast.dart';
@@ -66,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
         /*   await prefs.setString('nom', output['nom']);
            await prefs.setString('prenom', output['prenom']);
            await prefs.setString('username', output['stanley97']);
-           await prefs.setString('nom', output['nom']); */
+           await prefs.setString('id', output['id']); */
 
         Hive.box('settings').put('currentUser', x);
         setState(() {
@@ -145,6 +146,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+      final _userProvider = Provider.of<UserInformationProvider>(context);
+
     Size size = MediaQuery.of(context).size;
     return Stack(
       children: [

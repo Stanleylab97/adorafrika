@@ -308,34 +308,19 @@ class _PanegerycsState extends State<Panegerycs> {
           ],
         ),
       ),
-      floatingActionButton: SpeedDial(
-          heroTag: "create-paneyrique",
-          //animatedIcon: AnimatedIcons.menu_close,
-          backgroundColor: Colors.yellow.shade600,
-          overlayOpacity: 0.4,
-          overlayColor: Colors.black,
-          icon: Icons.add,
-          activeIcon: Icons.close,
-          children: [
-            SpeedDialChild(
-                child: Icon(FontAwesomeIcons.microphone),
-                label: "Enregister",
-                onTap: () {
+      floatingActionButton: FloatingActionButton(
+                heroTag: "create-panegeric",
+              backgroundColor: Colors.yellow.shade600,
+              onPressed: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => CreatePanegyrique()));
-                }),
-            SpeedDialChild(
-                child: Icon(FontAwesomeIcons.video),
-                label: "Sélectionner une vidéo",
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PicknUploadPaneegyrique()));
-                }),
-          ]),
+                }
+                , child: Icon(Icons.add)
+                ),
+           
+          
     );
   }
 }
