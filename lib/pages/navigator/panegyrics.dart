@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:adorafrika/pages/panegyriques/create_panegyrique.dart';
+import 'package:adorafrika/pages/panegyriques/panegyric_video_player.dart';
+import 'package:adorafrika/pages/panegyriques/panegyrique_details.dart';
 import 'package:adorafrika/pages/panegyriques/video_panegyrique.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:http/http.dart' as http;
@@ -163,29 +165,37 @@ class _PanegerycsState extends State<Panegerycs> {
                         itemBuilder: (context, index) {
                           final pane = panegeriques[index];
                           if (pane.type == "AUDIO")
-                            return ListTile(
-                              leading: FaIcon(
-                                FontAwesomeIcons.music,
-                                size: 35,
-                                color: Colors.red,
+                            return GestureDetector(
+                              child: ListTile(
+                                leading: FaIcon(
+                                  FontAwesomeIcons.music,
+                                  size: 35,
+                                  color: Colors.red,
+                                ),
+                                title: Text(
+                                  "Famille " + pane.name,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ),
+                                subtitle: Row(
+                                  children: [
+                                    Text(pane.countryCode.toString().substring(0,2)+" "+pane.region.toString()+" "+pane.username,
+                                        style: TextStyle(color: Colors.white)),
+                                  ],
+                                ),
+                                trailing: Visibility(
+                                    visible: true,
+                                    child: Icon(
+                                      Icons.verified_rounded,
+                                      color: Colors.green,
+                                    )),
                               ),
-                              title: Text(
-                                "Famille " + pane.name,
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              ),
-                              subtitle: Row(
-                                children: [
-                                  Text(pane.countryCode.toString().substring(0,2)+" "+pane.region.toString()+" "+pane.username,
-                                      style: TextStyle(color: Colors.white)),
-                                ],
-                              ),
-                              trailing: Visibility(
-                                  visible: true,
-                                  child: Icon(
-                                    Icons.verified_rounded,
-                                    color: Colors.green,
-                                  )),
+                               onTap: (() {
+                                 Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => PanegyriqueDetails(panegyrique: pane,)));
+           
+                                
+                              }),
                             );
                           else
                             return GestureDetector(
@@ -280,6 +290,12 @@ class _PanegerycsState extends State<Panegerycs> {
                                       ))
                                 ],
                               ),
+                              onTap: (() {
+                                 Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => PanegyriqueDetails(panegyrique: pane,)));
+           
+                                
+                              }),
                             );
                         },
                       );
