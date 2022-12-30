@@ -8,8 +8,8 @@ import 'package:lottie/lottie.dart';
 
 
 class PanegyricVideoPlayer extends StatefulWidget {
-  final Panegyrique panegyrique;
-  const PanegyricVideoPlayer({super.key, required this.panegyrique});
+  final String fichier;
+  const PanegyricVideoPlayer({super.key, required this.fichier});
 
   @override
   State<PanegyricVideoPlayer> createState() => _PanegyricVideoPlayerState();
@@ -22,7 +22,7 @@ ChewieController? chewieController;
 @override
   void initState() {
     super.initState();
-    videoPlayerController=VideoPlayerController.network(widget.panegyrique.fichier);
+    videoPlayerController=VideoPlayerController.network(widget.fichier);
     videoPlayerController!.initialize().then((_){
       chewieController=ChewieController(videoPlayerController: videoPlayerController!);
      setState(() {

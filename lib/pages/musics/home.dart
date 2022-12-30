@@ -29,6 +29,7 @@ import 'package:adorafrika/customWidgets/playlist_head.dart';
 import 'package:adorafrika/customWidgets/snackbar.dart';
 import 'package:adorafrika/helpers/audio_query.dart';
 import 'package:adorafrika/pages/musics/recents.dart';
+import 'package:adorafrika/pages/musics/traditionals.dart';
 import 'package:adorafrika/pages/playlist/Player/audioplayer.dart';
 import 'package:adorafrika/pages/playlist/add_musique.dart';
 import 'package:adorafrika/pages/services/networkHandler.dart';
@@ -490,7 +491,7 @@ class _MusicsDashState extends State<MusicsDash> with TickerProviderStateMixin {
                         controller: _tcontroller,
                         children: [
                           const Recents(),
-                          const Placeholder(),
+                          const Traditionals(),
                           const Placeholder()
                         ],
                       ),

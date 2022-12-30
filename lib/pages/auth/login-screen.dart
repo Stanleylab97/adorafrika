@@ -51,53 +51,64 @@ class _LoginScreenState extends State<LoginScreen> {
     if (status == DataConnectionStatus.connected) {
       var response = await networkHandler.unsecurepost(
           NetworkHandler.baseurl + "/client/login", data);
-      log.v(response.data);
-      if (response.data['statusCode'] == 422) {
+      log.v(response.statusCode);
+      if (response.statusCode == 422) {
         circular = false;
-        errorText = 'Une erreur s\'est produite';
+        errorText = response.data['message'];
+        print(errorText);
         CherryToast.error(
-                title: Text("Une erreur s\'est produite",
-                    style: TextStyle(color: Colors.black)),
+                title: Text(errorText, style: TextStyle(color: Colors.black)),
                 displayTitle: false,
                 description: Text(errorText),
                 animationType: AnimationType.fromRight,
                 animationDuration: Duration(milliseconds: 1000),
                 autoDismiss: true)
             .show(context);
-      } else if (response.statusCode == 200 || response.statusCode == 201) {
-        final x = {
-          "id": response.data['user']['id'],
-          "nom": response.data['user']['nom'],
-          "prenom": response.data['user']['prenom'],
-          "username": response.data['user']['username'],
-          "profil": response.data['user']['profil'],
-        };
-        print("Login susscessfull");
-
-        Hive.box('settings').put('currentUser', x);
-        setState(() {
-          validate = true;
+      } else if (response.statusCode == 200) {
+        if (response.data['statusCode'] == 422) {
           circular = false;
-        });
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => HomePage()));
+          errorText = response.data['message'];
+          CherryToast.error(
+                  title: Text(errorText, style: TextStyle(color: Colors.black)),
+                  displayTitle: false,
+                  description: Text(errorText,style: TextStyle(color: Colors.black)),
+                  animationType: AnimationType.fromRight,
+                  animationDuration: Duration(milliseconds: 1000),
+                  autoDismiss: true)
+              .show(context);
+        } else {
+          final x = {
+            "id": response.data['user']['id'],
+            "nom": response.data['user']['nom'],
+            "prenom": response.data['user']['prenom'],
+            "username": response.data['user']['username'],
+            "profil": response.data['user']['profil'],
+          };
+          print("Login successfull");
+
+          Hive.box('settings').put('currentUser', x);
+          setState(() {
+            validate = true;
+            circular = false;
+          });
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => HomePage()));
+        }
       } else if (response.statusCode == 401) {
         setState(() {
           circular = false;
         });
         errorText = 'Identifiant ou mot de passe incorrects';
         //log.e('Erreur ${response.statusCode}: $errorText');
-        Flushbar(
-          margin: EdgeInsets.all(8),
-          borderRadius: BorderRadius.circular(8),
-          message: errorText,
-          icon: Icon(
-            Icons.info_outline,
-            size: 28.0,
-            color: Colors.blue[300],
-          ),
-          duration: Duration(seconds: 3),
-        )..show(context);
+        CherryToast.error(
+                title: Text(errorText, style: TextStyle(color: Colors.black)),
+                displayTitle: false,
+                description:
+                    Text(errorText, style: TextStyle(color: Colors.black)),
+                animationType: AnimationType.fromRight,
+                animationDuration: Duration(milliseconds: 1000),
+                autoDismiss: true)
+            .show(context);
       }
       if (response.statusCode == 500) {
         setState(() {
@@ -105,9 +116,10 @@ class _LoginScreenState extends State<LoginScreen> {
         });
         errorText = 'Erreur système détectée';
         CherryToast.error(
-                title: Text(errorText),
+                title: Text(errorText, style: TextStyle(color: Colors.black)),
                 displayTitle: false,
-                description: Text(errorText),
+                description:
+                    Text(errorText, style: TextStyle(color: Colors.black)),
                 animationType: AnimationType.fromRight,
                 animationDuration: Duration(milliseconds: 1000),
                 autoDismiss: true)
@@ -118,9 +130,11 @@ class _LoginScreenState extends State<LoginScreen> {
         circular = false;
       });
       CherryToast.error(
-              title: Text("Erreur réseau"),
+              title:
+                  Text("Erreur réseau", style: TextStyle(color: Colors.black)),
               displayTitle: false,
-              description: Text("Vérifiez votre connexion internet!"),
+              description: Text("Vérifiez votre connexion internet",
+                  style: TextStyle(color: Colors.black)),
               animationType: AnimationType.fromRight,
               animationDuration: Duration(milliseconds: 1000),
               autoDismiss: true)

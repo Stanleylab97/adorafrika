@@ -24,17 +24,17 @@ List cachedrecents = [];
 bool fetched = false;
 bool emptyTop = false;
 
-class Recents extends StatefulWidget {
-  const Recents({
+class Traditionals extends StatefulWidget {
+  const Traditionals({
     super.key,
   });
 
   @override
-  _RecentsState createState() => _RecentsState();
+  _TraditionalsState createState() => _TraditionalsState();
 }
 
-class _RecentsState extends State<Recents>
-    with AutomaticKeepAliveClientMixin<Recents> {
+class _TraditionalsState extends State<Traditionals>
+    with AutomaticKeepAliveClientMixin<Traditionals> {
   @override
   bool get wantKeepAlive => true;
   @override
@@ -44,7 +44,7 @@ class _RecentsState extends State<Recents>
     final bool rotated = MediaQuery.of(context).size.height < screenWidth;
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: TopPage(type: 'recents'),
+      body: TopPage(type: 'traditionelle'),
     );
   }
 }
@@ -56,12 +56,12 @@ Future<List> futurescrapData(String type) async {
     final String unencodedPath = topPath;
 
     final Response res = await get(Uri.https(authority, unencodedPath));
-    print("***\n***\n***\n");
+   
     if (res.statusCode != 200) return List.empty();
     final Map data = json.decode(res.body) as Map;
-    print(data['recents']);
-    Hive.box('cache').put(type, data['recents'] as List);
-    return data['recents'] as List;
+    print(data['traditionelle']);
+    Hive.box('cache').put(type, data['traditionelle'] as List);
+    return data['traditionelle'] as List;
   });
   return List.empty();
 }
@@ -79,7 +79,7 @@ Future<List> futurescrapData(String type) async {
   /*  final result = RegExp(r'<script.*>({\"context\".*})<\/script>', dotAll: true)
       .firstMatch(res.body); */
   final Map data = json.decode(res.body) as Map;
-  return data['recents'] as List;
+  return data['traditionelle'] as List;
 }
 
 
@@ -233,7 +233,7 @@ class _TopPageState extends State<TopPage>
                 },
               );
             },
-            future: futurescrapData('recents'),
+            future: futurescrapData('traditionelle'),
           ),
         ),
       ],
