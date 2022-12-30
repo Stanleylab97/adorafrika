@@ -81,8 +81,7 @@ Future<List> scrapData(String type) async {
   /*  final result = RegExp(r'<script.*>({\"context\".*})<\/script>', dotAll: true)
       .firstMatch(res.body); */
   final Map data = json.decode(res.body) as Map;
-  print(data['musiques']);
-  return data['musiques'] as List;
+  return data['recents'] as List;
 }
 
 class TopPage extends StatefulWidget {

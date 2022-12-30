@@ -30,7 +30,7 @@ class _PanegyricAudioPlayerState extends State<PanegyricAudioPlayer> {
 
   void dispose() {
     super.dispose();
-    player?.dispose();
+    player.dispose();
   }
 
   void setSong(Panegyrique songInfo) async {
