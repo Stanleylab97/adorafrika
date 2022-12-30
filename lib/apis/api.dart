@@ -378,7 +378,7 @@ class SaavnAPI {
     final res = await getResponse(params);
     if (res.statusCode == 200) {
       final getMain = json.decode(res.body) as Map;
-      final List topSongsResponseList = getMain['topSongs'] as List;
+      final List topSongsResponseList = getMain['recents'] as List;
       final List latestReleaseResponseList = getMain['latest_release'] as List;
       final List topAlbumsResponseList = getMain['topAlbums'] as List;
       final List singlesResponseList = getMain['singles'] as List;
@@ -394,7 +394,7 @@ class SaavnAPI {
         'song',
       );
       if (topSongsSearchedList.isNotEmpty) {
-        data[getMain['modules']?['topSongs']?['title']?.toString() ??
+        data[getMain['modules']?['recents']?['title']?.toString() ??
             'Top Songs'] = topSongsSearchedList;
       }
 

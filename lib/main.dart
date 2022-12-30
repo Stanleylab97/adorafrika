@@ -197,7 +197,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget initialFuntion() {
-    return Hive.box('settings').get('currentUser')['id'] != null
+    return Hive.box('settings').containsKey('currentUser')
         ? HomePage()
         : PrefScreen();
   }
