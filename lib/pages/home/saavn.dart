@@ -65,6 +65,8 @@ class _SaavnHomePageState extends State<SaavnHomePage>
       Hive.box('settings').get('playlistDetails', defaultValue: {}) as Map;
   int recentIndex = 0;
   int playlistIndex = 1;
+  Map currentUser =
+      Hive.box('settings').get('currentUser', defaultValue: {}) as Map;
 
   Future<void> getHomePageData() async {
     Map recievedData = await SaavnAPI().fetchHomePageData();

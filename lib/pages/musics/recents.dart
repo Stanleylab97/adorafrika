@@ -17,10 +17,12 @@
  * Copyright (c) 2021-2022, Ankit Sangwan
  */
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:adorafrika/customWidgets/custom_physics.dart';
 import 'package:adorafrika/customWidgets/empty_screen.dart';
+import 'package:adorafrika/models/song.dart';
 import 'package:adorafrika/pages/playlist/Search/search.dart';
 
 // import 'package:blackhole/Helpers/countrycodes.dart';
@@ -35,13 +37,10 @@ import 'package:hive_flutter/hive_flutter.dart';
 // import 'package:html_unescape/html_unescape_small.dart';
 import 'package:http/http.dart';
 
-List topSongs = [];
-List viralSongs = [];
-List cachedTopSongs = [];
-List cachedViralSongs = [];
+List recents = [];
+List cachedrecents = [];
 bool fetched = false;
 bool emptyTop = false;
-bool emptyViral = false;
 
 class Recents extends StatefulWidget {
   const Recents({
@@ -63,12 +62,29 @@ class _RecentsState extends State<Recents>
     final bool rotated = MediaQuery.of(context).size.height < screenWidth;
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: TopPage(type: 'top'),
+      body: TopPage(type: 'recents'),
     );
   }
 }
 
-Future<List> scrapData(String type) async {
+Future<List> futurescrapData(String type) async {
+  Future.delayed(Duration(seconds: 7), () async {
+    const String authority = 'www.backend.adorafrika.com';
+    const String topPath = '/api/musique';
+    final String unencodedPath = topPath;
+
+    final Response res = await get(Uri.https(authority, unencodedPath));
+    print("***\n***\n***\n");
+    if (res.statusCode != 200) return List.empty();
+    final Map data = json.decode(res.body) as Map;
+    print(data['recents']);
+    Hive.box('cache').put(type, data['recents'] as List);
+    return data['recents'] as List;
+  });
+  return List.empty();
+}
+
+ Future<List> scrapData(String type) async {
   const String authority = 'www.backend.adorafrika.com';
   const String topPath = '/api/musique';
 
@@ -84,6 +100,7 @@ Future<List> scrapData(String type) async {
   return data['recents'] as List;
 }
 
+
 class TopPage extends StatefulWidget {
   final String type;
   const TopPage({super.key, required this.type});
@@ -93,149 +110,150 @@ class TopPage extends StatefulWidget {
 
 class _TopPageState extends State<TopPage>
     with AutomaticKeepAliveClientMixin<TopPage> {
-  Future<void> getData(String type) async {
-    fetched = true;
-    final List temp = await compute(scrapData, type);
-    setState(() {
-      topSongs = temp;
-      if (topSongs.isNotEmpty) {
-        cachedTopSongs = topSongs;
-        Hive.box('cache').put(type, topSongs);
-      }
-      emptyTop = topSongs.isEmpty && cachedTopSongs.isEmpty;
-    });
-  }
+  List temp = List.empty();
 
   Future<void> getCachedData(String type) async {
     fetched = true;
 
-    cachedTopSongs =
-        await Hive.box('cache').get(type, defaultValue: []) as List;
+    cachedrecents = await Hive.box('cache').get(type, defaultValue: []) as List;
 
     setState(() {});
   }
 
+   Future<void> getData(String type) async {
+    fetched = true;
+    final List temp = await compute(scrapData, type);
+    setState(() {
+      recents = temp;
+      if (recents.isNotEmpty) {
+        cachedrecents = recents;
+        Hive.box('cache').put(type, recents);
+      }
+      emptyTop = recents.isEmpty && cachedrecents.isEmpty;
+    });
+  }
+
+ 
   @override
   bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
-    if (widget.type == 'top' && topSongs.isEmpty) {
-        getCachedData(widget.type);
-      getData(widget.type);
-    }
+     getCachedData(widget.type);
+    getData(widget.type);
+    
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
 
-    if (!fetched) {
-       getCachedData(widget.type);
-      getData(widget.type);
-    }
-    final List showList = cachedTopSongs;
+    final List showList = cachedrecents;
     final bool isListEmpty = emptyTop;
     return Column(
       children: [
-        if (showList.length <= 0)
-          Expanded(
-            child: isListEmpty
-                ? emptyScreen(
-                    context,
-                    0,
-                    ':( ',
-                    100,
-                    'ERROR',
-                    60,
-                    'Service Unavailable',
-                    20,
-                  )
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Center(child: CircularProgressIndicator()),
-                    ],
-                  ),
-          )
-        else
-          Expanded(
-            child: ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              itemCount: showList.length,
-              itemExtent: 70.0,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: Card(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(7.0),
-                    ),
-                    clipBehavior: Clip.antiAlias,
-                    child: Stack(
-                      children: [
-                        const Image(
-                          image: AssetImage('assets/images/cover.jpg'),
-                        ),
-                        if (showList[index]['thumbnail'] != '' && showList[index]['thumbnail'] != null)
-                          CachedNetworkImage(
-                            width: MediaQuery.of(context).size.width * .12,
-                            height: MediaQuery.of(context).size.height * 1,
-                            fit: BoxFit.cover,
-                            imageUrl: showList[index]['thumbnail'].toString(),
-                            errorWidget: (context, _, __) => const Image(
-                              fit: BoxFit.cover,
-                              image: AssetImage('assets/images/cover.jpg'),
-                            ),
-                            placeholder: (context, url) => const Image(
-                              fit: BoxFit.cover,
-                              image: AssetImage('assets/images/cover.jpg'),
-                            ),
-                          )
-                      else
-                         CachedNetworkImage(
-                            width: MediaQuery.of(context).size.width * .12,
-                            height: MediaQuery.of(context).size.height * 1,
-                            fit: BoxFit.cover,
-                            imageUrl: "https://i.pinimg.com/736x/a7/a9/cb/a7a9cbcefc58f5b677d8c480cf4ddc5d.jpg",
-                            errorWidget: (context, _, __) => const Image(
-                              fit: BoxFit.cover,
-                              image: AssetImage('assets/images/cover.jpg'),
-                            ),
-                            placeholder: (context, url) => const Image(
-                              fit: BoxFit.cover,
-                              image: AssetImage('assets/images/cover.jpg'),
-                            ),
-                          )
-                      ],
-                    ),
-                  ),
-                  title: Text(
-                    '${index + 1}. ${showList[index]['titre'] == null ? AppLocalizations.of(context)!.unknown : showList[index]["titre"]}',
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  subtitle: Text(
-                    showList[index]['blazartiste'] == null
-                        ? AppLocalizations.of(context)!.unknown
-                        : showList[index]['blazartiste'],
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  trailing: setIcon(showList[index]['typefile']),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SearchPage(
-                          query: showList[index]['titre'].toString(),
-                        ),
+        Expanded(
+          child: FutureBuilder(
+            builder: (context, snapshot) {
+              // WHILE THE CALL IS BEING MADE AKA LOADING
+              if (ConnectionState.active != null && !snapshot.hasData) {
+                return Center(
+                    child: Text(
+                  'Loading',
+                  style: TextStyle(color: Colors.white),
+                ));
+              }
+
+              // WHEN THE CALL IS DONE BUT HAPPENS TO HAVE AN ERROR
+              if (ConnectionState.done != null && snapshot.hasError) {
+                return Center(
+                    child: Text(
+                  "Error",
+                  style: TextStyle(color: Colors.white),
+                ));
+              }
+
+              return ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                itemCount: cachedrecents.length,
+                itemExtent: 70.0,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7.0),
                       ),
-                    );
-                  },
-                );
-              },
-            ),
+                      clipBehavior: Clip.antiAlias,
+                      child: Stack(
+                        children: [
+                          const Image(
+                            image: AssetImage('assets/images/cover.jpg'),
+                          ),
+                          if (showList[index]['thumbnail'] != '' &&
+                              showList[index]['thumbnail'] != null)
+                            CachedNetworkImage(
+                              width: MediaQuery.of(context).size.width * .12,
+                              height: MediaQuery.of(context).size.height * 1,
+                              fit: BoxFit.cover,
+                              imageUrl: showList[index]['thumbnail'].toString(),
+                              errorWidget: (context, _, __) => const Image(
+                                fit: BoxFit.cover,
+                                image: AssetImage('assets/images/cover.jpg'),
+                              ),
+                              placeholder: (context, url) => const Image(
+                                fit: BoxFit.cover,
+                                image: AssetImage('assets/images/cover.jpg'),
+                              ),
+                            )
+                          else
+                            CachedNetworkImage(
+                              width: MediaQuery.of(context).size.width * .12,
+                              height: MediaQuery.of(context).size.height * 1,
+                              fit: BoxFit.cover,
+                              imageUrl:
+                                  "https://i.pinimg.com/736x/a7/a9/cb/a7a9cbcefc58f5b677d8c480cf4ddc5d.jpg",
+                              errorWidget: (context, _, __) => const Image(
+                                fit: BoxFit.cover,
+                                image: AssetImage('assets/images/cover.jpg'),
+                              ),
+                              placeholder: (context, url) => const Image(
+                                fit: BoxFit.cover,
+                                image: AssetImage('assets/images/cover.jpg'),
+                              ),
+                            )
+                        ],
+                      ),
+                    ),
+                    title: Text(
+                      '${index + 1}. ${showList[index]['titre'] == null ? AppLocalizations.of(context)!.unknown : showList[index]["titre"]}',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    subtitle: Text(
+                      showList[index]['blazartiste'] == null
+                          ? AppLocalizations.of(context)!.unknown
+                          : showList[index]['blazartiste'],
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    trailing: setIcon(showList[index]['typefile']),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SearchPage(
+                            query: showList[index]['titre'].toString(),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              );
+            },
+            future: futurescrapData('recents'),
           ),
+        ),
       ],
     );
   }
@@ -245,10 +263,10 @@ Icon setIcon(type) {
   switch (type) {
     case "AUDIO":
       return Icon(FontAwesomeIcons.music, size: 17);
-      
+
     case "VIDEO":
-       return Icon(FontAwesomeIcons.video,size: 17);
+      return Icon(FontAwesomeIcons.video, size: 17);
     default:
-     return Icon(FontAwesomeIcons.linkSlash,size: 17);
+      return Icon(FontAwesomeIcons.linkSlash, size: 17);
   }
 }

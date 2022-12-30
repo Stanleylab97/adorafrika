@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:adorafrika/pages/navigator/home.dart';
+import 'package:adorafrika/providers/user_info_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:adorafrika/helpers/config.dart';
 import 'package:adorafrika/helpers/countrycodes.dart';
@@ -196,7 +197,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget initialFuntion() {
-    return Hive.box('settings').get('userId') != null
+    return Hive.box('settings').containsKey('currentUser')
         ? HomePage()
         : PrefScreen();
   }
@@ -231,6 +232,8 @@ class _MyAppState extends State<MyApp> {
         providers: [
           ChangeNotifierProvider(create: (_) => RecordAudioProvider()),
           ChangeNotifierProvider(create: (_) => PlayAudioProvider()),
+          ChangeNotifierProvider(create: (_) => UserInformationProvider()),
+ 
         ],
 //GetMaterialApp(
         child: 

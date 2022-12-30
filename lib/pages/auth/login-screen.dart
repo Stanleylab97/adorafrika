@@ -1,10 +1,11 @@
 import 'dart:convert';
-
+import 'package:provider/provider.dart';
 import 'package:adorafrika/pages/auth/widgets/background-image.dart';
 import 'package:adorafrika/pages/auth/widgets/pallete.dart';
 import 'package:adorafrika/pages/auth/widgets/widgets.dart';
 import 'package:adorafrika/pages/navigator/home.dart';
 import 'package:adorafrika/pages/services/networkHandler.dart';
+import 'package:adorafrika/providers/user_info_provider.dart';
 import 'package:adorafrika/utils/config.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cherry_toast/cherry_toast.dart';
@@ -51,22 +52,27 @@ class _LoginScreenState extends State<LoginScreen> {
       var response = await networkHandler.unsecurepost(
           NetworkHandler.baseurl + "/client/login", data);
       log.v(response.data);
-      log.v(response.data['user']['nom']);
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response.data['statusCode'] == 422) {
+        circular = false;
+        errorText = 'Une erreur s\'est produite';
+        CherryToast.error(
+                title: Text("Une erreur s\'est produite",
+                    style: TextStyle(color: Colors.black)),
+                displayTitle: false,
+                description: Text(errorText),
+                animationType: AnimationType.fromRight,
+                animationDuration: Duration(milliseconds: 1000),
+                autoDismiss: true)
+            .show(context);
+      } else if (response.statusCode == 200 || response.statusCode == 201) {
         final x = {
           "id": response.data['user']['id'],
-            "nom": response.data['user']['nom'],
-            "prenom":response.data['user']['prenom'],
-            "username": response.data['user']['username'],
-            "profil":response.data['user']['profil'],
+          "nom": response.data['user']['nom'],
+          "prenom": response.data['user']['prenom'],
+          "username": response.data['user']['username'],
+          "profil": response.data['user']['profil'],
         };
         print("Login susscessfull");
-        //Map<String, dynamic> output = json.decode(x);
-
-        /*   await prefs.setString('nom', output['nom']);
-           await prefs.setString('prenom', output['prenom']);
-           await prefs.setString('username', output['stanley97']);
-           await prefs.setString('nom', output['nom']); */
 
         Hive.box('settings').put('currentUser', x);
         setState(() {
@@ -75,40 +81,37 @@ class _LoginScreenState extends State<LoginScreen> {
         });
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => HomePage()));
-      } else {
+      } else if (response.statusCode == 401) {
         setState(() {
-          validate = false;
-          if (response.statusCode == 401) {
-            circular = false;
-            errorText = 'Identifiant ou mot de passe incorrects';
-            //log.e('Erreur ${response.statusCode}: $errorText');
-            Flushbar(
-              margin: EdgeInsets.all(8),
-              borderRadius: BorderRadius.circular(8),
-              message: errorText,
-              icon: Icon(
-                Icons.info_outline,
-                size: 28.0,
-                color: Colors.blue[300],
-              ),
-              duration: Duration(seconds: 3),
-            )..show(context);
-          }
-          if (response.statusCode == 500) {
-            circular = false;
-            errorText = 'Erreur système détectée';
-            CherryToast.error(
-                    title: Text("Erreur réseau"),
-                    displayTitle: false,
-                    description: Text(errorText),
-                    animationType: AnimationType.fromRight,
-                    animationDuration: Duration(milliseconds: 1000),
-                    autoDismiss: true)
-                .show(context);
-          } else {
-            circular = false;
-          }
+          circular = false;
         });
+        errorText = 'Identifiant ou mot de passe incorrects';
+        //log.e('Erreur ${response.statusCode}: $errorText');
+        Flushbar(
+          margin: EdgeInsets.all(8),
+          borderRadius: BorderRadius.circular(8),
+          message: errorText,
+          icon: Icon(
+            Icons.info_outline,
+            size: 28.0,
+            color: Colors.blue[300],
+          ),
+          duration: Duration(seconds: 3),
+        )..show(context);
+      }
+      if (response.statusCode == 500) {
+        setState(() {
+          circular = false;
+        });
+        errorText = 'Erreur système détectée';
+        CherryToast.error(
+                title: Text(errorText),
+                displayTitle: false,
+                description: Text(errorText),
+                animationType: AnimationType.fromRight,
+                animationDuration: Duration(milliseconds: 1000),
+                autoDismiss: true)
+            .show(context);
       }
     } else {
       setState(() {
@@ -145,6 +148,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final _userProvider = Provider.of<UserInformationProvider>(context);
+
     Size size = MediaQuery.of(context).size;
     return Stack(
       children: [

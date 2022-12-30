@@ -1,6 +1,6 @@
 class Panegyrique {
-  late String name,username, state, region,  statut, fichier, type;
-  String? countryCode,thumbnail;
+  late String name,username, countryLibelle,state, region,  statut, fichier, type;
+  String? countryCode, thumbnail;
   late int id, isPanegyric;
 
   Panegyrique(
@@ -9,6 +9,7 @@ class Panegyrique {
       required this.statut,
       required this.fichier,
       this.countryCode,
+      required this.countryLibelle,
       required this.id,
       required this.state,
       required this.username,
@@ -21,12 +22,14 @@ class Panegyrique {
       name: json['nom_famille'],
       region: json['region'],
       statut: json['statut']==null?"":json['statut'],
-      countryCode: json['pays'],
+      countryCode: json['pays']==null?"ERR":json['pays'],
+      countryLibelle: json['pays']==null?"ERR":json['pays'],
       fichier: json['fichier'],
       type: json['type_fichier'],
       thumbnail: json['thumbnail'],
       state: json['state'] ,
       username:json['compte_client']['username'],
-isPanegyric: json['isPanegyric']
+      isPanegyric: json['isPanegyric'],
+
       );
 }

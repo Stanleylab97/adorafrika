@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:adorafrika/models/categorie_music.dart';
+import 'package:adorafrika/models/rythme_musical.dart';
 import 'package:adorafrika/pages/services/networkHandler.dart';
 import 'package:adorafrika/theme/app_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -13,6 +14,7 @@ import 'package:adorafrika/utils/config.dart';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cherry_toast/resources/arrays.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -30,9 +32,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 import 'package:http/http.dart' as http;
 import 'package:audio_waveforms/audio_waveforms.dart';
+import 'package:path/path.dart' as pathfile;
 
 class AddMusic extends StatefulWidget {
-
   const AddMusic({Key? key}) : super(key: key);
 
   @override
@@ -47,7 +49,8 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
   TextEditingController blazArtistCtrl = TextEditingController();
   TextEditingController language = TextEditingController();
   TextEditingController pays = TextEditingController();
-  int idCategory = 0;
+  bool isTraditional = true;
+  int idRythme = 0;
   String codepays = "";
   ImagePicker picker = ImagePicker();
   late File _videoselected = File("");
@@ -159,15 +162,14 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
 
   saveMusic() async {
     final prefs = await SharedPreferences.getInstance();
-    // int? userId=prefs.getString("userId");
-    String userId = "1";
+    String userId = Hive.box('settings').get('currentUser')['id'].toString();
 
     setState(() {
       isloading = true;
     });
 
     if ((isfilechoosen || iscovered) &&
-        idCategory != 0 &&
+        idRythme != 0 &&
         titleCtrl.text.length >= 3) {
       if (_videoselected.path.isNotEmpty || _audioselected.path.isNotEmpty) {
         DataConnectionStatus status = await isConnected();
@@ -194,20 +196,23 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
           if (iscovered) {
             request.files.add(await http.MultipartFile.fromPath(
                 "thumbnail", coverImage.path));
-           }
+          } else {
+            request.fields['thumbnail'] = "";
+          }
           request.fields['typefile'] = plan == 0 ? "AUDIO" : "VIDEO";
           request.fields['statut'] = "NOUVEAU";
-          request.fields['country'] = pays.text.trim();
+          request.fields['country_libelle'] = pays.text.trim();
+          request.fields['country_code'] = codepays;
           request.fields['titre'] = titleCtrl.text.trim();
           request.fields['blazartiste'] = blazArtistCtrl.text.trim();
           request.fields['compte_clients_id'] = userId;
-          request.fields['categories_id'] = idCategory.toString();
+          request.fields['categorie'] =
+              isTraditional ? 0.toString() : 1.toString();
+          request.fields['rythme_musicals_id'] = idRythme.toString();
           request.fields['yearofproduction'] = yearproduction.text.length == 4
               ? yearproduction.text.trim().toString()
               : "1974";
 
-          
-        
           request.headers.addAll({
             "Content-type": "multipart/form-data",
             //"Authorization": "Bearer $token"
@@ -229,17 +234,29 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
 
               Navigator.pop(context);
             } else {
-              EasyLoading.dismiss();
-              Map<String, dynamic> output = json.decode(response.body);
-              setState(() {
-                validate = false;
-                errorText = output['status'];
-                log.e(errorText);
-                isloading = false;
-              });
+              print("response ${response.body}");
+              if (response.statusCode == 500) {
+                Map<String, dynamic> output = json.decode(response.body);
+
+                log.e(output);
+                setState(() {
+                  validate = false;
+                  errorText = output['statusText'];
+
+                  CherryToast.error(
+                          title: Text("Erreur"),
+                          displayTitle: false,
+                          description: Text(errorText,
+                              style: TextStyle(color: Colors.black)),
+                          animationType: AnimationType.fromRight,
+                          animationDuration: Duration(milliseconds: 1000),
+                          autoDismiss: true)
+                      .show(context);
+                  isloading = false;
+                });
+              }
             }
           } catch (e) {
-            print(e);
             EasyLoading.dismiss();
             log.e(e);
             setState(() {
@@ -346,10 +363,13 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
 
     if (result != null) {
       File file = File(result.files.single.path!);
-      await playerController.preparePlayer(file.path);
+      String dir = pathfile.dirname(file.path);
+     String newPath = pathfile.join(dir,(DateTime.now().microsecond.toString()) + '.' + file.path.split('.').last);
+File f = await File(file.path).copy(newPath);
+      await playerController.preparePlayer(f.path);
       setState(() {
         isfilechoosen = true;
-        _audioselected = file;
+        _audioselected = f;
       });
       _playOrPausePlayer(playerController);
     } else {
@@ -380,11 +400,20 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Icon(Icons.drag_handle, color: Colors.grey),
+                          SwitchListTile(
+                              //switch at right side of label
+                              value: isTraditional,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  isTraditional =
+                                      value; //update value when sitch changed
+                                });
+                              },
+                              title: Text("Est-ce de la musique ordinaire ?")),
                           Text('Quel est le format du fichier ?',
                               style: TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.black38)),
+                                  color: Colors.white)),
                           SizedBox(
                             height: 12,
                           ),
@@ -409,7 +438,8 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
               SizedBox(
                 height: 10,
               ),
-              DropdownSearch<CategoryMusic>(
+              DropdownSearch<RythmeMusical>(
+                 itemAsString: (RythmeMusical u) => u.userAsString(),
                 popupProps: PopupProps.menu(
                     showSearchBox: true,
                     menuProps: MenuProps(
@@ -423,18 +453,21 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
                 ),
                 asyncItems: (String filter) async {
                   var response = await Dio().get(
-                    "https://backend.adorafrika.com/api/categorie/musique",
+                    "https://backend.adorafrika.com/api/rythme",
                     queryParameters: {"libelle": filter},
                   );
+                  print(response.data['rythmes']);
                   var models =
-                      CategoryMusic.fromJsonList(response.data['categories']);
+                      RythmeMusical.fromJsonList(response.data['rythmes']);
                   return models;
                 },
-                onChanged: (CategoryMusic? data) {
+                onChanged: (RythmeMusical? data) {
                   setState(() {
-                    idCategory = int.parse(data!.id);
+                    idRythme = data!.id;
+                    print(idRythme);
                   });
                 },
+
               )
             ]),
             isActive: currentStep >= 1),
@@ -519,9 +552,12 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
               Center(
                 child: codepays.isEmpty
                     ? FloatingActionButton.extended(
-                      heroTag: "selection-country",
+                        heroTag: "selection-country",
                         elevation: 8,
-                        label: Text('Sélectionnez le pays', style: TextStyle(color: Colors.black),), // <-- Text
+                        label: Text(
+                          'Sélectionnez le pays',
+                          style: TextStyle(color: Colors.black),
+                        ), // <-- Text
                         backgroundColor: Colors.white,
                         icon: Icon(
                           // <-- Icon
@@ -580,8 +616,10 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
                           : Center(
                               child: FloatingActionButton.extended(
                                 heroTag: "select-video",
-                                label:
-                                    Text('Sélectionnez la vidéo', style: TextStyle(color: Colors.black),), // <-- Text
+                                label: Text(
+                                  'Sélectionnez la vidéo',
+                                  style: TextStyle(color: Colors.black),
+                                ), // <-- Text
                                 backgroundColor: Colors.white,
                                 icon: Icon(
                                   // <-- Icon
@@ -620,8 +658,9 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
                           : Center(
                               child: FloatingActionButton.extended(
                                 heroTag: "select-fichierr",
-                                label:
-                                    Text('Sélectionnez le fichier',style: TextStyle(color: Colors.black)), // <-- Text
+                                label: Text('Sélectionnez le fichier',
+                                    style: TextStyle(
+                                        color: Colors.black)), // <-- Text
                                 backgroundColor: Colors.white,
                                 icon: Icon(
                                   // <-- Icon
@@ -669,7 +708,7 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
   void dispose() async {
     playerController.stopAllPlayers();
     playerController.dispose();
-    
+
     super.dispose();
   }
 
@@ -684,14 +723,12 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-     
         child: Material(
-          color: Colors.black,
-          
+      color: Colors.black,
       child: Theme(
         data: AppTheme.darkTheme(
-        context: context,
-      ),
+          context: context,
+        ),
         child: Column(
           children: [
             Padding(
@@ -762,7 +799,6 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
                       if (currentStep != 0)
                         Expanded(
                             child: ElevatedButton(
-                              
                                 child: Text("Précédant"),
                                 onPressed: controls.onStepCancel)),
                       SizedBox(

@@ -92,6 +92,7 @@ class AppTheme {
       headline6: TextStyle(fontSize: 26.0, fontStyle: FontStyle.italic,color:Colors.white),
       bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind', color:Colors.white),
     ),
+    switchTheme: SwitchThemeData(),
   
       textSelectionTheme: TextSelectionThemeData(
         selectionHandleColor: currentTheme.currentColor(),

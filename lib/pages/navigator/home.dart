@@ -57,8 +57,8 @@ class _HomePageState extends State<HomePage> {
   final ValueNotifier<int> _selectedIndex = ValueNotifier<int>(0);
   bool checked = false;
   String? appVersion;
-  String name =
-      Hive.box('settings').get('name', defaultValue: 'Guest') as String;
+  Map currentUser =
+      Hive.box('settings').get('currentUser', defaultValue: {}) as Map;
   bool checkUpdate =
       Hive.box('settings').get('checkUpdate', defaultValue: false) as bool;
   bool autoBackup =
@@ -601,26 +601,7 @@ class _HomePageState extends State<HomePage> {
                                               // collapseMode: CollapseMode.parallax,
                                               background: GestureDetector(
                                                 onTap: () async {
-                                                  await showTextInputDialog(
-                                                    context: context,
-                                                    title: 'Name',
-                                                    initialText: name,
-                                                    keyboardType:
-                                                        TextInputType.name,
-                                                    onSubmitted: (value) {
-                                                      Hive.box('settings').put(
-                                                        'name',
-                                                        value.trim(),
-                                                      );
-                                                      name = value.trim();
-                                                      Navigator.pop(context);
-                                                      updateUserDetails(
-                                                        'name',
-                                                        value.trim(),
-                                                      );
-                                                    },
-                                                  );
-                                                  setState(() {});
+                                                     setState(() {});
                                                 },
                                                 child: Column(
                                                   mainAxisSize:
@@ -680,20 +661,15 @@ class _HomePageState extends State<HomePage> {
                                                               Widget? child,
                                                             ) {
                                                               return Text(
-                                                                (box.get('name') ==
-                                                                            null ||
-                                                                        box.get('name') ==
-                                                                            '')
+                                                                (box.get('currentUser') ==
+                                                                            {} 
                                                                     ? 'Guest'
                                                                     : box
                                                                         .get(
-                                                                          'name',
+                                                                          'currentUser',
                                                                         )
-                                                                        .split(
-                                                                          ' ',
-                                                                        )[0]
-                                                                        .toString()
-                                                                        .capitalize(),
+                                                                        ['prenom'])
+                                                                      ,
                                                                 style:
                                                                     const TextStyle(
                                                                   letterSpacing:

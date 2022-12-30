@@ -77,7 +77,7 @@ class _PanegyriqueDetailsState extends State<PanegyriqueDetails> {
               child: const Icon(
                 Icons.arrow_back_ios,
                 size: 20,
-                color: Colors.black,
+                color: Colors.white,
               ),
             ),
           ),
@@ -216,7 +216,7 @@ class _PanegyriqueDetailsState extends State<PanegyriqueDetails> {
                         width: MediaQuery.of(context).size.width * .02,
                       ),
                       Text(
-                        widget.panegyrique.countryCode!,
+                        widget.panegyrique.countryLibelle,
                         style: TextStyle(
                             fontSize: 16,
                             color: Colors.black,
