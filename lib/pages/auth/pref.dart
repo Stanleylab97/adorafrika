@@ -72,22 +72,7 @@ class _PrefScreenState extends State<PrefScreen> {
               ),
               Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.popAndPushNamed(context, '/dashboard');
-                        },
-                        child: Text(
-                          AppLocalizations.of(context)!.skip,
-                          style: const TextStyle(
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                 
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(left: 30.0, right: 30.0),

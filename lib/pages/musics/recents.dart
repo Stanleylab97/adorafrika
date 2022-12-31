@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 
@@ -18,6 +17,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 // import 'package:html_unescape/html_unescape_small.dart';
 import 'package:http/http.dart';
+import 'package:logger/logger.dart';
 
 List recents = [];
 List cachedrecents = [];
@@ -37,6 +37,7 @@ class _RecentsState extends State<Recents>
     with AutomaticKeepAliveClientMixin<Recents> {
   @override
   bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext cntxt) {
     super.build(context);
@@ -50,23 +51,23 @@ class _RecentsState extends State<Recents>
 }
 
 Future<List> futurescrapData(String type) async {
-  Future.delayed(Duration(seconds: 7), () async {
+  Logger log = Logger();
+
+ return Future.delayed(Duration(seconds: 7), () async {
     const String authority = 'www.backend.adorafrika.com';
     const String topPath = '/api/musique';
     final String unencodedPath = topPath;
 
     final Response res = await get(Uri.https(authority, unencodedPath));
-    print("***\n***\n***\n");
+
     if (res.statusCode != 200) return List.empty();
     final Map data = json.decode(res.body) as Map;
-    print(data['recents']);
-    Hive.box('cache').put(type, data['recents'] as List);
     return data['recents'] as List;
   });
   return List.empty();
 }
 
- Future<List> scrapData(String type) async {
+Future<List> scrapData(String type) async {
   const String authority = 'www.backend.adorafrika.com';
   const String topPath = '/api/musique';
 
@@ -81,7 +82,6 @@ Future<List> futurescrapData(String type) async {
   final Map data = json.decode(res.body) as Map;
   return data['recents'] as List;
 }
-
 
 class TopPage extends StatefulWidget {
   final String type;
@@ -102,7 +102,7 @@ class _TopPageState extends State<TopPage>
     setState(() {});
   }
 
-   Future<void> getData(String type) async {
+  Future<void> getData(String type) async {
     fetched = true;
     final List temp = await compute(scrapData, type);
     setState(() {
@@ -115,17 +115,17 @@ class _TopPageState extends State<TopPage>
     });
   }
 
- 
   @override
   bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
-     getCachedData(widget.type);
-    getData(widget.type);
-    
+    /*   getCachedData(widget.type);
+    getData(widget.type); */
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -137,100 +137,116 @@ class _TopPageState extends State<TopPage>
         Expanded(
           child: FutureBuilder(
             builder: (context, AsyncSnapshot snapshot) {
-              // WHILE THE CALL IS BEING MADE AKA LOADING
-              if (ConnectionState.active != null && !snapshot.hasData) {
-                return Center(
-                    child: Text(
-                  'Loading',
-                  style: TextStyle(color: Colors.white),
-                ));
-              }
+              if (snapshot.connectionState == ConnectionState.done) {
+                // If we got an error
+                if (snapshot.hasError) {
+                  return Center(
+                      child: Text(
+                    "Error",
+                    style: TextStyle(color: Colors.white),
+                  ));
 
-              // WHEN THE CALL IS DONE BUT HAPPENS TO HAVE AN ERROR
-              if (ConnectionState.done != null && snapshot.hasError) {
-                return Center(
-                    child: Text(
-                  "Error",
-                  style: TextStyle(color: Colors.white),
-                ));
-              }
-
-              return ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: snapshot.data.length,
-                itemExtent: 70.0,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: Card(
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7.0),
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      child: Stack(
-                        children: [
-                          const Image(
-                            image: AssetImage('assets/images/cover.jpg'),
+                  // if we got our data
+                } else if (snapshot.hasData) {
+                  // Extracting data from snapshot object
+                  return ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: snapshot.data.length,
+                    itemExtent: 70.0,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: Card(
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(7.0),
                           ),
-                          if (snapshot.data[index]['thumbnail'] != '' &&
-                              snapshot.data[index]['thumbnail'] != null)
-                            CachedNetworkImage(
-                              width: MediaQuery.of(context).size.width * .12,
-                              height: MediaQuery.of(context).size.height * 1,
-                              fit: BoxFit.cover,
-                              imageUrl: snapshot.data[index]['thumbnail'].toString(),
-                              errorWidget: (context, _, __) => const Image(
-                                fit: BoxFit.cover,
+                          clipBehavior: Clip.antiAlias,
+                          child: Stack(
+                            children: [
+                              const Image(
                                 image: AssetImage('assets/images/cover.jpg'),
                               ),
-                              placeholder: (context, url) => const Image(
-                                fit: BoxFit.cover,
-                                image: AssetImage('assets/images/cover.jpg'),
-                              ),
-                            )
-                          else
-                            CachedNetworkImage(
-                              width: MediaQuery.of(context).size.width * .12,
-                              height: MediaQuery.of(context).size.height * 1,
-                              fit: BoxFit.cover,
-                              imageUrl:
-                                  "https://i.pinimg.com/736x/a7/a9/cb/a7a9cbcefc58f5b677d8c480cf4ddc5d.jpg",
-                              errorWidget: (context, _, __) => const Image(
-                                fit: BoxFit.cover,
-                                image: AssetImage('assets/images/cover.jpg'),
-                              ),
-                              placeholder: (context, url) => const Image(
-                                fit: BoxFit.cover,
-                                image: AssetImage('assets/images/cover.jpg'),
-                              ),
-                            )
-                        ],
-                      ),
-                    ),
-                    title: Text(
-                      '${index + 1}. ${snapshot.data[index]['titre'] == null ? AppLocalizations.of(context)!.unknown : snapshot.data[index]["titre"]}',
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    subtitle: Text(
-                      snapshot.data[index]['blazartiste'] == null
-                          ? AppLocalizations.of(context)!.unknown
-                          : snapshot.data[index]['blazartiste'],
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    trailing: setIcon(snapshot.data[index]['typefile']),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SearchPage(
-                            query: snapshot.data[index]['titre'].toString(),
+                              if (snapshot.data[index]['thumbnail'] != '' &&
+                                  snapshot.data[index]['thumbnail'] != null)
+                                CachedNetworkImage(
+                                  width:
+                                      MediaQuery.of(context).size.width * .12,
+                                  height:
+                                      MediaQuery.of(context).size.height * 1,
+                                  fit: BoxFit.cover,
+                                  imageUrl: snapshot.data[index]['thumbnail']
+                                      .toString(),
+                                  errorWidget: (context, _, __) => const Image(
+                                    fit: BoxFit.cover,
+                                    image:
+                                        AssetImage('assets/images/cover.jpg'),
+                                  ),
+                                  placeholder: (context, url) => const Image(
+                                    fit: BoxFit.cover,
+                                    image:
+                                        AssetImage('assets/images/cover.jpg'),
+                                  ),
+                                )
+                              else
+                                CachedNetworkImage(
+                                  width:
+                                      MediaQuery.of(context).size.width * .12,
+                                  height:
+                                      MediaQuery.of(context).size.height * 1,
+                                  fit: BoxFit.cover,
+                                  imageUrl:
+                                      "https://i.pinimg.com/736x/a7/a9/cb/a7a9cbcefc58f5b677d8c480cf4ddc5d.jpg",
+                                  errorWidget: (context, _, __) => const Image(
+                                    fit: BoxFit.cover,
+                                    image:
+                                        AssetImage('assets/images/cover.jpg'),
+                                  ),
+                                  placeholder: (context, url) => const Image(
+                                    fit: BoxFit.cover,
+                                    image:
+                                        AssetImage('assets/images/cover.jpg'),
+                                  ),
+                                )
+                            ],
                           ),
                         ),
+                        title: Text(
+                          '${index + 1}. ${snapshot.data[index]['titre'] == null ? AppLocalizations.of(context)!.unknown : snapshot.data[index]["titre"]}',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        subtitle: Text(
+                          snapshot.data[index]['blazartiste'] == null
+                              ? AppLocalizations.of(context)!.unknown
+                              : snapshot.data[index]['blazartiste'],
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        trailing: setIcon(snapshot.data[index]['typefile']),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SearchPage(
+                                query: snapshot.data[index]['titre'].toString(),
+                              ),
+                            ),
+                          );
+                        },
                       );
                     },
                   );
-                },
-              );
+                }else{
+                  return Center(
+                      child: Text(
+                    "Booooom",
+                    style: TextStyle(color: Colors.white),
+                  ));
+                }
+              }
+          
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+         
             },
             future: futurescrapData('recents'),
           ),

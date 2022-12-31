@@ -50,7 +50,7 @@ class _TraditionalsState extends State<Traditionals>
 }
 
 Future<List> futurescrapData(String type) async {
-  Future.delayed(Duration(seconds: 7), () async {
+  return Future.delayed(Duration(seconds: 7), () async {
     const String authority = 'www.backend.adorafrika.com';
     const String topPath = '/api/musique';
     final String unencodedPath = topPath;
@@ -60,7 +60,7 @@ Future<List> futurescrapData(String type) async {
     if (res.statusCode != 200) return List.empty();
     final Map data = json.decode(res.body) as Map;
     print(data['traditionelle']);
-    Hive.box('cache').put(type, data['traditionelle'] as List);
+  
     return data['traditionelle'] as List;
   });
   return List.empty();
@@ -122,8 +122,7 @@ class _TopPageState extends State<TopPage>
   @override
   void initState() {
     super.initState();
-     getCachedData(widget.type);
-    getData(widget.type);
+    
     
   }
 
@@ -135,107 +134,122 @@ class _TopPageState extends State<TopPage>
     return Column(
       children: [
         Expanded(
-          child: FutureBuilder(
-            builder: (context,AsyncSnapshot snapshot) {
-              // WHILE THE CALL IS BEING MADE AKA LOADING
-              if (ConnectionState.active != null && !snapshot.hasData) {
-                return Center(
-                    child: Text(
-                  'Loading',
-                  style: TextStyle(color: Colors.white),
-                ));
-              }
+          child:  FutureBuilder(
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                // If we got an error
+                if (snapshot.hasError) {
+                  return Center(
+                      child: Text(
+                    "Error",
+                    style: TextStyle(color: Colors.white),
+                  ));
 
-              // WHEN THE CALL IS DONE BUT HAPPENS TO HAVE AN ERROR
-              if (ConnectionState.done != null && snapshot.hasError) {
-                return Center(
-                    child: Text(
-                  "Error",
-                  style: TextStyle(color: Colors.white),
-                ));
-              }
-
-         
-              return ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: snapshot.data.length,
-                itemExtent: 70.0,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: Card(
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7.0),
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      child: Stack(
-                        children: [
-                          const Image(
-                            image: AssetImage('assets/images/cover.jpg'),
+                  // if we got our data
+                } else if (snapshot.hasData) {
+                  // Extracting data from snapshot object
+                  return ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: snapshot.data.length,
+                    itemExtent: 70.0,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: Card(
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(7.0),
                           ),
-                          if (snapshot.data[index]['thumbnail'] != '' &&
-                              snapshot.data[index]['thumbnail'] != null)
-                            CachedNetworkImage(
-                              width: MediaQuery.of(context).size.width * .12,
-                              height: MediaQuery.of(context).size.height * 1,
-                              fit: BoxFit.cover,
-                              imageUrl: snapshot.data[index]['thumbnail'].toString(),
-                              errorWidget: (context, _, __) => const Image(
-                                fit: BoxFit.cover,
+                          clipBehavior: Clip.antiAlias,
+                          child: Stack(
+                            children: [
+                              const Image(
                                 image: AssetImage('assets/images/cover.jpg'),
                               ),
-                              placeholder: (context, url) => const Image(
-                                fit: BoxFit.cover,
-                                image: AssetImage('assets/images/cover.jpg'),
-                              ),
-                            )
-                          else
-                            CachedNetworkImage(
-                              width: MediaQuery.of(context).size.width * .12,
-                              height: MediaQuery.of(context).size.height * 1,
-                              fit: BoxFit.cover,
-                              imageUrl:
-                                  "https://i.pinimg.com/736x/a7/a9/cb/a7a9cbcefc58f5b677d8c480cf4ddc5d.jpg",
-                              errorWidget: (context, _, __) => const Image(
-                                fit: BoxFit.cover,
-                                image: AssetImage('assets/images/cover.jpg'),
-                              ),
-                              placeholder: (context, url) => const Image(
-                                fit: BoxFit.cover,
-                                image: AssetImage('assets/images/cover.jpg'),
-                              ),
-                            )
-                        ],
-                      ),
-                    ),
-                    title: Text(
-                      '${index + 1}. ${snapshot.data[index]['titre'] == null ? AppLocalizations.of(context)!.unknown : snapshot.data[index]["titre"]}',
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    subtitle: Text(
-                      snapshot.data[index]['blazartiste'] == null
-                          ? AppLocalizations.of(context)!.unknown
-                          : snapshot.data[index]['blazartiste'],
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    trailing: setIcon(snapshot.data[index]['typefile']),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SearchPage(
-                            query: snapshot.data[index]['titre'].toString(),
+                              if (snapshot.data[index]['thumbnail'] != '' &&
+                                  snapshot.data[index]['thumbnail'] != null)
+                                CachedNetworkImage(
+                                  width:
+                                      MediaQuery.of(context).size.width * .12,
+                                  height:
+                                      MediaQuery.of(context).size.height * 1,
+                                  fit: BoxFit.cover,
+                                  imageUrl: snapshot.data[index]['thumbnail']
+                                      .toString(),
+                                  errorWidget: (context, _, __) => const Image(
+                                    fit: BoxFit.cover,
+                                    image:
+                                        AssetImage('assets/images/cover.jpg'),
+                                  ),
+                                  placeholder: (context, url) => const Image(
+                                    fit: BoxFit.cover,
+                                    image:
+                                        AssetImage('assets/images/cover.jpg'),
+                                  ),
+                                )
+                              else
+                                CachedNetworkImage(
+                                  width:
+                                      MediaQuery.of(context).size.width * .12,
+                                  height:
+                                      MediaQuery.of(context).size.height * 1,
+                                  fit: BoxFit.cover,
+                                  imageUrl:
+                                      "https://i.pinimg.com/736x/a7/a9/cb/a7a9cbcefc58f5b677d8c480cf4ddc5d.jpg",
+                                  errorWidget: (context, _, __) => const Image(
+                                    fit: BoxFit.cover,
+                                    image:
+                                        AssetImage('assets/images/cover.jpg'),
+                                  ),
+                                  placeholder: (context, url) => const Image(
+                                    fit: BoxFit.cover,
+                                    image:
+                                        AssetImage('assets/images/cover.jpg'),
+                                  ),
+                                )
+                            ],
                           ),
                         ),
+                        title: Text(
+                          '${index + 1}. ${snapshot.data[index]['titre'] == null ? AppLocalizations.of(context)!.unknown : snapshot.data[index]["titre"]}',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        subtitle: Text(
+                          snapshot.data[index]['blazartiste'] == null
+                              ? AppLocalizations.of(context)!.unknown
+                              : snapshot.data[index]['blazartiste'],
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        trailing: setIcon(snapshot.data[index]['typefile']),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SearchPage(
+                                query: snapshot.data[index]['titre'].toString(),
+                              ),
+                            ),
+                          );
+                        },
                       );
                     },
                   );
-                },
-              );
+                }else{
+                  return Center(
+                      child: Text(
+                    "Booooom",
+                    style: TextStyle(color: Colors.white),
+                  ));
+                }
+              }
+          
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+         
             },
-            future: futurescrapData('traditionelle'),
+            future: futurescrapData('recents'),
           ),
-        ),
+      ),
       ],
     );
   }
