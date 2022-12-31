@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:adorafrika/pages/navigator/home.dart';
+import 'package:adorafrika/pages/navigator/navigation.dart';
 import 'package:adorafrika/providers/user_info_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:adorafrika/helpers/config.dart';

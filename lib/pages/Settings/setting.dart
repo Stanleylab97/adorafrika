@@ -31,7 +31,7 @@ import 'package:adorafrika/helpers/countrycodes.dart';
 import 'package:adorafrika/helpers/picker.dart';
 import 'package:adorafrika/helpers/supabase.dart';
 import 'package:adorafrika/pages/Settings/player_gradient.dart';
-import 'package:adorafrika/pages/home/saavn.dart' as home_screen;
+import 'package:adorafrika/pages/navigator/dashboard.dart' as home_screen;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 

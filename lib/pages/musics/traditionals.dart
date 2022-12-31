@@ -131,13 +131,12 @@ class _TopPageState extends State<TopPage>
   Widget build(BuildContext context) {
     super.build(context);
 
-    final List showList = cachedrecents;
     final bool isListEmpty = emptyTop;
     return Column(
       children: [
         Expanded(
           child: FutureBuilder(
-            builder: (context, snapshot) {
+            builder: (context,AsyncSnapshot snapshot) {
               // WHILE THE CALL IS BEING MADE AKA LOADING
               if (ConnectionState.active != null && !snapshot.hasData) {
                 return Center(
@@ -156,9 +155,10 @@ class _TopPageState extends State<TopPage>
                 ));
               }
 
+         
               return ListView.builder(
                 physics: const BouncingScrollPhysics(),
-                itemCount: cachedrecents.length,
+                itemCount: snapshot.data.length,
                 itemExtent: 70.0,
                 itemBuilder: (context, index) {
                   return ListTile(
@@ -173,13 +173,13 @@ class _TopPageState extends State<TopPage>
                           const Image(
                             image: AssetImage('assets/images/cover.jpg'),
                           ),
-                          if (showList[index]['thumbnail'] != '' &&
-                              showList[index]['thumbnail'] != null)
+                          if (snapshot.data[index]['thumbnail'] != '' &&
+                              snapshot.data[index]['thumbnail'] != null)
                             CachedNetworkImage(
                               width: MediaQuery.of(context).size.width * .12,
                               height: MediaQuery.of(context).size.height * 1,
                               fit: BoxFit.cover,
-                              imageUrl: showList[index]['thumbnail'].toString(),
+                              imageUrl: snapshot.data[index]['thumbnail'].toString(),
                               errorWidget: (context, _, __) => const Image(
                                 fit: BoxFit.cover,
                                 image: AssetImage('assets/images/cover.jpg'),
@@ -209,22 +209,22 @@ class _TopPageState extends State<TopPage>
                       ),
                     ),
                     title: Text(
-                      '${index + 1}. ${showList[index]['titre'] == null ? AppLocalizations.of(context)!.unknown : showList[index]["titre"]}',
+                      '${index + 1}. ${snapshot.data[index]['titre'] == null ? AppLocalizations.of(context)!.unknown : snapshot.data[index]["titre"]}',
                       overflow: TextOverflow.ellipsis,
                     ),
                     subtitle: Text(
-                      showList[index]['blazartiste'] == null
+                      snapshot.data[index]['blazartiste'] == null
                           ? AppLocalizations.of(context)!.unknown
-                          : showList[index]['blazartiste'],
+                          : snapshot.data[index]['blazartiste'],
                       overflow: TextOverflow.ellipsis,
                     ),
-                    trailing: setIcon(showList[index]['typefile']),
+                    trailing: setIcon(snapshot.data[index]['typefile']),
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => SearchPage(
-                            query: showList[index]['titre'].toString(),
+                            query: snapshot.data[index]['titre'].toString(),
                           ),
                         ),
                       );

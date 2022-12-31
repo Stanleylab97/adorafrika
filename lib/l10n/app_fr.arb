@@ -273,7 +273,7 @@
   "@guest": {},
   "home": "Accueil",
   "@home": {},
-  "homeGreet": "Bonjour,",
+  "homeGreet": "Bienvenue,",
   "@homeGreet": {},
   "importFile": "Importer depuis un fichier",
   "@importFile": {},

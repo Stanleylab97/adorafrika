@@ -30,7 +30,7 @@ import 'package:adorafrika/helpers/extensions.dart';
 import 'package:adorafrika/helpers/supabase.dart';
 import 'package:adorafrika/pages/Settings/setting.dart';
 import 'package:adorafrika/pages/account/profile.dart';
-import 'package:adorafrika/pages/home/saavn.dart';
+import 'package:adorafrika/pages/navigator/dashboard.dart';
 import 'package:adorafrika/pages/musics/home.dart';
 import 'package:adorafrika/pages/navigator/panegyrics.dart';
 import 'package:adorafrika/pages/navigator/panegyriques.dart';

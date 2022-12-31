@@ -1,10 +1,10 @@
-
 import 'dart:async';
 import 'dart:convert';
 
 import 'package:adorafrika/customWidgets/custom_physics.dart';
 import 'package:adorafrika/customWidgets/empty_screen.dart';
 import 'package:adorafrika/models/song.dart';
+import 'package:adorafrika/pages/panegyriques/panegyric_video_player.dart';
 import 'package:adorafrika/pages/playlist/Search/search.dart';
 
 // import 'package:blackhole/Helpers/countrycodes.dart';
@@ -24,17 +24,17 @@ List cachedrecents = [];
 bool fetched = false;
 bool emptyTop = false;
 
-class Recents extends StatefulWidget {
-  const Recents({
+class Religious extends StatefulWidget {
+  const Religious({
     super.key,
   });
 
   @override
-  _RecentsState createState() => _RecentsState();
+  _ReligiousState createState() => _ReligiousState();
 }
 
-class _RecentsState extends State<Recents>
-    with AutomaticKeepAliveClientMixin<Recents> {
+class _ReligiousState extends State<Religious>
+    with AutomaticKeepAliveClientMixin<Religious> {
   @override
   bool get wantKeepAlive => true;
   @override
@@ -44,7 +44,7 @@ class _RecentsState extends State<Recents>
     final bool rotated = MediaQuery.of(context).size.height < screenWidth;
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: TopPage(type: 'recents'),
+      body: TopPage(type: 'religious'),
     );
   }
 }
@@ -56,17 +56,17 @@ Future<List> futurescrapData(String type) async {
     final String unencodedPath = topPath;
 
     final Response res = await get(Uri.https(authority, unencodedPath));
-    print("***\n***\n***\n");
+
     if (res.statusCode != 200) return List.empty();
     final Map data = json.decode(res.body) as Map;
-    print(data['recents']);
-    Hive.box('cache').put(type, data['recents'] as List);
-    return data['recents'] as List;
+    print(data['religious']);
+    Hive.box('cache').put(type, data['gospel'] as List);
+    return data['gospel'] as List;
   });
   return List.empty();
 }
 
- Future<List> scrapData(String type) async {
+Future<List> scrapData(String type) async {
   const String authority = 'www.backend.adorafrika.com';
   const String topPath = '/api/musique';
 
@@ -79,9 +79,8 @@ Future<List> futurescrapData(String type) async {
   /*  final result = RegExp(r'<script.*>({\"context\".*})<\/script>', dotAll: true)
       .firstMatch(res.body); */
   final Map data = json.decode(res.body) as Map;
-  return data['recents'] as List;
+  return data['gospel'] as List;
 }
-
 
 class TopPage extends StatefulWidget {
   final String type;
@@ -102,7 +101,7 @@ class _TopPageState extends State<TopPage>
     setState(() {});
   }
 
-   Future<void> getData(String type) async {
+  Future<void> getData(String type) async {
     fetched = true;
     final List temp = await compute(scrapData, type);
     setState(() {
@@ -115,22 +114,21 @@ class _TopPageState extends State<TopPage>
     });
   }
 
- 
   @override
   bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
-     getCachedData(widget.type);
+    getCachedData(widget.type);
     getData(widget.type);
-    
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
 
+  
     final bool isListEmpty = emptyTop;
     return Column(
       children: [
@@ -157,7 +155,7 @@ class _TopPageState extends State<TopPage>
 
               return ListView.builder(
                 physics: const BouncingScrollPhysics(),
-                itemCount: snapshot.data.length,
+                itemCount:snapshot.data.length,
                 itemExtent: 70.0,
                 itemBuilder: (context, index) {
                   return ListTile(
@@ -219,20 +217,27 @@ class _TopPageState extends State<TopPage>
                     ),
                     trailing: setIcon(snapshot.data[index]['typefile']),
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SearchPage(
-                            query: snapshot.data[index]['titre'].toString(),
-                          ),
-                        ),
-                      );
+                      snapshot.data[index]['typefile'] == "AUDIO"
+                          ? Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SearchPage(
+                                  query: snapshot.data[index]['titre'].toString(),
+                                ),
+                              ),
+                            )
+                          : Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AdorAfrikaVideoPlayer(
+                                    fichier: snapshot.data[index]['fichier']),
+                              ));
                     },
                   );
                 },
               );
             },
-            future: futurescrapData('recents'),
+            future: futurescrapData('religious'),
           ),
         ),
       ],

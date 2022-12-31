@@ -293,7 +293,7 @@
   "@guest": {},
   "home": "Home",
   "@home": {},
-  "homeGreet": "Hi There,",
+  "homeGreet": "Welcome,",
   "@homeGreet": {},
   "importFile": "Import from File",
   "@importFile": {},

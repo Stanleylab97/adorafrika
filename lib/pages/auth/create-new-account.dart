@@ -63,7 +63,7 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
       if (status == DataConnectionStatus.connected) {
         Map<String, String> data = {
   "nom": nom.text.trim(),
-  "prenom": "John", //prenom.text.trim(),
+  "prenom": prenom.text.trim(), //prenom.text.trim(),
   //"email": email.text.trim(),
   "profil": "abonne",
   "username": email.text.trim(),
@@ -208,6 +208,13 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
                       controller: nom,
                       icon: FontAwesomeIcons.user,
                       hint: 'Nom ',
+                      inputType: TextInputType.name,
+                      inputAction: TextInputAction.next,
+                    ),
+                     TextInputField(
+                      controller: prenom,
+                      icon: FontAwesomeIcons.user,
+                      hint: 'Prénom',
                       inputType: TextInputType.name,
                       inputAction: TextInputAction.next,
                     ),

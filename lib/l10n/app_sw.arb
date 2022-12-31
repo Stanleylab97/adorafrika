@@ -270,7 +270,7 @@
   "@guest": {},
   "home": "Karibu",
   "@home": {},
-  "homeGreet": "AdorAfrika,",
+  "homeGreet": "homeGreet,",
   "@homeGreet": {},
   "importFile": "Importer depuis un fichier",
   "@importFile": {},

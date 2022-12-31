@@ -7,15 +7,15 @@ import 'package:video_player/video_player.dart';
 import 'package:lottie/lottie.dart';
 
 
-class PanegyricVideoPlayer extends StatefulWidget {
+class AdorAfrikaVideoPlayer extends StatefulWidget {
   final String fichier;
-  const PanegyricVideoPlayer({super.key, required this.fichier});
+  const AdorAfrikaVideoPlayer({super.key, required this.fichier});
 
   @override
-  State<PanegyricVideoPlayer> createState() => _PanegyricVideoPlayerState();
+  State<AdorAfrikaVideoPlayer> createState() => _AdorAfrikaVideoPlayerState();
 }
 
-class _PanegyricVideoPlayerState extends State<PanegyricVideoPlayer> {
+class _AdorAfrikaVideoPlayerState extends State<AdorAfrikaVideoPlayer> {
 VideoPlayerController? videoPlayerController;
 ChewieController? chewieController;
 

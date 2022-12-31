@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:adorafrika/pages/navigator/home.dart';
+import 'package:adorafrika/pages/navigator/navigation.dart';
 import 'package:adorafrika/pages/navigator/panegyrics.dart';
 import 'package:adorafrika/pages/services/networkHandler.dart';
 import 'package:another_flushbar/flushbar.dart';

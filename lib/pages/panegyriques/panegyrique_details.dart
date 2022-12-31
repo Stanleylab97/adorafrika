@@ -148,7 +148,7 @@ class _PanegyriqueDetailsState extends State<PanegyriqueDetails> {
                         ),
                         onTap: () {
                            Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => widget.panegyrique.type=="VIDEO" ?PanegyricVideoPlayer(fichier: widget.panegyrique.fichier):PanegyricAudioPlayer(songInfo: widget.panegyrique)));
+                  context, MaterialPageRoute(builder: (context) => widget.panegyrique.type=="VIDEO" ?AdorAfrikaVideoPlayer(fichier: widget.panegyrique.fichier):PanegyricAudioPlayer(songInfo: widget.panegyrique)));
                         },
                       ),
                     ],
