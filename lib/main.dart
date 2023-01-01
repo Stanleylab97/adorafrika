@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:adorafrika/pages/navigator/navigation.dart';
 import 'package:adorafrika/providers/user_info_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:adorafrika/helpers/config.dart';
 import 'package:adorafrika/helpers/countrycodes.dart';
@@ -40,7 +41,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Paint.enableDithering = true;
 
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS || kIsWeb) {
     await Hive.initFlutter('adorAfrika');
   } else {
     await Hive.initFlutter();

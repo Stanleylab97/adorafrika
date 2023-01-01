@@ -32,7 +32,7 @@ import 'package:adorafrika/pages/musics/recents.dart';
 import 'package:adorafrika/pages/musics/religious.dart';
 import 'package:adorafrika/pages/musics/traditionals.dart';
 import 'package:adorafrika/pages/playlist/Player/audioplayer.dart';
-import 'package:adorafrika/pages/playlist/add_musique.dart';
+import 'package:adorafrika/pages/musics/add_musique.dart';
 import 'package:adorafrika/pages/services/networkHandler.dart';
 import 'package:data_connection_checker_tv/data_connection_checker.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';

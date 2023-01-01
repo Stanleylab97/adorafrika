@@ -231,6 +231,8 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
               setState(() {
                 isloading = false;
               });
+              playerController.stopAllPlayers();
+              playerController.dispose();
 
               Navigator.pop(context);
             } else {
@@ -364,8 +366,12 @@ class _AddMusicState extends State<AddMusic> with WidgetsBindingObserver {
     if (result != null) {
       File file = File(result.files.single.path!);
       String dir = pathfile.dirname(file.path);
-     String newPath = pathfile.join(dir,(DateTime.now().microsecond.toString()) + '.' + file.path.split('.').last);
-File f = await File(file.path).copy(newPath);
+      String newPath = pathfile.join(
+          dir,
+          (DateTime.now().microsecond.toString()) +
+              '.' +
+              file.path.split('.').last);
+      File f = await File(file.path).copy(newPath);
       await playerController.preparePlayer(f.path);
       setState(() {
         isfilechoosen = true;
@@ -400,17 +406,62 @@ File f = await File(file.path).copy(newPath);
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          SwitchListTile(
-                              //switch at right side of label
-                              value: isTraditional,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  isTraditional =
-                                      value; //update value when sitch changed
-                                });
-                              },
-                              title: Text("Est-ce de la musique ordinaire ?")),
-                          Text('Quel est le format du fichier ?',
+                          Padding(
+        padding: EdgeInsets.all(14.0),
+        child: Center(
+          child: Text('Quel est la catégorie de la musique ?',
+              style: TextStyle(fontSize: 15)),
+        )
+          ),
+                           Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Row(
+            
+              children: [
+                Radio(
+                  value: true,
+                  groupValue: isTraditional,
+                  onChanged: (val) {
+                    setState(() {
+                      isTraditional = val as bool;
+                      
+                    });
+                  },
+                ), Text(
+              'Normal',
+              style: new TextStyle(fontSize: 17.0),
+            ),
+ 
+
+              ],
+            ),
+           
+            Row(
+              children: [
+                Radio(
+                  value: false,
+                  groupValue: isTraditional,
+                  onChanged: (val) {
+                    setState(() {
+                       isTraditional = val as bool;
+                    });
+                  },
+                ),
+                Text(
+              'Réligieux',
+              style: new TextStyle(
+                fontSize: 17.0,
+              ),
+            ),
+              ],
+            ),
+            
+            
+           
+          ],
+        ),
+                        Text('Quel est le format du fichier ?',
                               style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   color: Colors.white)),
@@ -439,7 +490,7 @@ File f = await File(file.path).copy(newPath);
                 height: 10,
               ),
               DropdownSearch<RythmeMusical>(
-                 itemAsString: (RythmeMusical u) => u.userAsString(),
+                itemAsString: (RythmeMusical u) => u.userAsString(),
                 popupProps: PopupProps.menu(
                     showSearchBox: true,
                     menuProps: MenuProps(
@@ -467,7 +518,6 @@ File f = await File(file.path).copy(newPath);
                     print(idRythme);
                   });
                 },
-
               )
             ]),
             isActive: currentStep >= 1),

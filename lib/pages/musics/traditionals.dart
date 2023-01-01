@@ -63,7 +63,6 @@ Future<List> futurescrapData(String type) async {
   
     return data['traditionelle'] as List;
   });
-  return List.empty();
 }
 
  Future<List> scrapData(String type) async {
@@ -247,7 +246,7 @@ class _TopPageState extends State<TopPage>
                 );
          
             },
-            future: futurescrapData('recents'),
+            future: futurescrapData('gospels'),
           ),
       ),
       ],
