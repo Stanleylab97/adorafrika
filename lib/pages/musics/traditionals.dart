@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:adorafrika/customWidgets/custom_physics.dart';
 import 'package:adorafrika/customWidgets/empty_screen.dart';
 import 'package:adorafrika/models/song.dart';
+import 'package:adorafrika/pages/panegyriques/panegyric_video_player.dart';
 import 'package:adorafrika/pages/playlist/Search/search.dart';
 
 // import 'package:blackhole/Helpers/countrycodes.dart';
@@ -220,11 +221,19 @@ class _TopPageState extends State<TopPage>
                         ),
                         trailing: setIcon(snapshot.data[index]['typefile']),
                         onTap: () {
+                          snapshot.data[index]['typefile']=="AUDIO"?
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => SearchPage(
                                 query: snapshot.data[index]['titre'].toString(),
+                              ),
+                            ),
+                          ):Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AdorAfrikaVideoPlayer(
+                                 fichier: snapshot.data[index]['fichier'],
                               ),
                             ),
                           );

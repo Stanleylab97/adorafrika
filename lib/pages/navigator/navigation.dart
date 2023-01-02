@@ -888,7 +888,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           SalomonBottomBarItem(
                             icon: const Icon(Icons.person),
-                            title: Text(AppLocalizations.of(context)!.library),
+                            title: Text(AppLocalizations.of(context)!.account),
                             selectedColor:
                                 Theme.of(context).colorScheme.secondary,
                           ),
