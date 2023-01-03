@@ -1,0 +1,15 @@
+Nous sommes content de vous informer que nous avons mis en place l'espace de Test officiel de adorAfrika.
+Dans cette dernière version nous avons travaillé sur les fonctionnalités suivantes:
+    - Améliration du fichier de langues de la page d'accueil
+    - Mise à jour dynamique des listes de musique
+    - Lecture de musiques au format vidéo
+    - Lecture en continue d'une playlist de musique
+    - Meilleure présentation du lecteur audio de musique
+    - Ajout de la page de profil
+    - Fonctionnalité de déconnexion
+    - Ajout du logo
+    - Ajout de la  page de démarrage(en chantier)
+    - Ajout du prénom au tableau de bord
+    - Auto-connexion de l'utilisateur
+    
+StanleyLab, toujours plus haut!
