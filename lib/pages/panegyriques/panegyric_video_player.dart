@@ -59,7 +59,7 @@ ChewieController? chewieController;
           ),
           elevation: 0,
           centerTitle: true,
-        title: Text('JadorAfrika video player', style: TextStyle(color:Colors.green),),
+        title: Text('AdorAfrika video player', style: TextStyle(color:Colors.green),),
       ),
       body: _chewieVideoPlayer(),
     );
