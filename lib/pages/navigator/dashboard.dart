@@ -543,7 +543,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                                         : item['type'] ==
                                                                 'artist'
                                                             ? const AssetImage(
-                                                                'assets/artist.png',
+                                                                'assets/images/artist.png',
                                                               )
                                                             : const AssetImage(
                                                                 'assets/images/cover.jpg',
@@ -680,7 +680,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                                 )
                                               : item['type'] == 'artist'
                                                   ? const AssetImage(
-                                                      'assets/artist.png',
+                                                      'assets/images/artist.png',
                                                     )
                                                   : const AssetImage(
                                                       'assets/images/cover.jpg',

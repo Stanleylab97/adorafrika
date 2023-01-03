@@ -118,7 +118,7 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                           ],
                           title: widget.data['title']?.toString() ??
                               AppLocalizations.of(context)!.songs,
-                          placeholderImage: 'assets/artist.png',
+                          placeholderImage: 'assets/images/artist.png',
                           imageUrl: widget.data['image']
                               .toString()
                               .replaceAll('http:', 'https:')
@@ -660,7 +660,7 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                                                                 entry.key ==
                                                                     'Latest Release')
                                                             ? 'assets/images/cover.jpg'
-                                                            : 'assets//images/album.png',
+                                                            : 'assets/images/album.png',
                                                       ),
                                                     ),
                                                     imageUrl:
@@ -676,7 +676,7 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                                                                 entry.key ==
                                                                     'Singles')
                                                             ? 'assets/images/cover.jpg'
-                                                            : 'assets//images/album.png',
+                                                            : 'assets/images/album.png',
                                                       ),
                                                     ),
                                                   ),

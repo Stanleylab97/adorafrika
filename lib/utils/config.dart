@@ -15,6 +15,8 @@ class SizeConfig {
   static Color greenColor = Color.fromRGBO(142, 191, 69, 1);
   static Color red = Colors.red;
 
+  static String defaultImageUrl="https://i.pinimg.com/736x/a7/a9/cb/a7a9cbcefc58f5b677d8c480cf4ddc5d.jpg";
+
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
     screenWidth = _mediaQueryData.size.width;

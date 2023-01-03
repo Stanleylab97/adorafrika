@@ -4,8 +4,10 @@ import 'dart:convert';
 import 'package:adorafrika/customWidgets/custom_physics.dart';
 import 'package:adorafrika/customWidgets/empty_screen.dart';
 import 'package:adorafrika/models/song.dart';
+import 'package:adorafrika/pages/musics/manager/song_list.dart';
 import 'package:adorafrika/pages/panegyriques/panegyric_video_player.dart';
 import 'package:adorafrika/pages/playlist/Search/search.dart';
+import 'package:adorafrika/utils/config.dart';
 
 // import 'package:blackhole/Helpers/countrycodes.dart';
 
@@ -54,7 +56,7 @@ class _RecentsState extends State<Recents>
 Future<List> futurescrapData(String type) async {
   Logger log = Logger();
 
- return Future.delayed(Duration(seconds: 7), () async {
+  return Future.delayed(Duration(seconds: 7), () async {
     const String authority = 'www.backend.adorafrika.com';
     const String topPath = '/api/musique';
     final String unencodedPath = topPath;
@@ -126,8 +128,6 @@ class _TopPageState extends State<TopPage>
     getData(widget.type); */
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -196,7 +196,7 @@ class _TopPageState extends State<TopPage>
                                       MediaQuery.of(context).size.height * 1,
                                   fit: BoxFit.cover,
                                   imageUrl:
-                                      "https://i.pinimg.com/736x/a7/a9/cb/a7a9cbcefc58f5b677d8c480cf4ddc5d.jpg",
+                                      SizeConfig.defaultImageUrl,
                                   errorWidget: (context, _, __) => const Image(
                                     fit: BoxFit.cover,
                                     image:
@@ -223,27 +223,28 @@ class _TopPageState extends State<TopPage>
                         ),
                         trailing: setIcon(snapshot.data[index]['typefile']),
                         onTap: () {
-                           snapshot.data[index]['typefile']=="AUDIO"?
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SearchPage(
-                                query: snapshot.data[index]['titre'].toString(),
-                              ),
-                            ),
-                          ):Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AdorAfrikaVideoPlayer(
-                                 fichier: snapshot.data[index]['fichier'],
-                              ),
-                            ),
-                          );
+                          snapshot.data[index]['typefile'] == "AUDIO"
+                              ? Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SongsListPage(
+                                      listItem: snapshot.data[index] as Map,
+                                    ),
+                                  ),
+                                )
+                              : Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AdorAfrikaVideoPlayer(
+                                      fichier: snapshot.data[index]['fichier'],
+                                    ),
+                                  ),
+                                );
                         },
                       );
                     },
                   );
-                }else{
+                } else {
                   return Center(
                       child: Text(
                     "Booooom",
@@ -251,11 +252,10 @@ class _TopPageState extends State<TopPage>
                   ));
                 }
               }
-          
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-         
+
+              return Center(
+                child: CircularProgressIndicator(),
+              );
             },
             future: futurescrapData('recents'),
           ),

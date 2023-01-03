@@ -153,8 +153,8 @@ class _AlbumSearchPageState extends State<AlbumSearchPage> {
                           scrollController: _scrollController,
                           title: widget.type,
                           placeholderImage: widget.type == 'Artists'
-                              ? 'assets/artist.png'
-                              : 'assets//images/album.png',
+                              ? 'assets/images/artist.png'
+                              : 'assets/images/album.png',
                           sliverList: SliverList(
                             delegate: SliverChildListDelegate(
                               _searchedList!.map(
@@ -198,8 +198,8 @@ class _AlbumSearchPageState extends State<AlbumSearchPage> {
                                             fit: BoxFit.cover,
                                             image: AssetImage(
                                               widget.type == 'Artists'
-                                                  ? 'assets/artist.png'
-                                                  : 'assets//images/album.png',
+                                                  ? 'assets/images/artist.png'
+                                                  : 'assets/images/album.png',
                                             ),
                                           ),
                                           imageUrl:
@@ -208,8 +208,8 @@ class _AlbumSearchPageState extends State<AlbumSearchPage> {
                                             fit: BoxFit.cover,
                                             image: AssetImage(
                                               widget.type == 'Artists'
-                                                  ? 'assets/artist.png'
-                                                  : 'assets//images/album.png',
+                                                  ? 'assets/images/artist.png'
+                                                  : 'assets/images/album.png',
                                             ),
                                           ),
                                         ),

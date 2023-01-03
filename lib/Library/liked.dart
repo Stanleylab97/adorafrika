@@ -799,14 +799,14 @@ class _AlbumsTabState extends State<AlbumsTab>
                         imageList: imageList,
                         showGrid: widget.type == 'genre',
                         placeholderImage: widget.type == 'artist'
-                            ? 'assets/artist.png'
+                            ? 'assets/images/artist.png'
                             : 'assets/images/album.png',
                       )
                     : Collage(
                         imageList: imageList,
                         showGrid: widget.type == 'genre',
                         placeholderImage: widget.type == 'artist'
-                            ? 'assets/artist.png'
+                            ? 'assets/images/artist.png'
                             : 'assets/images/album.png',
                       ),
                 title: Text(

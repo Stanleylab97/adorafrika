@@ -33,7 +33,6 @@ class NetworkHandler {
   }
 
   Future<Response> unsecureget(String url) async {
-    final prefs = await SharedPreferences.getInstance();
     url = formater(url);
     dio.options.contentType = 'application/json';
     dio.options.headers['Content-Type'] = 'application/json';

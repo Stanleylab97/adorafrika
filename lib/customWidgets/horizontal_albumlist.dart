@@ -170,11 +170,11 @@ class HorizontalAlbumsList extends StatelessWidget {
                       image: (item['type'] == 'playlist' ||
                               item['type'] == 'album')
                           ? const AssetImage(
-                              'assets//images/album.png',
+                              'assets/images/album.png',
                             )
                           : item['type'] == 'artist'
                               ? const AssetImage(
-                                  'assets/artist.png',
+                                  'assets/images/artist.png',
                                 )
                               : const AssetImage(
                                   'assets/images/cover.jpg',

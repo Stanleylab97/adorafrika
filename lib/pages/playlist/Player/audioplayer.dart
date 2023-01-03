@@ -264,31 +264,11 @@ class _PlayScreenState extends State<PlayScreen> {
   }
 
   void setValues(List response) {
-    final audio={
-      'id': response[0]['id'],
-      'album': "",
-      'album_id': "",
-      'artist': response[0]['blazartiste'],
-      'duration': "234",
-      'genre': response[0]['categories_id'],
-      'has_lyrics': false,
-      'image': response[0]['thumbnail'] ??  "https://i.pinimg.com/736x/a7/a9/cb/a7a9cbcefc58f5b677d8c480cf4ddc5d.jpg",
-      'language': "",
-      'release_date': response[0]['updated_at'],
-      'subtitle': "",
-      'title': response[0]['titre'],
-      'url': response[0]['fichier'].toString() ,
-      'lowUrl': response[0]['fichier'].toString(),
-      'highUrl': response[0]['fichier']?.toString(),
-      'year': response[0]['yearofproduction'].toString(),
-      '320kbps': "",
-      'quality': "High",
-      'perma_url': response[0]['fichier']?.toString(),
-    };
+   
     globalQueue.addAll(
       response.map(
         (song) => MediaItemConverter.mapToMediaItem(
-          audio as Map,
+          song as Map,
           autoplay: widget.recommend,
         ),
       ),
