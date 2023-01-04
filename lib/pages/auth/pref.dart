@@ -86,41 +86,42 @@ class _PrefScreenState extends State<PrefScreen> {
                     ),
                   ),
                             Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  RichText(
-                                    text: TextSpan(
-                                      text:
-                                          '${AppLocalizations.of(context)!.welcome}\n',
-                                      style: TextStyle(
-                                        fontSize: 65,
-                                        height: 1.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: SizeConfig.primaryColor,
-                                      ),
-                                      children: <TextSpan>[
-                                        TextSpan(
-                                          text: AppLocalizations.of(context)!
-                                              .aboard,
-                                          style: const TextStyle(
+                                  
+                                      RichText(
+                                        text: TextSpan(
+                                          text:
+                                              '${AppLocalizations.of(context)!.welcome}',
+                                          style: TextStyle(
+                                            fontSize: 28,
+                                            height: 1.0,
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 75,
-                                            color: Colors.yellow,
+                                            color: SizeConfig.primaryColor,
                                           ),
+                                          
                                         ),
-                                        TextSpan(
-                                          text: '!\n',
+                                      ),
+                                  
+                                  RichText(text: TextSpan(
+                                              text: AppLocalizations.of(context)!
+                                                  .aboard,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 28,
+                                                color: Colors.yellow,
+                                              ),
+                                            ),),
+                                 RichText(text: TextSpan(
+                                          text:  AppLocalizations.of(context)!
+                                                  .culture,
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 70,
+                                            fontSize: 35,
                                             color: Colors.red,
                                           ),
-                                        ),
-                                       
-                                      ],
-                                    ),
-                                  ),
+                                        )),
                                 ],
                               ),
                             ),

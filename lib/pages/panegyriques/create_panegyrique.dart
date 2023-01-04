@@ -702,7 +702,7 @@ class _CreatePanegyriqueState extends State<CreatePanegyrique> {
                 Icons.video_file,
                 color: Colors.white,
                 size: 22,
-              ), Text(_recordProvider.pickedVideoFilename, style:TextStyle(color: Colors.white, fontSize: 14)), SizedBox(width: 1),
+              ),_recordProvider.pickedVideoFilename.length>=20? Text(_recordProvider.pickedVideoFilename.substring(0,20), style:TextStyle(color: Colors.white, fontSize: 14)):Text(_recordProvider.pickedVideoFilename, style:TextStyle(color: Colors.white, fontSize: 14)), SizedBox(width: 1),
           GestureDetector(
               onTap: () {
                 final _recordProvider =

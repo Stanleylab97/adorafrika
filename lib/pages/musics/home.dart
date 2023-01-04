@@ -28,16 +28,15 @@ import 'package:adorafrika/customWidgets/miniplayer.dart';
 import 'package:adorafrika/customWidgets/playlist_head.dart';
 import 'package:adorafrika/customWidgets/snackbar.dart';
 import 'package:adorafrika/helpers/audio_query.dart';
+import 'package:adorafrika/pages/musics/manager/add_musique.dart';
 import 'package:adorafrika/pages/musics/recents.dart';
 import 'package:adorafrika/pages/musics/religious.dart';
 import 'package:adorafrika/pages/musics/traditionals.dart';
 import 'package:adorafrika/pages/playlist/Player/audioplayer.dart';
-import 'package:adorafrika/pages/musics/add_musique.dart';
 import 'package:adorafrika/pages/services/networkHandler.dart';
 import 'package:data_connection_checker_tv/data_connection_checker.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -172,7 +171,7 @@ class _MusicsDashState extends State<MusicsDash> with TickerProviderStateMixin {
           _sortedGenreKeysList.add(_songs[i].genre ?? 'Unknown');
         }
       } catch (e) {
-        log(e.toString());
+        log("ERR"+e.toString());
       }
     }
   }

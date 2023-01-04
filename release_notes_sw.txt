@@ -1,15 +1,7 @@
-Tunayo furaha kukuarifu kwamba tumeweka nafasi rasmi ya majaribio ya adorAfrika.
-Katika toleo hili la hivi karibuni tumeshughulikia vipengele vifuatavyo:
-     - Uboreshaji wa faili ya lugha ya ukurasa wa nyumbani
-     - Inasasisha orodha za muziki kwa nguvu
-     - Cheza muziki katika umbizo la video
-     - Orodha ya kucheza ya muziki inayoendelea
-     - Uwasilishaji bora wa kicheza sauti cha muziki
-     - Aliongeza ukurasa wa wasifu
-     - Tenganisha utendaji
-     - Alama iliyoongezwa
-     - Ongezeko la ukurasa wa kuanza (unajengwa)
-     - Imeongeza jina la kwanza kwenye dashibodi
-     - Mtumiaji kuingia kiotomatiki
+Tunayo furaha kukufahamisha kwamba tumezindua toleo jipya la adorAfrika.
+Katika toleo hili la hivi karibuni tumefanyia kazi vipengele vifuatavyo:
+     - Uboreshaji wa faili ya lugha
+     - Uboreshaji wa UI ya ukurasa wa kukaribisha
+     - Umbizo la .m4a limeongezwa kwa kiteua sauti kwenye iOS
     
-StanleyLab, daima juu!
+StanleyLab, ngazi juu!

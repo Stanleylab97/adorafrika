@@ -52,7 +52,7 @@ class RecordAudioProvider extends ChangeNotifier {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowMultiple: false,
       type: FileType.custom,
-      allowedExtensions: ['mp3', 'aac', 'wav'],
+      allowedExtensions: ['mp3', 'aac', 'wav, m4a'],
     );
 
     if (result != null) {

@@ -33,7 +33,6 @@ import 'package:adorafrika/pages/account/profile.dart';
 import 'package:adorafrika/pages/navigator/dashboard.dart';
 import 'package:adorafrika/pages/musics/home.dart';
 import 'package:adorafrika/pages/navigator/panegyrics.dart';
-import 'package:adorafrika/pages/navigator/panegyriques.dart';
 import 'package:adorafrika/pages/playlist/Search/search.dart';
 import 'package:adorafrika/services/ext_storage_provider.dart';
 import 'package:device_info_plus/device_info_plus.dart';

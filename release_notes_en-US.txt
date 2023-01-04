@@ -1,16 +1,8 @@
-We are glad to inform you that we have launched the official adorAfrika Test Space.
+We are glad to inform you that we have launched the new version of adorAfrika.
 In this latest version we have worked on the following features:
-    - Improvement of the homepage language file
-    - Dynamic update of the music lists
-    - Playback of music in video format
-    - Continuous playback of a music playlist
-    - Better presentation of the music player
-    - Added profile page
-    - Logout functionality
-    - Added logo
-    - Added start page (under construction)
-    - Added first name to dashboard
-    - User auto-login
+    - Improvement of the languages file
+    - Improvement of the welcome page UI
+   - Format .m4a added to audio picker on iOS
     
 StanleyLab, Level up!
 
